@@ -30,8 +30,8 @@ export default async function MainLayout({ children }: { children: React.ReactNo
           {profile.role === 'admin' && (
             <Link href="/equipo" className="text-gris hover:text-tinta">Equipo</Link>
           )}
-          <span className="ml-auto text-gris">{profile.full_name ?? profile.email}</span>
-          <form action={signout}>
+          <span className="ml-auto hidden text-gris sm:inline">{profile.full_name ?? profile.email}</span>
+          <form action={signout} className="ml-auto sm:ml-0">
             <button className="text-gris hover:text-tinta">Salir</button>
           </form>
         </nav>

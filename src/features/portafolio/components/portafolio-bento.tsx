@@ -12,8 +12,8 @@ export function PortafolioBento({ conteo, error }: { conteo: ConteoEtapas; error
   const total = Object.values(conteo).reduce((a, b) => a + b, 0)
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-6">
-      <section className="bento flex flex-col justify-between bg-ladrillo text-white md:col-span-2 md:row-span-2 lg:col-span-3">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+      <section className="bento col-span-2 flex flex-col justify-between bg-ladrillo text-white md:row-span-2 lg:col-span-3">
         <p className="text-xs font-semibold uppercase tracking-widest text-white/70">Portafolio</p>
         <div className="mt-8">
           <p className="text-6xl font-bold">{total}</p>
@@ -28,7 +28,12 @@ export function PortafolioBento({ conteo, error }: { conteo: ConteoEtapas; error
         </section>
       ))}
 
-      <section className="bento md:col-span-4 lg:col-span-6">
+      <section className="bento bg-tinta text-white">
+        <p className="text-3xl font-bold">&lt; 1 h</p>
+        <p className="mt-1 text-sm text-white/70">Meta por ficha (hoy &gt; 6 h)</p>
+      </section>
+
+      <section className="bento col-span-2 md:col-span-4 lg:col-span-6">
         <h2 className="font-semibold">Buscar edificio</h2>
         <p className="mt-1 text-sm text-gris">
           Búsqueda por dirección, CHIP o mapa: llega con la ficha del edificio (Fase 1).
@@ -36,7 +41,7 @@ export function PortafolioBento({ conteo, error }: { conteo: ConteoEtapas; error
       </section>
 
       {error && (
-        <p role="alert" className="text-sm text-ladrillo-oscuro md:col-span-4 lg:col-span-6">
+        <p role="alert" className="col-span-2 text-sm text-ladrillo-oscuro md:col-span-4 lg:col-span-6">
           No se pudo leer el portafolio. Revisa la conexión con la base de datos.
         </p>
       )}
