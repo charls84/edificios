@@ -1,8 +1,8 @@
 # BUSINESS_LOGIC.md — Plataforma de inteligencia de edificios (Bogotá)
 
 > Documento de necesidad para el equipo de desarrollo.
-> Versión 0.1 · 2026-10-19 · Preparado por DOUX.WORK
-> Estado: **borrador para validar con el cliente** (ver sección 12, preguntas abiertas).
+> Versión 0.2 · 2026-10-19 · Preparado por DOUX.WORK
+> Estado: **validado en entrevista de negocio**. Quedan abiertas la zona, el volumen y el presupuesto (ver sección 12).
 
 ---
 
@@ -12,7 +12,7 @@ El cliente está montando una empresa que rehabilita edificaciones antiguas deso
 
 Para responder, hoy tiene que buscar a mano la información de cada edificio en 6 a 8 portales distintos: catastro, norma del POT, patrimonio, PEMP, riesgo, licencias, propiedad e incentivos. Cada portal usa su propio identificador y su propio formato.
 
-**Costo del problema:** cada análisis de prefactibilidad toma días y depende de una persona que sepa dónde buscar. Eso limita cuántos edificios se pueden evaluar y retrasa la respuesta al propietario.
+**Costo del problema:** cada análisis de prefactibilidad toma **más de 6 horas** de una persona y depende de una persona que sepa dónde buscar. Eso limita cuántos edificios se pueden evaluar y retrasa la respuesta al propietario.
 
 **Contexto de mercado que lo hace urgente:**
 - RenoBo estima más de 500 edificios con potencial de reúso solo en el centro de Bogotá, y unas 6.500 soluciones de vivienda posibles (programa *Reúsa y Revitaliza el Centro*).
@@ -169,6 +169,8 @@ Los montos usan una **tarifa ilustrativa de COP 120.000/hora**. Hay que reemplaz
 
 **Recomendación:** cotizar y ejecutar solo las Fases 0 y 1. Con la ficha funcionando sobre edificios reales, se decide con evidencia si se sigue con las Fases 2 y 3.
 
+**Ritmo acordado:** sin fecha límite fija; se construye fase por fase y cada fase cierra con una entrega funcionando. El entregable de la tesis es doble: **la herramienta funcionando y la metodología documentada**, que se escribe a medida que avanza cada fase.
+
 ### Entregables de la Fase 0
 
 - [ ] Inventario de fuentes: URL, licencia, formato, campos, frecuencia de actualización y llave de cruce
@@ -178,8 +180,8 @@ Los montos usan una **tarifa ilustrativa de COP 120.000/hora**. Hay que reemplaz
 
 ## 11. KPI de éxito
 
-- **Tiempo de prefactibilidad por edificio:** de días a menos de 1 hora (meta por validar con una medición inicial en la Fase 0).
-- **Edificios evaluados por mes:** línea base por definir con el cliente.
+- **Tiempo de prefactibilidad por edificio:** de más de 6 horas (línea base del cliente) a menos de 1 hora.
+- **Edificios evaluados por mes:** sin línea base, porque la operación es nueva; se mide desde la Fase 0 con los edificios de los dos propietarios.
 - **Cobertura de la ficha:** al menos el 80 % de los campos automatizables llenos sin intervención manual.
 
 ## 12. Riesgos y preguntas abiertas
@@ -193,17 +195,25 @@ Los montos usan una **tarifa ilustrativa de COP 120.000/hora**. Hay que reemplaz
 
 ### Preguntas para el cliente (antes de cotizar)
 
-- [ ] ¿Cuántos edificios espera evaluar al año y en qué zonas (Centro Histórico, Teusaquillo, otras)?
-- [ ] ¿Quiénes usarán la plataforma (solo él, su equipo, los propietarios)?
-- [ ] ¿Qué entregable necesita la tesis: la herramienta funcionando, la metodología, o ambas?
+- [ ] ¿En qué zonas (Centro Histórico, Teusaquillo, otras)? El volumen por mes se mide desde la Fase 0.
+- [x] ¿Quiénes usarán la plataforma? → El fundador y su equipo; los propietarios solo reciben el PDF.
+- [x] ¿Qué entregable necesita la tesis? → Ambos: herramienta funcionando y metodología.
 - [ ] ¿Puede compartir las direcciones o CHIP de los edificios de los dos propietarios para la Fase 0?
-- [ ] ¿Cuál es el presupuesto y la fecha límite (sustentación)?
+- [ ] ¿Cuál es el presupuesto? → Por definir.
+- [x] ¿Fecha límite? → Abierta; se avanza fase por fase.
 
 ### Fuera de alcance
 
 - Venta de la plataforma a terceros, app móvil, pagos en línea, multi-idioma, ciudades distintas a Bogotá.
 
-## 13. Fuentes
+## 13. Decisiones de implementación (SaaS Factory)
+
+- **Sin pagos** (no se vende) y **sin multi-idioma** (solo es-CO).
+- **Login solo por invitación:** sin registro público; roles admin y analista.
+- **Protección de datos bajo la Ley 1581 de 2012 (Colombia):** política de tratamiento, RLS en todas las tablas y acceso por rol desde la Fase 1.
+- **Adiciones al stack base:** PostGIS en Supabase y MapLibre GL para el mapa.
+
+## 14. Fuentes
 
 Consultadas el 2026-10-19 mediante búsqueda web. Algunas páginas oficiales no se pudieron abrir directamente; las cifras deben verificarse.
 
