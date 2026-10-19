@@ -5,9 +5,6 @@ const nextConfig: NextConfig = {
   experimental: {
     mcpServer: true,
   },
-  turbopack: {
-    root: 'D:/proyectos/saas-factory',
-  },
 }
 
 export default nextConfig

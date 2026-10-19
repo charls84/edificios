@@ -1,10 +1,19 @@
-export default function LoginPage() {
+import { AuthShell, LoginForm } from '@/features/auth/components'
+
+const ERRORS: Record<string, string> = {
+  enlace_invalido: 'El enlace expiró o ya se usó. Pide uno nuevo.',
+}
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>
+}) {
+  const { error } = await searchParams
+
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-8 p-8">
-        <h1 className="text-3xl font-bold">Login</h1>
-        <p className="text-gray-600">Implementa LoginForm desde features/auth/components/</p>
-      </div>
-    </div>
+    <AuthShell title="Entrar" subtitle="Acceso solo para el equipo invitado.">
+      <LoginForm initialError={error ? ERRORS[error] : undefined} />
+    </AuthShell>
   )
 }

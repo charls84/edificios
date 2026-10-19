@@ -1,10 +1,13 @@
-export default function DashboardPage() {
+import { PortafolioBento } from '@/features/portafolio/components/portafolio-bento'
+import { getConteoPorEtapa } from '@/features/portafolio/services/stats'
+
+export default async function DashboardPage() {
+  const { conteo, error } = await getConteoPorEtapa()
+
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-      <p className="mt-4 text-gray-600">
-        Implementa componentes desde features/dashboard/components/
-      </p>
-    </div>
+    <>
+      <h1 className="mb-6 text-2xl font-bold">Portafolio de edificios</h1>
+      <PortafolioBento conteo={conteo} error={error} />
+    </>
   )
 }

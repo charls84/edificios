@@ -1,6 +1,27 @@
-@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/*
- * Personaliza tu tema aquí
- * Documentación: https://tailwindcss.com/docs/theme
- */
+@layer base {
+  body {
+    @apply bg-crema text-tinta antialiased;
+  }
+}
+
+@layer components {
+  /* Celda bento: compartimento base de toda la UI */
+  .bento {
+    @apply rounded-2xl border border-borde bg-white p-6 shadow-sm;
+  }
+  .campo {
+    @apply mt-1 block w-full rounded-xl border border-borde bg-white px-3 py-2 text-sm
+      focus:border-ladrillo focus:outline-none focus:ring-2 focus:ring-ladrillo/20;
+  }
+  .etiqueta {
+    @apply block text-sm font-medium text-tinta;
+  }
+  .boton {
+    @apply inline-flex w-full items-center justify-center rounded-xl bg-ladrillo px-4 py-2.5
+      text-sm font-semibold text-white transition-colors hover:bg-ladrillo-oscuro disabled:opacity-50;
+  }
+}
