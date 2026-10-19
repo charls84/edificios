@@ -1,7 +1,7 @@
 # BUSINESS_LOGIC.md — Plataforma de inteligencia de edificios (Bogotá)
 
 > Documento de necesidad para el equipo de desarrollo.
-> Versión 0.2 · 2026-10-19 · Preparado por DOUX.WORK
+> Versión 0.3 · 2026-10-19 · Preparado por DOUX.WORK
 > Estado: **validado en entrevista de negocio**. Quedan abiertas la zona, el volumen y el presupuesto (ver sección 12).
 
 ---
@@ -52,6 +52,8 @@ Una **herramienta web de uso interno** (no es un producto para vender) que, con 
 | [Regrid](https://regrid.com/pricing) | EE. UU., Canadá | Datos de predios por API; servidor MCP para agentes de IA | Por registros consultados | Capa de datos + IA conversacional |
 | [Searchland](https://hmlandregistry.blog.gov.uk/2022/08/18/how-searchland-is-using-our-data-to-help-land-developers/) | Reino Unido | Cruza el registro de propiedad con licencias y restricciones | No público | Folio de matrícula como llave |
 | [UrbanGPT](https://www.urbangpt.com.co/) | Colombia | Consulta de POT y norma urbana con IA (mapas vistos solo de Villavicencio) | No verificado | Competidor local más cercano; confirmar cobertura en Bogotá |
+| [RED Atlas](https://atlas.red/en-PR) | Puerto Rico, Colombia | Datos de propiedades y mercado para corredores; API B2B para Latinoamérica | No público | **Complemento, no competencia:** precios y comparables de mercado (Fase 2, por validar) |
+| [Croma](https://usecroma.com/en/co) | Colombia y otros | API y servidor MCP sobre registros públicos oficiales (RUES, procesos judiciales, RUNT) | Pago por consulta (según terceros) | **Complemento opcional:** debida diligencia del propietario (Fase 2) |
 | SINUPOT, Mapas Bogotá, [Planoteca SDP](https://bogota.gov.co/mi-ciudad/planeacion/planoteca-digital-de-bogota-con-1670-planos-urbanisticos-disponibles) | Colombia | Portales oficiales separados, sin cruce ni análisis | Gratis | Son las fuentes, no la competencia |
 
 *Los precios vienen de listados de terceros (Capterra, G-Cloud). Hay que validarlos antes de citarlos en la tesis.*
@@ -60,7 +62,7 @@ Una **herramienta web de uso interno** (no es un producto para vender) que, con 
 
 | Pregunta sobre el edificio | Fuente oficial | Acceso | Automatizable |
 |---|---|---|---|
-| Ubicación, área, avalúo, CHIP | Catastro Bogotá (UAECD) / IDECA / Mapas Bogotá | Datos abiertos y servicios GIS gratuitos (licencia abierta, base 2024) | Sí |
+| Ubicación, área, avalúo, CHIP | Catastro Bogotá (UAECD) / IDECA / Mapas Bogotá | [Base de Datos Catastral](https://www.ideca.gov.co/recursos/mapas/base-de-datos-catastral-para-bogota-dc) descargable en PostgreSQL/GeoPackage, licencia CC BY 4.0, actualización anual | Sí: se carga completa a la base propia |
 | Norma aplicable (uso, tratamiento, edificabilidad) | [POT Decreto 555 de 2021](https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=119582) ([capas en datos abiertos](https://datosabiertos.bogota.gov.co/dataset/pot-decreto-555-de-2021-bogota-d-c)) + SINUPOT (SDP) | Capas abiertas; SINUPOT es consulta web | Parcial: capas sí, interpretación con IA + revisión humana |
 | Patrimonio (BIC, sector de interés cultural) | IDPC + [capa BIC de Catastro](https://serviciosgis.catastrobogota.gov.co/arcgis/rest/services/recreaciondeporte/bienesinterescultural/MapServer/layers); BIC nacionales: MinCultura | Capa GIS pública; concepto técnico por solicitud | Parcial: detección sí, concepto no |
 | PEMP Centro Histórico y nivel de intervención | Res. 088 de 2021, mod. Res. 092 de 2023; capas IDPC en datos abiertos | Datos abiertos | Sí |
@@ -94,6 +96,13 @@ Una **herramienta web de uso interno** (no es un producto para vender) que, con 
 | RF-09 | Asistente normativo en lenguaje natural sobre POT 555, PEMP y acuerdos | Toda respuesta cita artículo y documento; si no encuentra base, lo dice |
 | RF-10 | Puntaje de potencial configurable (norma, patrimonio, riesgo, incentivos, estado) | Pesos editables; el puntaje muestra cómo se calculó |
 | RF-11 | Tablero comparativo de candidatos | Ordena y filtra por puntaje, zona y etapa |
+
+#### Candidatos a Fase 2 (sujetos a validación)
+
+| ID | Requisito | Fuente | Condición para incluirlo |
+|---|---|---|---|
+| RF-13 | Sección **Mercado** en la ficha: precios de venta/arriendo y comparables de la zona | RED Atlas (API) | Demo que confirme cobertura en Centro Histórico y Teusaquillo, precio de la API y permiso para mostrar datos en el PDF |
+| RF-14 | **Debida diligencia del propietario:** RUES (si es empresa) y procesos judiciales activos | Croma (API) | Servicio estable y términos que permitan el uso interno; fuente opcional, la ficha funciona sin ella |
 
 ### Fase 3 — Cabida preliminar
 
@@ -192,6 +201,7 @@ Los montos usan una **tarifa ilustrativa de COP 120.000/hora**. Hay que reemplaz
 - **Capas no abiertas:** SINUPOT no muestra API pública. Si una capa solo existe como consulta web, se carga a mano o se solicita a la SDP.
 - **Escala de los mapas de riesgo:** el IDIGER advierte que los mapas del POT (1:5.000) no definen el riesgo de un predio puntual.
 - **Incentivos cambiantes:** el Acuerdo "Ciudad Inteligente" aparece como aprobado en una sola fuente. Hay que confirmar el texto y la vigencia.
+- **Proveedores externos (RED Atlas, Croma):** su información no es oficial. RED Atlas advierte que sus datos pueden estar incompletos o desactualizados. Croma es una empresa reciente (2026); un listado de terceros marcó su conector como inestable en septiembre de 2026, y según terceros sus términos prohíben redistribuir datos. Ninguno se usa en la Fase 1; si se integran, cada dato sale marcado con su fuente y no se vuelve requisito para generar la ficha.
 
 ### Preguntas para el cliente (antes de cotizar)
 
@@ -229,4 +239,6 @@ Consultadas el 2026-10-19 mediante búsqueda web. Algunas páginas oficiales no 
 - [RenoBo — Reúsa y Revitaliza](https://bogota.gov.co/mi-ciudad/habitat/estrategia-de-renobo-para-promover-la-reutilizacion-de-inmuebles) · [El Tiempo](https://www.eltiempo.com/bogota/reuso-de-edificios-la-estrategia-de-renobo-para-recuperar-el-centro-de-bogota-3372059)
 - [Acuerdo "Ciudad Inteligente" y renovación urbana](https://bogota.gov.co/mi-ciudad/habitat/acuerdo-ciudad-inteligente-busca-impulsar-renovacion-urbana-en-bogota) · [ABC del acuerdo](https://bogota.gov.co/mi-ciudad/hacienda/abc-del-acuerdo-por-una-ciudad-inteligente-y-que-cambia-para-bogota)
 - [Tarifas 2026 del certificado de tradición](https://newsroom.rcnradio.com/actualidad/certificado-de-tradicion-y-libertad-cuales-son-las-nuevas-tarifas-para-2026)
+- Complementos evaluados: [RED Atlas](https://atlas.red/en-PR) · [RED Atlas API](https://api.atlas.red/en/consulting) · [aviso de uso de datos](https://app.atlas.red/en/notices/data-use) · [Croma](https://usecroma.com/en/co) · [Croma MCP](https://usecroma.com/en/mcp) · [términos de Croma](https://usecroma.com/es/terms)
+- [Base de Datos Catastral de Bogotá (IDECA)](https://www.ideca.gov.co/recursos/mapas/base-de-datos-catastral-para-bogota-dc)
 - Referentes: [LandInsight](https://land.tech/landinsight-pricing-plans), [Archistar](https://www.capterra.com/p/213621/Archistar/), [Gridics](https://pr1.gridics.com/zoning-data-api/), [Zoneomics](https://www.zoneomics.com/blog/2025-recap-zoneomics-advancing-zoning-intelligence), [Regrid](https://regrid.com/pricing), [Searchland](https://hmlandregistry.blog.gov.uk/2022/08/18/how-searchland-is-using-our-data-to-help-land-developers/), [UrbanGPT](https://www.urbangpt.com.co/)
