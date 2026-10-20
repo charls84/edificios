@@ -19,6 +19,18 @@ deja todo con fuente y fecha.
 | Fase 0: validación de datos con edificios reales | ⏳ Pendiente de los CHIP o direcciones |
 | Ficha del edificio, carga de PDFs con IA, exportación a PDF | ⏳ Fase 1 |
 
+## Ver el demo en tu computador
+
+Requiere Node.js 20 o superior (https://nodejs.org, versión LTS).
+
+```bash
+npm install
+npm run demo
+```
+
+Abrir **http://localhost:3000** y hacer clic en **Entrar al demo**. Funciona sin Supabase y
+todos los datos son ficticios.
+
 ## Correr el proyecto
 
 ```bash
