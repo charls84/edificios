@@ -7,10 +7,10 @@
 (vacio)
 
 ## project/ — Proyectos y decisiones activas
-(vacio)
+- [estado-proyecto.md](project/estado-proyecto.md) — decisiones tomadas y pendientes (Supabase, Fase 0)
 
 ## feedback/ — Correcciones y preferencias
-(vacio)
+- [idioma-y-llaves.md](feedback/idioma-y-llaves.md) — responder en español; llaves nunca por chat
 
 ## reference/ — Donde encontrar cosas
-(vacio)
+- Lógica de negocio: `BUSINESS_LOGIC.md` · Configuración: `docs/SETUP.md` · Esquema: `supabase/migrations/`

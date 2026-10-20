@@ -1,170 +1,69 @@
-# SaaS Factory V4
+# Edificios · Ficha de prefactibilidad
 
-Template production-ready para crear aplicaciones SaaS con desarrollo asistido por IA. Filosofia Agent-First: el usuario dice que quiere, el agente construye todo.
+Herramienta web **de uso interno** para evaluar el potencial de rehabilitación de edificios
+desocupados en Bogotá. Con una dirección o un CHIP arma la **ficha del edificio**: reúne datos
+oficiales (catastro, POT, patrimonio, PEMP, riesgo), lee los documentos cargados con IA y
+deja todo con fuente y fecha.
 
-## Que incluye
+- **Lógica de negocio, alcance y fases:** [`BUSINESS_LOGIC.md`](BUSINESS_LOGIC.md)
+- **Configuración de Supabase paso a paso:** [`docs/SETUP.md`](docs/SETUP.md)
 
-- Next.js 16 (App Router) + TypeScript
-- Supabase (Database + Auth + RLS)
-- Tailwind CSS + shadcn/ui
-- 19 Skills de Claude Code (V4 Skills 2.0)
-- Playwright CLI para QA automatizado
-- AI Templates (Vercel AI SDK v5 + OpenRouter)
-- 5 Design Systems listos para usar
-- Arquitectura Feature-First optimizada para IA
-- Auto-Blindaje: el sistema aprende de cada error
+## Estado
 
-## Quick Start
+| Parte | Estado |
+|---|---|
+| Login solo por invitación, recuperación de contraseña, pantalla de Equipo | ✅ Construido |
+| Portafolio por etapas (Bento Grid) | ✅ Construido (sin buscador todavía) |
+| Esquema de base de datos de la Fase 1 con reglas de acceso (RLS) | ✅ Escrito, pendiente de instalar en Supabase |
+| Conexión con Supabase | ⏳ Pendiente (ver `docs/SETUP.md`) |
+| Fase 0: validación de datos con edificios reales | ⏳ Pendiente de los CHIP o direcciones |
+| Ficha del edificio, carga de PDFs con IA, exportación a PDF | ⏳ Fase 1 |
 
-### 1. Instalar
+## Correr el proyecto
 
 ```bash
 npm install
-```
-
-### 2. Variables de Entorno
-
-```bash
-cp .env.example .env.local
-# Editar con credenciales de Supabase
-```
-
-### 3. MCPs (Opcional)
-
-```bash
-cp .claude/example.mcp.json .mcp.json
-# Editar con project ref de Supabase
-```
-
-### 4. Desarrollar
-
-```bash
+cp .env.local.example .env.local   # llenar con las llaves (nunca subirlas al repo)
+npm run check:supabase             # verifica conexión, tablas y reglas de acceso
 npm run dev
-# Auto-detecta puerto disponible (3000-3006)
 ```
 
-## Tech Stack
+Otros comandos: `npm run build`, `npm run typecheck`, `npm run lint`.
 
-```yaml
-Runtime: Node.js + TypeScript
-Framework: Next.js 16 (App Router)
-Database: PostgreSQL/Supabase
-Styling: Tailwind CSS 3.4
-Components: shadcn/ui
-State: Zustand
-Validation: Zod
-AI Engine: Vercel AI SDK v5 + OpenRouter
-Testing: Playwright CLI + MCP
-Deploy: Vercel
-```
+## Variables de entorno
 
-## Arquitectura Feature-First
+| Variable | Dónde se usa | ¿Es secreta? |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Navegador y servidor | No |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Navegador y servidor | No (es pública por diseño) |
+| `SUPABASE_SECRET_KEY` | Solo servidor (invitar usuarios) | **Sí.** Nunca en el repo ni en un chat |
+| `NEXT_PUBLIC_SITE_URL` | Enlaces de invitación y recuperación | No |
+
+## Estructura
 
 ```
 src/
-├── app/                      # Next.js App Router
-│   ├── (auth)/              # Rutas auth
-│   ├── (main)/              # Rutas principales
-│   └── layout.tsx
-│
-├── features/                 # Organizadas por funcionalidad
-│   └── [feature]/
-│       ├── components/
-│       ├── hooks/
-│       ├── services/
-│       ├── types/
-│       └── store/
-│
-└── shared/                   # Codigo reutilizable
-    ├── components/
-    ├── hooks/
-    ├── lib/
-    └── types/
+├── app/
+│   ├── (auth)/        # login, recuperar contraseña, definir contraseña, callback
+│   └── (main)/        # portafolio (dashboard) y equipo
+├── features/
+│   ├── auth/          # formularios y acciones de sesión
+│   ├── equipo/        # invitaciones (solo admin)
+│   └── portafolio/    # conteo por etapa
+├── lib/supabase/      # clientes de Supabase y protección de rutas
+└── shared/            # tipos y sesión
+supabase/migrations/   # esquema de la base de datos
+scripts/               # verificación de la conexión
+docs/                  # guías de configuración
 ```
 
-## Skills (19 total)
+## Stack
 
-### Para el usuario
+Next.js 16 · React 19 · TypeScript · Tailwind 3.4 · Supabase (Auth + Postgres + PostGIS +
+Storage + RLS) · Zod. Construido sobre la plantilla SaaS Factory (ver `CLAUDE.md`).
 
-| Skill | Que hace |
-|-------|----------|
-| `/new-app` | Entrevista de negocio → BUSINESS_LOGIC.md |
-| `/landing` | Landing page de alta conversion |
-| `/add-login` | Auth completo (Email + Google OAuth + profiles + RLS) |
-| `/bucle-agentico` | Implementar features complejas por fases |
-| `/sprint` | Tareas rapidas sin planificacion |
-| `/prp` | Planificar features complejas antes de implementar |
-| `/ai [template]` | Agregar IA: chat, RAG, vision, tools |
-| `/qa` | QA automatizado con Playwright CLI |
-| `/primer` | Inicializar contexto del proyecto |
-| `/update-sf` | Actualizar a ultima version |
-| `/eject-sf` | Remover SaaS Factory (destructivo) |
-| `/skill-creator` | Crear nuevos skills |
+## Datos personales
 
-### Automaticos (Claude los activa segun la tarea)
-
-backend, frontend, supabase-admin, codebase-analyst, vercel-deployer, documentacion, calidad
-
-## AI Templates
-
-Bloques LEGO para construir features de IA con Vercel AI SDK v5 + OpenRouter:
-
-| Template | Que hace |
-|----------|----------|
-| setup-base | Configuracion inicial |
-| chat | Chat streaming con useChat |
-| web-search | Busqueda con :online |
-| historial | Persistencia en Supabase |
-| vision | Analisis de imagenes |
-| tools | Funciones/herramientas |
-| rag | pgvector + embeddings |
-| single-call | generateText() puntual |
-| structured-outputs | generateObject() con Zod |
-| generative-ui | LLM decide que componente renderizar |
-
-## Design Systems
-
-5 sistemas visuales listos en `.claude/design-systems/`:
-
-- **Liquid Glass** - iOS-like, transparencias
-- **Gradient Mesh** - Degradados fluidos
-- **Neumorphism** - Soft UI, sombras suaves
-- **Bento Grid** - Grids asimetricos
-- **Neobrutalism** - Bold, bordes duros
-
-## Comandos
-
-```bash
-npm run dev          # Desarrollo (auto-port 3000-3006)
-npm run build        # Build produccion
-npm run typecheck    # TypeScript check
-npm run lint         # ESLint
-```
-
-## Deploy
-
-```bash
-# Vercel (recomendado)
-npm install -g vercel
-vercel
-```
-
-Variables en Vercel Dashboard:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
-
-## Estructura .claude/
-
-```
-.claude/
-├── skills/              # 19 Skills (V4 Skills 2.0)
-├── PRPs/                # Product Requirements Proposals
-│   │   └── references/  # AI Templates (11 bloques)
-├── design-systems/      # 5 sistemas de diseno
-├── hooks/               # Scripts en eventos
-└── example.mcp.json     # Config de MCPs
-```
-
----
-
-**SaaS Factory V4** | Agent-First. Todo es un Skill.
+Los certificados de tradición tienen nombres y cédulas. Aplica la **Ley 1581 de 2012**: acceso
+solo para el equipo invitado, reglas de acceso en todas las tablas y documentos en almacenamiento
+privado.
