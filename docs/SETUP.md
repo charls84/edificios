@@ -54,7 +54,9 @@ En **Authentication**:
 3. **Emails → Templates**, reemplazar el enlace de cada plantilla:
    - *Invite user:* `{{ .SiteURL }}/callback?token_hash={{ .TokenHash }}&type=invite&next=/update-password`
    - *Reset password:* `{{ .SiteURL }}/callback?token_hash={{ .TokenHash }}&type=recovery&next=/update-password`
-4. **Users → Invite user:** invitar al primer administrador.
+4. **Users → Add user → Create new user:** crear al primer administrador con correo y
+   contraseña, dejando marcado *Auto Confirm User*. (Se crea directo y no por invitación
+   porque el enlace de invitación abre la app, y la app aún no está publicada.)
 5. **SQL Editor:** darle el rol de administrador (cambiar el correo):
    ```sql
    update public.profiles set role = 'admin' where email = 'correo@del-admin.com';
