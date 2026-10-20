@@ -3,9 +3,9 @@
 Pasos para conectar la base de datos. Se hacen una sola vez por ambiente.
 
 1. **Crear el proyecto** en supabase.com (región São Paulo, la más cercana a Bogotá).
-2. **Variables:** copiar `.env.local.example` a `.env.local` y llenar URL, anon key y
-   service role key (Settings → API). La service role key es solo de servidor; nunca va al
-   navegador ni al repositorio.
+2. **Variables:** copiar `.env.local.example` a `.env.local` y llenar la URL, la
+   *publishable key* y la *secret key* (Settings → API Keys). La secret key es solo de
+   servidor; nunca va al navegador, al repositorio ni a un chat.
 3. **Aplicar la migración** `supabase/migrations/20261019000000_base.sql`
    (SQL Editor, o `supabase db push`).
 4. **Cerrar el registro público:** Authentication → Sign In / Providers → desactivar
