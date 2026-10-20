@@ -1,5 +1,6 @@
 import { InviteForm } from '@/features/equipo/components'
 import { createClient } from '@/lib/supabase/server'
+import { IS_DEMO } from '@/shared/lib/demo'
 import { requireAdmin } from '@/shared/lib/session'
 import type { Profile } from '@/shared/types/database'
 
@@ -9,11 +10,20 @@ const ROLES: Record<Profile['role'], string> = {
   sin_acceso: 'Sin acceso',
 }
 
-export default async function EquipoPage() {
-  await requireAdmin()
+const MIEMBROS_DEMO = [
+  { id: '1', full_name: 'Fundador (ejemplo)', email: 'fundador@ejemplo.co', role: 'admin' },
+  { id: '2', full_name: 'Analista (ejemplo)', email: 'analista@ejemplo.co', role: 'analista' },
+] as Profile[]
+
+async function listMiembros() {
   const supabase = await createClient()
   const { data } = await supabase.from('profiles').select('*').order('created_at')
-  const miembros = (data ?? []) as Profile[]
+  return (data ?? []) as Profile[]
+}
+
+export default async function EquipoPage() {
+  await requireAdmin()
+  const miembros = IS_DEMO ? MIEMBROS_DEMO : await listMiembros()
 
   return (
     <>

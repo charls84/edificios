@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { DEMO_COOKIE, IS_DEMO } from '@/shared/lib/demo'
 
 // Rutas accesibles sin sesion. No hay registro publico: solo invitacion.
 const PUBLIC_ROUTES = ['/login', '/forgot-password', '/callback']
@@ -10,7 +11,22 @@ function matches(pathname: string, routes: string[]) {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`))
 }
 
+function guard(request: NextRequest, hasUser: boolean) {
+  const { pathname } = request.nextUrl
+  if (!hasUser && !matches(pathname, PUBLIC_ROUTES)) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
+  if (hasUser && matches(pathname, GUEST_ONLY_ROUTES)) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+  return null
+}
+
 export async function updateSession(request: NextRequest) {
+  if (IS_DEMO) {
+    return guard(request, request.cookies.has(DEMO_COOKIE)) ?? NextResponse.next({ request })
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -35,15 +51,5 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  const { pathname } = request.nextUrl
-
-  if (!user && !matches(pathname, PUBLIC_ROUTES)) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
-
-  if (user && matches(pathname, GUEST_ONLY_ROUTES)) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
-  }
-
-  return supabaseResponse
+  return guard(request, Boolean(user)) ?? supabaseResponse
 }

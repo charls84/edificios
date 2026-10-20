@@ -1,4 +1,5 @@
 export { AuthShell } from './auth-shell'
 export { LoginForm } from './login-form'
+export { DemoLogin } from './demo-login'
 export { ForgotPasswordForm } from './forgot-password-form'
 export { UpdatePasswordForm } from './update-password-form'

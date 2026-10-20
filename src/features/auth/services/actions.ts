@@ -1,7 +1,9 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { DEMO_COOKIE, IS_DEMO } from '@/shared/lib/demo'
 import { createClient } from '@/lib/supabase/server'
 import type { ActionState } from '../types'
 import { emailSchema, loginSchema, newPasswordSchema } from './schemas'
@@ -48,7 +50,18 @@ export async function updatePassword(
   redirect('/dashboard')
 }
 
+export async function enterDemo() {
+  if (!IS_DEMO) redirect('/login')
+  const store = await cookies()
+  store.set(DEMO_COOKIE, '1', { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 8 })
+  redirect('/dashboard')
+}
+
 export async function signout() {
+  if (IS_DEMO) {
+    ;(await cookies()).delete(DEMO_COOKIE)
+    redirect('/login')
+  }
   const supabase = await createClient()
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')

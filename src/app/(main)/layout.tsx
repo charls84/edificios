@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { signout } from '@/features/auth/services/actions'
+import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
@@ -23,6 +24,11 @@ export default async function MainLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="min-h-screen">
+      {IS_DEMO && (
+        <p className="bg-ocre px-4 py-1.5 text-center text-xs font-semibold text-white">
+          Modo demostración · todos los edificios y datos son ficticios
+        </p>
+      )}
       <header className="border-b border-borde bg-white">
         <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3 text-sm">
           <Link href="/dashboard" className="font-bold text-ladrillo">Edificios</Link>

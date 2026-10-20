@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { IS_DEMO } from '@/shared/lib/demo'
 import { requireAdmin } from '@/shared/lib/session'
 import type { ActionState } from '@/features/auth/types'
 
@@ -14,6 +15,7 @@ const inviteSchema = z.object({
 
 export async function inviteMember(_prev: ActionState, formData: FormData): Promise<ActionState> {
   await requireAdmin()
+  if (IS_DEMO) return { error: 'Las invitaciones están desactivadas en el modo demostración.' }
   const parsed = inviteSchema.safeParse(Object.fromEntries(formData))
   if (!parsed.success) return { error: parsed.error.issues[0].message }
 
