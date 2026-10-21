@@ -10,7 +10,7 @@ Fuente de verdad: `BUSINESS_LOGIC.md` (v0.3).
 **Decisiones tomadas**
 - Ritmo por fases, sin fecha fija. Primero Fase 0 (validación de datos) y Fase 1 (ficha).
 - Entregable de la tesis: herramienta funcionando + metodología.
-- Diseño Bento Grid, paleta ladrillo/crema.
+- Diseño Bento Grid con la identidad de Torna (ver docs/MARCA.md). Nombre visible: Torna.
 - Login solo por invitación; usuarios nuevos nacen `sin_acceso`. Sin pagos ni multi-idioma (es-CO).
 - Ley 1581 (Colombia), no LFPDPPP.
 - Llaves de Supabase en formato nuevo: `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` y `SUPABASE_SECRET_KEY`.

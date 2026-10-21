@@ -23,7 +23,7 @@ export function LoginForm({ initialError }: { initialError?: string }) {
         {pending ? 'Entrando…' : 'Entrar'}
       </button>
       <p className="text-center text-sm">
-        <Link href="/forgot-password" className="text-ladrillo hover:underline">
+        <Link href="/forgot-password" className="text-rojo hover:underline">
           ¿Olvidaste tu contraseña?
         </Link>
       </p>

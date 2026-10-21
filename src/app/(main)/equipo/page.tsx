@@ -36,16 +36,16 @@ export default async function EquipoPage() {
               <li key={m.id} className="flex items-center justify-between py-3 text-sm">
                 <span>
                   <span className="font-medium">{m.full_name ?? '—'}</span>
-                  <span className="block text-gris">{m.email}</span>
+                  <span className="block text-medio-texto">{m.email}</span>
                 </span>
-                <span className="rounded-full bg-crema px-3 py-1 text-xs">{ROLES[m.role]}</span>
+                <span className="rounded-full bg-piedra px-3 py-1 text-xs">{ROLES[m.role]}</span>
               </li>
             ))}
           </ul>
         </section>
         <section className="bento md:col-span-2">
           <h2 className="font-semibold">Invitar persona</h2>
-          <p className="mt-1 text-sm text-gris">No hay registro público: solo entra quien invites.</p>
+          <p className="mt-1 text-sm text-medio-texto">No hay registro público: solo entra quien invites.</p>
           <div className="mt-4">
             <InviteForm />
           </div>

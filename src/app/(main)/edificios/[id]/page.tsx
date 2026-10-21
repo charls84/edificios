@@ -12,7 +12,7 @@ export default async function EdificioPage({ params }: { params: Promise<{ id: s
 
   return (
     <>
-      <Link href="/dashboard" className="mb-4 inline-block text-sm text-ladrillo hover:underline">
+      <Link href="/dashboard" className="mb-4 inline-block text-sm text-rojo hover:underline">
         ← Volver al portafolio
       </Link>
       <FichaView edificio={edificio} />

@@ -10,15 +10,15 @@ export const ETAPA_LABEL: Record<Etapa, string> = {
 }
 
 const SEMAFORO: Record<Semaforo, { label: string; clase: string }> = {
-  verde: { label: 'Viable para presentar', clase: 'bg-musgo text-white' },
-  amarillo: { label: 'Condicionado', clase: 'bg-ocre text-white' },
-  rojo: { label: 'Descartar o revisar a fondo', clase: 'bg-ladrillo text-white' },
+  verde: { label: 'Viable para presentar', clase: 'bg-verde text-white' },
+  amarillo: { label: 'Condicionado', clase: 'bg-ambar text-white' },
+  rojo: { label: 'Descartar o revisar a fondo', clase: 'bg-rojo text-white' },
 }
 
 const ESTADO: Record<EstadoDato, { label: string; clase: string }> = {
-  automatico: { label: 'Automático', clase: 'bg-crema text-gris' },
-  por_validar: { label: 'Por validar', clase: 'bg-ocre-claro text-tinta' },
-  validado: { label: 'Validado', clase: 'bg-musgo-claro text-musgo' },
+  automatico: { label: 'Automático', clase: 'bg-piedra text-medio-texto' },
+  por_validar: { label: 'Por validar', clase: 'bg-ambar-claro text-torna' },
+  validado: { label: 'Validado', clase: 'bg-verde-claro text-verde' },
 }
 
 export function SemaforoBadge({ semaforo }: { semaforo: Semaforo }) {

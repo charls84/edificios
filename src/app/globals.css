@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-crema text-tinta antialiased;
+    @apply bg-fondo text-torna antialiased;
   }
 }
 
@@ -15,13 +15,13 @@
   }
   .campo {
     @apply mt-1 block w-full rounded-xl border border-borde bg-white px-3 py-2 text-sm
-      focus:border-ladrillo focus:outline-none focus:ring-2 focus:ring-ladrillo/20;
+      focus:border-torna focus:outline-none focus:ring-2 focus:ring-torna/20;
   }
   .etiqueta {
-    @apply block text-sm font-medium text-tinta;
+    @apply block text-sm font-medium text-torna;
   }
   .boton {
-    @apply inline-flex w-full items-center justify-center rounded-xl bg-ladrillo px-4 py-2.5
-      text-sm font-semibold text-white transition-colors hover:bg-ladrillo-oscuro disabled:opacity-50;
+    @apply inline-flex w-full items-center justify-center rounded-xl bg-torna px-4 py-2.5
+      text-sm font-semibold text-white transition-colors hover:bg-torna-700 disabled:opacity-50;
   }
 }
