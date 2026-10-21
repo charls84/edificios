@@ -1,9 +1,10 @@
 import type { Edificio } from '../types'
 import { ETAPA_LABEL, EstadoBadge, SemaforoBadge } from './badges'
 import { Galeria } from './galeria'
+import { InformeVisitaView } from './informe-visita'
 
 export function FichaView({ edificio }: { edificio: Edificio }) {
-  const { documento, visita } = edificio
+  const { documento, visita, informe } = edificio
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
@@ -15,7 +16,7 @@ export function FichaView({ edificio }: { edificio: Edificio }) {
         <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">Ficha del edificio</p>
         <h1 className="mt-2 text-2xl font-bold">{edificio.nombre}</h1>
         <p className="mt-1 text-sm text-medio-texto">
-          {edificio.direccion} · {edificio.zona} · CHIP {edificio.chip}
+          {edificio.direccion} · {edificio.zona} · CHIP {edificio.chip ?? 'pendiente'}
         </p>
         <p className="mt-4 inline-block rounded-full bg-piedra px-3 py-1 text-xs">
           Etapa: {ETAPA_LABEL[edificio.etapa]}
@@ -34,6 +35,22 @@ export function FichaView({ edificio }: { edificio: Edificio }) {
             {edificio.alertas.map((a) => <li key={a}>{a}</li>)}
           </ul>
         </section>
+      )}
+
+      {edificio.secciones.length === 0 && (
+        <section className="bento border-dashed md:col-span-4">
+          <h2 className="font-semibold">Datos oficiales</h2>
+          <p className="mt-1 text-sm text-medio-texto">
+            Catastro, norma POT, patrimonio y PEMP, amenaza, licencias y propiedad: pendientes de la
+            Fase 0. Se llenarán con su fuente y fecha de consulta.
+          </p>
+        </section>
+      )}
+
+      {informe && (
+        <div className="md:col-span-4">
+          <InformeVisitaView informe={informe} />
+        </div>
       )}
 
       {edificio.secciones.map((s) => (

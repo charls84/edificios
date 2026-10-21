@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   experimental: {
     mcpServer: true,
   },
+  async redirects() {
+    // El Ejemplo A del demo paso a ser el Edificio Rolher (datos reales de la visita)
+    return [{ source: '/edificios/ejemplo-a', destination: '/edificios/rolher', permanent: false }]
+  },
 }
 
 export default nextConfig

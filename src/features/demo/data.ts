@@ -1,6 +1,8 @@
 import type { Edificio } from '@/features/ficha/types'
+import { ROLHER } from './rolher'
 
-// DATOS FICTICIOS para demostracion. No corresponden a predios, personas ni
+// Edificio Rolher: datos reales del informe de visita (ver rolher.ts).
+// El resto son DATOS FICTICIOS para demostracion. No corresponden a predios, personas ni
 // consultas reales. Direcciones y CHIP inventados; coordenadas aproximadas de la
 // zona, solo para ubicar el marcador. Las fotos son ilustraciones generadas.
 const HOY = '2026-10-20'
@@ -14,73 +16,7 @@ function fotos(id: string) {
 }
 
 export const EDIFICIOS_DEMO: Edificio[] = [
-  {
-    id: 'ejemplo-a',
-    nombre: 'Edificio Ejemplo A',
-    direccion: 'Calle 00 # 0-01 (ficticia)',
-    chip: 'DEMO000A001',
-    zona: 'Centro Histórico',
-    lat: 4.5976,
-    lng: -74.0748,
-    // Fotos reales aportadas por el cliente; el resto de datos de este edificio sigue siendo ficticio
-    fotos: [
-      { src: '/demo/fotos/ejemplo-a-1.jpg', alt: 'Fachada y esquina' },
-      { src: '/demo/fotos/ejemplo-a-2.jpg', alt: 'Recorrido de la visita desde la acera' },
-    ],
-    etapa: 'presentado',
-    semaforo: 'verde',
-    resumen: 'Sin alertas fuertes. Uso residencial permitido e incentivo de renovación aplicable.',
-    alertas: [],
-    secciones: [
-      {
-        titulo: 'Identificación catastral',
-        datos: [
-          { label: 'Área de terreno', valor: '612 m²', fuente: 'Catastro (ejemplo)', fecha: HOY, estado: 'automatico' },
-          { label: 'Área construida', valor: '3.180 m²', fuente: 'Catastro (ejemplo)', fecha: HOY, estado: 'automatico' },
-          { label: 'Pisos', valor: '6', fuente: 'Catastro (ejemplo)', fecha: HOY, estado: 'automatico' },
-          { label: 'Uso actual', valor: 'Oficinas (desocupado)', fuente: 'Catastro (ejemplo)', fecha: HOY, estado: 'automatico' },
-        ],
-      },
-      {
-        titulo: 'Norma POT',
-        datos: [
-          { label: 'Tratamiento', valor: 'Renovación urbana', fuente: 'POT 555 (ejemplo)', fecha: HOY, estado: 'automatico' },
-          { label: 'Usos permitidos', valor: 'Residencial, comercio, servicios', fuente: 'POT 555 (ejemplo)', fecha: HOY, estado: 'automatico' },
-        ],
-      },
-      {
-        titulo: 'Patrimonio y PEMP',
-        datos: [
-          { label: 'Bien de Interés Cultural', valor: 'No', fuente: 'IDPC (ejemplo)', fecha: HOY, estado: 'automatico' },
-          { label: 'Nivel de intervención PEMP', valor: 'Nivel 4: permite adecuación', fuente: 'IDPC (ejemplo)', fecha: HOY, estado: 'automatico' },
-        ],
-      },
-      {
-        titulo: 'Amenaza y riesgo',
-        datos: [
-          { label: 'Remoción en masa', valor: 'Baja', fuente: 'POT 555 (ejemplo)', fecha: HOY, estado: 'automatico' },
-          { label: 'Inundación', valor: 'No aplica', fuente: 'POT 555 (ejemplo)', fecha: HOY, estado: 'automatico' },
-        ],
-      },
-      {
-        titulo: 'Incentivos',
-        datos: [
-          { label: 'Zona RenoBo', valor: 'Sí', fuente: 'RenoBo (ejemplo)', fecha: HOY, estado: 'automatico' },
-          { label: 'Acuerdo "Ciudad Inteligente"', valor: 'Aplica (por confirmar vigencia)', fuente: 'Regla interna', fecha: HOY, estado: 'por_validar' },
-        ],
-      },
-    ],
-    documento: {
-      nombre: 'Certificado de tradición (ejemplo).pdf',
-      extracciones: [
-        { campo: 'Matrícula inmobiliaria', valor: '50C-0000000', pagina: 1, estado: 'validado' },
-        { campo: 'Propietario', valor: 'Sociedad Ejemplo S.A.S.', pagina: 1, estado: 'validado' },
-        { campo: 'Embargos vigentes', valor: 'Ninguno', pagina: 3, estado: 'validado' },
-        { campo: 'Hipotecas vigentes', valor: 'Ninguna', pagina: 3, estado: 'validado' },
-      ],
-    },
-    visita: { fecha: '2026-10-15', autor: 'Analista (ejemplo)', nota: 'Fachada en buen estado. Humedad en cubierta. Estructura aparente de concreto, sin fisuras visibles.' },
-  },
+  ROLHER,
   {
     id: 'ejemplo-b',
     nombre: 'Edificio Ejemplo B',

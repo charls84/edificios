@@ -17,6 +17,11 @@ Fuente de verdad: `BUSINESS_LOGIC.md` (v0.3).
 - RED Atlas (mercado) y Croma (debida diligencia) solo como candidatos de Fase 2.
 - Base catastral de Bogotá descargable (PostgreSQL, CC BY 4.0): usarla en Fase 0/1.
 
+**Edificio Rolher (real)** — Carrera 10 # 13-22. Visita técnica 2026-10-18 (Daniela Céspedes · Torna).
+Datos y fotos en `src/features/demo/rolher.ts` y `public/demo/rolher/` (incluye el PDF). Solo se usa lo que
+dice el informe; catastro, POT, patrimonio y propiedad quedan pendientes de la Fase 0. Coordenadas aproximadas.
+Los demás edificios del demo siguen siendo ficticios.
+
 **Pendiente (a 2026-10-20)**
 - Proyecto Supabase `xeywtjnyoqqqmaomvfcd`: correr migración, cerrar registro, primer admin.
 - Rotar secret key y deshabilitar llaves legacy (se expusieron en el chat).

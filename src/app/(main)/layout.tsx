@@ -27,7 +27,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
     <div className="min-h-screen">
       {IS_DEMO && (
         <p className="bg-medio-texto px-4 py-1.5 text-center text-xs font-semibold text-white">
-          Modo demostración · todos los edificios y datos son ficticios
+          Modo demostración · Edificio Rolher con su informe de visita real; los demás edificios son ficticios
         </p>
       )}
       <header className="border-b-2 border-rojo bg-torna">
