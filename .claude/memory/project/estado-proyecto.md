@@ -21,6 +21,10 @@ Fuente de verdad: `BUSINESS_LOGIC.md` (v0.3).
 Datos y fotos en `src/features/demo/rolher.ts` y `public/demo/rolher/` (incluye el PDF). Solo se usa lo que
 dice el informe; catastro, POT, patrimonio y propiedad quedan pendientes de la Fase 0. Coordenadas aproximadas.
 Los demás edificios del demo siguen siendo ficticios.
+En la ficha de Rolher se conservan los datos oficiales DE EJEMPLO (marcados "Por validar" + aviso) a pedido del
+usuario; el informe va en la sección "Visita técnica", editable y con carga de fotos (`src/features/visita/`).
+En el demo los cambios se guardan en el navegador (localStorage + IndexedDB); en la Fase 1 pasan a Supabase
+(tabla visit_notes / Storage "documentos").
 
 **Pendiente (a 2026-10-20)**
 - Proyecto Supabase `xeywtjnyoqqqmaomvfcd`: correr migración, cerrar registro, primer admin.

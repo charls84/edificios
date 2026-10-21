@@ -78,4 +78,6 @@ export interface Edificio {
   documento?: { nombre: string; extracciones: Extraccion[] }
   visita?: { fecha: string; autor: string; nota: string }
   informe?: InformeVisita
+  /** Los datos oficiales son de ejemplo y estan pendientes de validar (Fase 0) */
+  datosDeEjemplo?: boolean
 }

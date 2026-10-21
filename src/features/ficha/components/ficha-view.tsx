@@ -1,7 +1,7 @@
 import type { Edificio } from '../types'
 import { ETAPA_LABEL, EstadoBadge, SemaforoBadge } from './badges'
 import { Galeria } from './galeria'
-import { InformeVisitaView } from './informe-visita'
+import { VisitaTecnica } from '@/features/visita/components/visita-tecnica'
 
 export function FichaView({ edificio }: { edificio: Edificio }) {
   const { documento, visita, informe } = edificio
@@ -37,6 +37,13 @@ export function FichaView({ edificio }: { edificio: Edificio }) {
         </section>
       )}
 
+      {edificio.datosDeEjemplo && (
+        <p className="rounded-xl border border-ambar/40 bg-ambar-claro px-4 py-3 text-sm md:col-span-4">
+          <strong>Datos oficiales de ejemplo.</strong> Catastro, POT, patrimonio, riesgo, incentivos y el
+          certificado de tradición se reemplazan con las consultas reales en la Fase 0.
+        </p>
+      )}
+
       {edificio.secciones.length === 0 && (
         <section className="bento border-dashed md:col-span-4">
           <h2 className="font-semibold">Datos oficiales</h2>
@@ -45,12 +52,6 @@ export function FichaView({ edificio }: { edificio: Edificio }) {
             Fase 0. Se llenarán con su fuente y fecha de consulta.
           </p>
         </section>
-      )}
-
-      {informe && (
-        <div className="md:col-span-4">
-          <InformeVisitaView informe={informe} />
-        </div>
       )}
 
       {edificio.secciones.map((s) => (
@@ -97,6 +98,10 @@ export function FichaView({ edificio }: { edificio: Edificio }) {
           <p className="mt-3 text-sm">{visita.nota}</p>
         </section>
       )}
+
+      <div className="mt-4 md:col-span-4">
+        <VisitaTecnica edificioId={edificio.id} inicial={informe ?? null} />
+      </div>
 
       <section className="bento flex flex-wrap items-center justify-between gap-3 border-torna bg-torna text-white md:col-span-4">
         <p className="text-sm text-white/80">Ficha para el propietario, con fuentes y fecha de corte.</p>

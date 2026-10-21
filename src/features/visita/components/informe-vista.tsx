@@ -1,34 +1,34 @@
-import Image from 'next/image'
-import type { InformeVisita, SeccionInforme } from '../types'
+import type { InformeVisita, SeccionInforme } from '@/features/ficha/types'
+import { FotoInforme } from './foto-informe'
 
-function Seccion({ s }: { s: SeccionInforme }) {
+function Seccion({ s, numero }: { s: SeccionInforme; numero: string }) {
   return (
     <section className="bento">
       <p className="text-xs font-semibold uppercase tracking-widest text-rojo">
-        {s.numero} · {s.etiqueta}
+        {numero} · {s.etiqueta}
       </p>
-      <h3 className="mt-1 text-xl font-bold">{s.titulo}</h3>
+      {s.titulo && <h3 className="mt-1 text-xl font-bold">{s.titulo}</h3>}
       {s.texto && <p className="mt-1 text-sm text-medio-texto">{s.texto}</p>}
+      {s.fotos.length === 0 && !s.conclusion && (
+        <p className="mt-3 text-sm text-medio-texto">Sin fotos todavía.</p>
+      )}
 
       <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
         {s.fotos.map((f) => (
           <figure key={f.src}>
-            <a href={f.src} target="_blank" rel="noopener noreferrer" className="block overflow-hidden rounded-xl">
-              <Image
+            <div className="overflow-hidden rounded-xl">
+              <FotoInforme
                 src={f.src}
-                alt={`${f.destacado} ${f.texto}`}
-                width={600}
-                height={800}
-                sizes="(min-width: 768px) 25vw, 50vw"
+                alt={`${f.destacado} ${f.texto}`.trim()}
                 className="aspect-[3/4] w-full object-cover transition-transform duration-300 hover:scale-105"
               />
-            </a>
+            </div>
             <figcaption className="mt-1.5 text-xs text-medio-texto">
               <strong className="font-semibold text-torna">{f.destacado}</strong> {f.texto}
             </figcaption>
           </figure>
         ))}
-        {s.conclusion && (
+        {s.conclusion && (s.conclusion.titulo || s.conclusion.texto) && (
           <div className="col-span-2 flex flex-col justify-end rounded-xl bg-torna p-5 text-white">
             <p className="text-xs font-semibold uppercase tracking-widest text-rojo">Lo que se vio</p>
             <p className="mt-2 text-lg font-semibold leading-snug">{s.conclusion.titulo}</p>
@@ -40,17 +40,16 @@ function Seccion({ s }: { s: SeccionInforme }) {
   )
 }
 
-export function InformeVisitaView({ informe }: { informe: InformeVisita }) {
+export function InformeVista({ informe }: { informe: InformeVisita }) {
+  const meta = [informe.fecha, informe.hora, informe.autor && `Visita y fotos: ${informe.autor}`].filter(Boolean)
   return (
     <div className="space-y-4">
       <section className="bento">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-rojo">{informe.titulo}</p>
-            <h2 className="mt-1 text-xl font-bold">{informe.resumenTitulo}</h2>
-            <p className="mt-1 text-sm text-medio-texto">
-              {informe.fecha} · {informe.hora} · Visita y fotos: {informe.autor}
-            </p>
+            {informe.resumenTitulo && <h2 className="mt-1 text-xl font-bold">{informe.resumenTitulo}</h2>}
+            {meta.length > 0 && <p className="mt-1 text-sm text-medio-texto">{meta.join(' · ')}</p>}
           </div>
           {informe.pdf && (
             <a
@@ -67,7 +66,7 @@ export function InformeVisitaView({ informe }: { informe: InformeVisita }) {
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-5">
           <ol className="space-y-3 lg:col-span-3">
             {informe.hallazgos.map((h, i) => (
-              <li key={h.titulo} className="flex gap-4 rounded-xl bg-piedra p-4">
+              <li key={i} className="flex gap-4 rounded-xl bg-piedra p-4">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-torna text-sm font-bold text-white">
                   {i + 1}
                 </span>
@@ -79,25 +78,31 @@ export function InformeVisitaView({ informe }: { informe: InformeVisita }) {
             ))}
           </ol>
           <div className="space-y-3 lg:col-span-2">
-            <div className="rounded-xl border border-borde p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">Otras observaciones</p>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-                {informe.observaciones.map((o) => <li key={o}>{o}</li>)}
-              </ul>
-            </div>
-            <div className="rounded-xl border border-rojo/40 bg-rojo-claro p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-rojo-oscuro">
-                Documentos por solicitar al propietario
-              </p>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-                {informe.documentosPorSolicitar.map((d) => <li key={d}>{d}</li>)}
-              </ul>
-            </div>
+            {informe.observaciones.length > 0 && (
+              <div className="rounded-xl border border-borde p-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">Otras observaciones</p>
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+                  {informe.observaciones.map((o, i) => <li key={i}>{o}</li>)}
+                </ul>
+              </div>
+            )}
+            {informe.documentosPorSolicitar.length > 0 && (
+              <div className="rounded-xl border border-rojo/40 bg-rojo-claro p-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-rojo-oscuro">
+                  Documentos por solicitar al propietario
+                </p>
+                <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+                  {informe.documentosPorSolicitar.map((d, i) => <li key={i}>{d}</li>)}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {informe.secciones.map((s) => <Seccion key={s.numero} s={s} />)}
+      {informe.secciones.map((s, i) => (
+        <Seccion key={i} s={s} numero={String(i + 1).padStart(2, '0')} />
+      ))}
     </div>
   )
 }

@@ -4,6 +4,7 @@ import type { Edificio } from '@/features/ficha/types'
 // (Torna, 18 de octubre de 2026). No inventar datos: lo que no esta en el
 // informe queda pendiente de la Fase 0.
 const R = '/demo/rolher'
+const FECHA_EJEMPLO = '2026-10-20'
 
 export const ROLHER: Edificio = {
   id: 'rolher',
@@ -30,7 +31,56 @@ export const ROLHER: Edificio = {
     'Solicitar la certificación RETIE y los planos hidrosanitarios.',
     'Fachada en piedra con valor arquitectónico: verificar si es Bien de Interés Cultural.',
   ],
-  secciones: [],
+  // Datos oficiales DE EJEMPLO (no consultados): se reemplazan con las fuentes reales en la Fase 0
+  datosDeEjemplo: true,
+  secciones: [
+    {
+      titulo: 'Identificación catastral',
+      datos: [
+        { label: 'Área de terreno', valor: '612 m²', fuente: 'Catastro (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+        { label: 'Área construida', valor: '3.180 m²', fuente: 'Catastro (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+        { label: 'Pisos', valor: '6', fuente: 'Catastro (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+        { label: 'Uso actual', valor: 'Oficinas (desocupado)', fuente: 'Catastro (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+      ],
+    },
+    {
+      titulo: 'Norma POT',
+      datos: [
+        { label: 'Tratamiento', valor: 'Renovación urbana', fuente: 'POT 555 (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+        { label: 'Usos permitidos', valor: 'Residencial, comercio, servicios', fuente: 'POT 555 (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+      ],
+    },
+    {
+      titulo: 'Patrimonio y PEMP',
+      datos: [
+        { label: 'Bien de Interés Cultural', valor: 'No', fuente: 'IDPC (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+        { label: 'Nivel de intervención PEMP', valor: 'Nivel 4: permite adecuación', fuente: 'IDPC (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+      ],
+    },
+    {
+      titulo: 'Amenaza y riesgo',
+      datos: [
+        { label: 'Remoción en masa', valor: 'Baja', fuente: 'POT 555 (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+        { label: 'Inundación', valor: 'No aplica', fuente: 'POT 555 (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+      ],
+    },
+    {
+      titulo: 'Incentivos',
+      datos: [
+        { label: 'Zona RenoBo', valor: 'Sí', fuente: 'RenoBo (ejemplo)', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+        { label: 'Acuerdo "Ciudad Inteligente"', valor: 'Aplica (por confirmar vigencia)', fuente: 'Regla interna', fecha: FECHA_EJEMPLO, estado: 'por_validar' },
+      ],
+    },
+  ],
+  documento: {
+    nombre: 'Certificado de tradición (ejemplo).pdf',
+    extracciones: [
+      { campo: 'Matrícula inmobiliaria', valor: '50C-0000000', pagina: 1, estado: 'por_validar' },
+      { campo: 'Propietario', valor: 'Sociedad Ejemplo S.A.S.', pagina: 1, estado: 'por_validar' },
+      { campo: 'Embargos vigentes', valor: 'Ninguno', pagina: 3, estado: 'por_validar' },
+      { campo: 'Hipotecas vigentes', valor: 'Ninguna', pagina: 3, estado: 'por_validar' },
+    ],
+  },
   informe: {
     titulo: 'Informe de visita técnica',
     fecha: 'Domingo 18 de octubre de 2026',
