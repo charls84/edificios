@@ -22,7 +22,11 @@ export const EDIFICIOS_DEMO: Edificio[] = [
     zona: 'Centro Histórico',
     lat: 4.5976,
     lng: -74.0748,
-    fotos: fotos('ejemplo-a'),
+    // Fotos reales aportadas por el cliente; el resto de datos de este edificio sigue siendo ficticio
+    fotos: [
+      { src: '/demo/fotos/ejemplo-a-1.jpg', alt: 'Fachada y esquina' },
+      { src: '/demo/fotos/ejemplo-a-2.jpg', alt: 'Recorrido de la visita desde la acera' },
+    ],
     etapa: 'presentado',
     semaforo: 'verde',
     resumen: 'Sin alertas fuertes. Uso residencial permitido e incentivo de renovación aplicable.',

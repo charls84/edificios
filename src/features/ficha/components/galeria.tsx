@@ -53,7 +53,15 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
           aria-hidden={i !== actual}
           className={`absolute inset-0 transition-opacity duration-700 ${i === actual ? 'opacity-100' : 'opacity-0'}`}
         >
-          <Image src={f.src} alt={f.alt} fill unoptimized priority={i === 0} className="object-cover object-bottom" />
+          {f.ilustrativa ? (
+            <Image src={f.src} alt={f.alt} fill unoptimized priority={i === 0} className="object-cover object-bottom" />
+          ) : (
+            <>
+              {/* Fotos de cualquier proporcion: completa al centro sobre un fondo difuminado de si misma */}
+              <Image src={f.src} alt="" aria-hidden fill className="scale-110 object-cover opacity-60 blur-2xl" sizes="100vw" />
+              <Image src={f.src} alt={f.alt} fill priority={i === 0} className="object-contain" sizes="(min-width: 1024px) 1120px, 100vw" />
+            </>
+          )}
         </div>
       ))}
 
