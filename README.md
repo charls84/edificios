@@ -13,7 +13,8 @@ deja todo con fuente y fecha.
 | Parte | Estado |
 |---|---|
 | Login solo por invitación, recuperación de contraseña, pantalla de Equipo | ✅ Construido |
-| Portafolio por etapas (Bento Grid) | ✅ Construido (sin buscador todavía) |
+| Portafolio por etapas con mapa (OpenFreeMap) y miniaturas | ✅ Construido (sin buscador todavía) |
+| Ficha del edificio con carrusel de fotos | ✅ En modo demo; con datos reales en la Fase 1 |
 | Esquema de base de datos de la Fase 1 con reglas de acceso (RLS) | ✅ Escrito, pendiente de instalar en Supabase |
 | Conexión con Supabase | ⏳ Pendiente (ver `docs/SETUP.md`) |
 | Fase 0: validación de datos con edificios reales | ⏳ Pendiente de los CHIP o direcciones |

@@ -13,12 +13,15 @@ export interface ResumenEdificio {
   zona: string | null
   etapa: Etapa
   semaforo: Semaforo | null
+  lat: number | null
+  lng: number | null
+  foto: string | null
 }
 
 export async function listEdificios(): Promise<ResumenEdificio[]> {
   if (IS_DEMO) {
-    return EDIFICIOS_DEMO.map(({ id, nombre, direccion, chip, zona, etapa, semaforo }) => ({
-      id, nombre, direccion, chip, zona, etapa, semaforo,
+    return EDIFICIOS_DEMO.map(({ id, nombre, direccion, chip, zona, etapa, semaforo, lat, lng, fotos }) => ({
+      id, nombre, direccion, chip, zona, etapa, semaforo, lat, lng, foto: fotos[0]?.src ?? null,
     }))
   }
   const supabase = await createClient()
@@ -34,5 +37,9 @@ export async function listEdificios(): Promise<ResumenEdificio[]> {
     zona: null,
     etapa: b.etapa,
     semaforo: null,
+    // Coordenadas y fotos reales llegan con la ficha (Fase 1): geom en PostGIS y fotos de visita
+    lat: null,
+    lng: null,
+    foto: null,
   }))
 }

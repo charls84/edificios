@@ -1,8 +1,17 @@
 import type { Edificio } from '@/features/ficha/types'
 
 // DATOS FICTICIOS para demostracion. No corresponden a predios, personas ni
-// consultas reales. Direcciones y CHIP inventados.
+// consultas reales. Direcciones y CHIP inventados; coordenadas aproximadas de la
+// zona, solo para ubicar el marcador. Las fotos son ilustraciones generadas.
 const HOY = '2026-10-20'
+
+function fotos(id: string) {
+  return [
+    { src: `/demo/edificios/${id}-fachada.svg`, alt: 'Fachada principal', ilustrativa: true },
+    { src: `/demo/edificios/${id}-contexto.svg`, alt: 'Contexto de la cuadra', ilustrativa: true },
+    { src: `/demo/edificios/${id}-detalle.svg`, alt: 'Detalle de ventanas y balcones', ilustrativa: true },
+  ]
+}
 
 export const EDIFICIOS_DEMO: Edificio[] = [
   {
@@ -11,6 +20,9 @@ export const EDIFICIOS_DEMO: Edificio[] = [
     direccion: 'Calle 00 # 0-01 (ficticia)',
     chip: 'DEMO000A001',
     zona: 'Centro Histórico',
+    lat: 4.5976,
+    lng: -74.0748,
+    fotos: fotos('ejemplo-a'),
     etapa: 'presentado',
     semaforo: 'verde',
     resumen: 'Sin alertas fuertes. Uso residencial permitido e incentivo de renovación aplicable.',
@@ -71,6 +83,9 @@ export const EDIFICIOS_DEMO: Edificio[] = [
     direccion: 'Carrera 00 # 0-02 (ficticia)',
     chip: 'DEMO000B002',
     zona: 'Teusaquillo',
+    lat: 4.6297,
+    lng: -74.0773,
+    fotos: fotos('ejemplo-b'),
     etapa: 'en_analisis',
     semaforo: 'amarillo',
     resumen: 'Condicionado: está en sector de interés cultural y requiere concepto del IDPC.',
@@ -110,6 +125,9 @@ export const EDIFICIOS_DEMO: Edificio[] = [
     direccion: 'Avenida 00 # 0-03 (ficticia)',
     chip: 'DEMO000C003',
     zona: 'Centro Histórico',
+    lat: 4.6012,
+    lng: -74.0703,
+    fotos: fotos('ejemplo-c'),
     etapa: 'descartado',
     semaforo: 'rojo',
     resumen: 'Descartado: embargo activo y amenaza alta por remoción en masa.',
@@ -131,6 +149,9 @@ export const EDIFICIOS_DEMO: Edificio[] = [
     direccion: 'Calle 00 # 0-04 (ficticia)',
     chip: 'DEMO000D004',
     zona: 'Centro Histórico',
+    lat: 4.6046,
+    lng: -74.0729,
+    fotos: fotos('ejemplo-d'),
     etapa: 'identificado',
     semaforo: 'amarillo',
     resumen: 'Datos oficiales cargados. Falta el certificado de tradición y la visita.',

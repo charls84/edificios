@@ -23,12 +23,24 @@ export interface Extraccion {
   estado: EstadoDato
 }
 
+export interface Foto {
+  src: string
+  alt: string
+  /** Ilustracion generada, no una fotografia real */
+  ilustrativa?: boolean
+}
+
 export interface Edificio {
   id: string
   nombre: string
   direccion: string
   chip: string
   zona: string
+  /** Coordenadas WGS84 del predio */
+  lat: number
+  lng: number
+  /** La primera es la foto principal */
+  fotos: Foto[]
   etapa: Etapa
   semaforo: Semaforo
   resumen: string

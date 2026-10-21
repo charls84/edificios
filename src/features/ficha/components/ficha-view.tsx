@@ -1,11 +1,16 @@
 import type { Edificio } from '../types'
 import { ETAPA_LABEL, EstadoBadge, SemaforoBadge } from './badges'
+import { Galeria } from './galeria'
 
 export function FichaView({ edificio }: { edificio: Edificio }) {
   const { documento, visita } = edificio
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="md:col-span-4">
+        <Galeria fotos={edificio.fotos} titulo={edificio.nombre} />
+      </div>
+
       <section className="bento md:col-span-3">
         <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">Ficha del edificio</p>
         <h1 className="mt-2 text-2xl font-bold">{edificio.nombre}</h1>
