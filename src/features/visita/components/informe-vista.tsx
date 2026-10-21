@@ -1,7 +1,9 @@
+import { useTranslations } from 'next-intl'
 import type { InformeVisita, SeccionInforme } from '@/features/ficha/types'
 import { FotoInforme } from './foto-informe'
 
 function Seccion({ s, numero }: { s: SeccionInforme; numero: string }) {
+  const t = useTranslations('visita')
   return (
     <section className="bento">
       <p className="text-xs font-semibold uppercase tracking-widest text-rojo">
@@ -10,7 +12,7 @@ function Seccion({ s, numero }: { s: SeccionInforme; numero: string }) {
       {s.titulo && <h3 className="mt-1 text-xl font-bold">{s.titulo}</h3>}
       {s.texto && <p className="mt-1 text-sm text-medio-texto">{s.texto}</p>}
       {s.fotos.length === 0 && !s.conclusion && (
-        <p className="mt-3 text-sm text-medio-texto">Sin fotos todavía.</p>
+        <p className="mt-3 text-sm text-medio-texto">{t('sinFotos')}</p>
       )}
 
       <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -30,7 +32,7 @@ function Seccion({ s, numero }: { s: SeccionInforme; numero: string }) {
         ))}
         {s.conclusion && (s.conclusion.titulo || s.conclusion.texto) && (
           <div className="col-span-2 flex flex-col justify-end rounded-xl bg-torna p-5 text-white">
-            <p className="text-xs font-semibold uppercase tracking-widest text-rojo">Lo que se vio</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-rojo">{t('loQueSeVio')}</p>
             <p className="mt-2 text-lg font-semibold leading-snug">{s.conclusion.titulo}</p>
             <p className="mt-3 text-sm text-white/75">{s.conclusion.texto}</p>
           </div>
@@ -41,7 +43,8 @@ function Seccion({ s, numero }: { s: SeccionInforme; numero: string }) {
 }
 
 export function InformeVista({ informe }: { informe: InformeVisita }) {
-  const meta = [informe.fecha, informe.hora, informe.autor && `Visita y fotos: ${informe.autor}`].filter(Boolean)
+  const t = useTranslations('visita')
+  const meta = [informe.fecha, informe.hora, informe.autor && t('visitaYFotos', { autor: informe.autor })].filter(Boolean)
   return (
     <div className="space-y-4">
       <section className="bento">
@@ -58,7 +61,7 @@ export function InformeVista({ informe }: { informe: InformeVisita }) {
               rel="noopener noreferrer"
               className="rounded-xl border border-torna px-4 py-2 text-sm font-semibold hover:bg-torna hover:text-white"
             >
-              Descargar informe (PDF)
+              {t('descargarPdf')}
             </a>
           )}
         </div>
@@ -80,7 +83,7 @@ export function InformeVista({ informe }: { informe: InformeVisita }) {
           <div className="space-y-3 lg:col-span-2">
             {informe.observaciones.length > 0 && (
               <div className="rounded-xl border border-borde p-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">Otras observaciones</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">{t('observaciones')}</p>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
                   {informe.observaciones.map((o, i) => <li key={i}>{o}</li>)}
                 </ul>
@@ -89,7 +92,7 @@ export function InformeVista({ informe }: { informe: InformeVisita }) {
             {informe.documentosPorSolicitar.length > 0 && (
               <div className="rounded-xl border border-rojo/40 bg-rojo-claro p-4">
                 <p className="text-xs font-semibold uppercase tracking-widest text-rojo-oscuro">
-                  Documentos por solicitar al propietario
+                  {t('documentos')}
                 </p>
                 <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
                   {informe.documentosPorSolicitar.map((d, i) => <li key={i}>{d}</li>)}

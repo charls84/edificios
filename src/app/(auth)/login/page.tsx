@@ -1,9 +1,6 @@
+import { getTranslations } from 'next-intl/server'
 import { AuthShell, DemoLogin, LoginForm } from '@/features/auth/components'
 import { IS_DEMO } from '@/shared/lib/demo'
-
-const ERRORS: Record<string, string> = {
-  enlace_invalido: 'El enlace expiró o ya se usó. Pide uno nuevo.',
-}
 
 export default async function LoginPage({
   searchParams,
@@ -11,10 +8,15 @@ export default async function LoginPage({
   searchParams: Promise<{ error?: string }>
 }) {
   const { error } = await searchParams
+  const t = await getTranslations()
 
   return (
-    <AuthShell title="Entrar" subtitle="Acceso solo para el equipo invitado.">
-      {IS_DEMO ? <DemoLogin /> : <LoginForm initialError={error ? ERRORS[error] : undefined} />}
+    <AuthShell title={t('auth.entrarTitulo')} subtitle={t('auth.entrarSubtitulo')}>
+      {IS_DEMO ? (
+        <DemoLogin />
+      ) : (
+        <LoginForm initialError={error === 'enlace_invalido' ? t('errores.enlaceInvalido') : undefined} />
+      )}
     </AuthShell>
   )
 }

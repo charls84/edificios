@@ -13,6 +13,10 @@ Fuente de verdad: `BUSINESS_LOGIC.md` (v0.3).
 - Diseño Bento Grid con la identidad de Torna (ver docs/MARCA.md). Nombre visible: Torna.
 - Login solo por invitación; usuarios nuevos nacen `sin_acceso`. Sin pagos ni multi-idioma (es-CO).
 - Ley 1581 (Colombia), no LFPDPPP.
+- Bilingüe ES/EN con next-intl (cookie NEXT_LOCALE, sin prefijo en URL; es por defecto). Glosario EN: ficha =
+  building profile, en análisis = under review, presentado = presented to owner, en intervención = under
+  rehabilitation, por validar = pending validation, visita técnica = technical site visit, certificado de
+  tradición = certificate of title, embargo = attachment. POT, PEMP, BIC, CHIP, NSR-10, RETIE no se traducen.
 - Llaves de Supabase en formato nuevo: `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` y `SUPABASE_SECRET_KEY`.
 - RED Atlas (mercado) y Croma (debida diligencia) solo como candidatos de Fase 2.
 - Base catastral de Bogotá descargable (PostgreSQL, CC BY 4.0): usarla en Fase 0/1.

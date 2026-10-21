@@ -1,6 +1,7 @@
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ETAPA_LABEL, SemaforoBadge } from '@/features/ficha/components/badges'
+import { SemaforoBadge } from '@/features/ficha/components/badges'
 import type { ResumenEdificio } from '../services/edificios'
 
 function Miniatura({ src }: { src: string | null }) {
@@ -20,18 +21,19 @@ function Miniatura({ src }: { src: string | null }) {
 }
 
 export function ListaEdificios({ edificios }: { edificios: ResumenEdificio[] }) {
+  const t = useTranslations()
   if (edificios.length === 0) {
     return (
       <section className="bento">
-        <h2 className="font-semibold">Edificios</h2>
-        <p className="mt-1 text-sm text-medio-texto">Todavía no hay edificios registrados.</p>
+        <h2 className="font-semibold">{t('portafolio.edificios')}</h2>
+        <p className="mt-1 text-sm text-medio-texto">{t('portafolio.sinEdificios')}</p>
       </section>
     )
   }
 
   return (
     <section className="bento p-4">
-      <h2 className="px-2 font-semibold">Edificios</h2>
+      <h2 className="px-2 font-semibold">{t('portafolio.edificios')}</h2>
       <ul className="mt-2">
         {edificios.map((e) => (
           <li key={e.id}>
@@ -46,7 +48,7 @@ export function ListaEdificios({ edificios }: { edificios: ResumenEdificio[] }) 
                   {[e.direccion, e.zona].filter(Boolean).join(' · ')}
                 </span>
                 <span className="mt-1 flex flex-wrap items-center gap-1.5">
-                  <span className="rounded-full bg-piedra px-2 py-0.5 text-xs">{ETAPA_LABEL[e.etapa]}</span>
+                  <span className="rounded-full bg-piedra px-2 py-0.5 text-xs">{t(`etapas.${e.etapa}`)}</span>
                   {e.semaforo && <SemaforoBadge semaforo={e.semaforo} />}
                 </span>
               </span>

@@ -2,19 +2,25 @@
 
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
+import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import { DEMO_COOKIE, IS_DEMO } from '@/shared/lib/demo'
 import { createClient } from '@/lib/supabase/server'
 import type { ActionState } from '../types'
 import { emailSchema, loginSchema, newPasswordSchema } from './schemas'
 
+async function errorDe(clave: string): Promise<ActionState> {
+  const t = await getTranslations('errores')
+  return { error: t(clave) }
+}
+
 export async function login(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = loginSchema.safeParse(Object.fromEntries(formData))
-  if (!parsed.success) return { error: parsed.error.issues[0].message }
+  if (!parsed.success) return errorDe(parsed.error.issues[0].message)
 
   const supabase = await createClient()
   const { error } = await supabase.auth.signInWithPassword(parsed.data)
-  if (error) return { error: 'Correo o contraseña incorrectos' }
+  if (error) return errorDe('credenciales')
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')
@@ -25,14 +31,15 @@ export async function requestPasswordReset(
   formData: FormData
 ): Promise<ActionState> {
   const parsed = emailSchema.safeParse(Object.fromEntries(formData))
-  if (!parsed.success) return { error: parsed.error.issues[0].message }
+  if (!parsed.success) return errorDe(parsed.error.issues[0].message)
 
   const supabase = await createClient()
   await supabase.auth.resetPasswordForEmail(parsed.data.email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback?next=/update-password`,
   })
   // Misma respuesta exista o no la cuenta, para no revelar quien esta registrado
-  return { success: 'Si el correo pertenece al equipo, te llegara un enlace para restablecer la contraseña.' }
+  const t = await getTranslations('auth')
+  return { success: t('enlaceEnviado') }
 }
 
 export async function updatePassword(
@@ -40,11 +47,11 @@ export async function updatePassword(
   formData: FormData
 ): Promise<ActionState> {
   const parsed = newPasswordSchema.safeParse(Object.fromEntries(formData))
-  if (!parsed.success) return { error: parsed.error.issues[0].message }
+  if (!parsed.success) return errorDe(parsed.error.issues[0].message)
 
   const supabase = await createClient()
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password })
-  if (error) return { error: 'No se pudo guardar la contraseña. Pide un enlace nuevo.' }
+  if (error) return errorDe('contrasenaNoGuardada')
 
   revalidatePath('/', 'layout')
   redirect('/dashboard')

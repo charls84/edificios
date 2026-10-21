@@ -1,8 +1,10 @@
+import { getTranslations } from 'next-intl/server'
 import { AuthShell, UpdatePasswordForm } from '@/features/auth/components'
 
-export default function UpdatePasswordPage() {
+export default async function UpdatePasswordPage() {
+  const t = await getTranslations('auth')
   return (
-    <AuthShell title="Define tu contraseña" subtitle="La usarás para entrar a partir de ahora.">
+    <AuthShell title={t('definirTitulo')} subtitle={t('definirSubtitulo')}>
       <UpdatePasswordForm />
     </AuthShell>
   )

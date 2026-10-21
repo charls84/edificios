@@ -1,4 +1,5 @@
 import type { Edificio } from '@/features/ficha/types'
+import { aplicarTraduccion, EN } from './en'
 import { ROLHER } from './rolher'
 
 // Edificio Rolher: datos reales del informe de visita (ver rolher.ts).
@@ -108,6 +109,10 @@ export const EDIFICIOS_DEMO: Edificio[] = [
   },
 ]
 
-export function getEdificioDemo(id: string) {
-  return EDIFICIOS_DEMO.find((e) => e.id === id) ?? null
+export function getEdificiosDemo(locale: string): Edificio[] {
+  return locale === 'en' ? EDIFICIOS_DEMO.map((e) => aplicarTraduccion(e, EN[e.id])) : EDIFICIOS_DEMO
+}
+
+export function getEdificioDemo(id: string, locale: string) {
+  return getEdificiosDemo(locale).find((e) => e.id === id) ?? null
 }

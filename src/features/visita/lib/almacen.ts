@@ -56,18 +56,9 @@ export function borrarInforme(edificioId: string) {
 }
 
 // Formato de informe de Torna: las 7 secciones que se revisan en cada visita
-export function informeVacio(): InformeVisita {
-  const etiquetas = [
-    'Fachada y acceso',
-    'Estructura',
-    'Redes eléctricas',
-    'Redes hidráulicas',
-    'Estado de los pisos superiores',
-    'Cubierta',
-    'Entorno',
-  ]
+export function informeVacio(titulo: string, etiquetas: string[]): InformeVisita {
   return {
-    titulo: 'Informe de visita técnica',
+    titulo,
     fecha: '',
     hora: '',
     autor: '',

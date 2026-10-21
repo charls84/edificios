@@ -1,10 +1,13 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import type { InformeVisita, SeccionInforme } from '@/features/ficha/types'
 import { Campo, CampoLista } from './campos'
 import { EditorSeccion } from './editor-seccion'
 
 export function EditorInforme({ value: inf, onChange }: { value: InformeVisita; onChange: (v: InformeVisita) => void }) {
+  const t = useTranslations('visita.editor')
+  const tv = useTranslations('visita')
   const set = (cambios: Partial<InformeVisita>) => onChange({ ...inf, ...cambios })
   const setSeccion = (i: number, s: SeccionInforme) => set({ secciones: inf.secciones.map((x, j) => (j === i ? s : x)) })
 
@@ -18,35 +21,35 @@ export function EditorInforme({ value: inf, onChange }: { value: InformeVisita; 
   return (
     <div className="space-y-4">
       <section className="bento space-y-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-rojo">Datos de la visita</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-rojo">{t('datos')}</p>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <Campo label="Fecha" value={inf.fecha} onChange={(v) => set({ fecha: v })} placeholder="Ej.: Domingo 18 de octubre de 2026" />
-          <Campo label="Hora" value={inf.hora} onChange={(v) => set({ hora: v })} placeholder="Ej.: 9:00 a. m." />
-          <Campo label="Visita y fotos" value={inf.autor} onChange={(v) => set({ autor: v })} placeholder="Nombre · empresa" />
+          <Campo label={t('fecha')} value={inf.fecha} onChange={(v) => set({ fecha: v })} placeholder={t('fechaEj')} />
+          <Campo label={t('hora')} value={inf.hora} onChange={(v) => set({ hora: v })} placeholder={t('horaEj')} />
+          <Campo label={t('autor')} value={inf.autor} onChange={(v) => set({ autor: v })} placeholder={t('autorEj')} />
         </div>
-        <Campo label="Conclusión general" value={inf.resumenTitulo} onChange={(v) => set({ resumenTitulo: v })} placeholder="Ej.: Estructura y redes listas para el nuevo uso" />
+        <Campo label={t('conclusion')} value={inf.resumenTitulo} onChange={(v) => set({ resumenTitulo: v })} placeholder={t('conclusionEj')} />
 
         <div>
-          <p className="etiqueta">Hallazgos principales</p>
+          <p className="etiqueta">{t('hallazgos')}</p>
           <div className="mt-2 space-y-2">
             {inf.hallazgos.map((h, i) => (
               <div key={i} className="grid grid-cols-1 gap-2 rounded-xl bg-piedra p-3 md:grid-cols-[1fr_2fr_auto]">
-                <input className="campo mt-0" value={h.titulo} placeholder="Hallazgo" aria-label={`Hallazgo ${i + 1}`}
+                <input className="campo mt-0" value={h.titulo} placeholder={t('hallazgo')} aria-label={t('hallazgoN', { n: i + 1 })}
                   onChange={(e) => set({ hallazgos: inf.hallazgos.map((x, j) => (j === i ? { ...x, titulo: e.target.value } : x)) })} />
-                <input className="campo mt-0" value={h.texto} placeholder="Detalle" aria-label={`Detalle del hallazgo ${i + 1}`}
+                <input className="campo mt-0" value={h.texto} placeholder={t('detalle')} aria-label={t('detalleN', { n: i + 1 })}
                   onChange={(e) => set({ hallazgos: inf.hallazgos.map((x, j) => (j === i ? { ...x, texto: e.target.value } : x)) })} />
                 <button type="button" onClick={() => set({ hallazgos: inf.hallazgos.filter((_, j) => j !== i) })}
-                  className="rounded-lg px-3 text-sm text-rojo-oscuro hover:bg-rojo-claro">Quitar</button>
+                  className="rounded-lg px-3 text-sm text-rojo-oscuro hover:bg-rojo-claro">{t('quitar')}</button>
               </div>
             ))}
             <button type="button" onClick={() => set({ hallazgos: [...inf.hallazgos, { titulo: '', texto: '' }] })}
-              className="rounded-xl border border-dashed border-borde px-4 py-2 text-sm hover:border-torna">+ Agregar hallazgo</button>
+              className="rounded-xl border border-dashed border-borde px-4 py-2 text-sm hover:border-torna">{t('agregarHallazgo')}</button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <CampoLista label="Otras observaciones" value={inf.observaciones} onChange={(v) => set({ observaciones: v })} />
-          <CampoLista label="Documentos por solicitar al propietario" value={inf.documentosPorSolicitar} onChange={(v) => set({ documentosPorSolicitar: v })} />
+          <CampoLista label={tv('observaciones')} value={inf.observaciones} onChange={(v) => set({ observaciones: v })} />
+          <CampoLista label={tv('documentos')} value={inf.documentosPorSolicitar} onChange={(v) => set({ documentosPorSolicitar: v })} />
         </div>
       </section>
 
@@ -67,7 +70,7 @@ export function EditorInforme({ value: inf, onChange }: { value: InformeVisita; 
         onClick={() => set({ secciones: [...inf.secciones, { numero: '', etiqueta: '', titulo: '', fotos: [] }] })}
         className="w-full rounded-2xl border-2 border-dashed border-borde py-4 text-sm font-semibold text-medio-texto hover:border-torna hover:text-torna"
       >
-        + Agregar sección revisada
+        {t('agregarSeccion')}
       </button>
     </div>
   )

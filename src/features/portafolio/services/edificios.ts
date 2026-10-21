@@ -1,5 +1,6 @@
 import 'server-only'
-import { EDIFICIOS_DEMO } from '@/features/demo/data'
+import { getLocale } from 'next-intl/server'
+import { getEdificiosDemo } from '@/features/demo/data'
 import type { Semaforo } from '@/features/ficha/types'
 import { createClient } from '@/lib/supabase/server'
 import { IS_DEMO } from '@/shared/lib/demo'
@@ -20,7 +21,7 @@ export interface ResumenEdificio {
 
 export async function listEdificios(): Promise<ResumenEdificio[]> {
   if (IS_DEMO) {
-    return EDIFICIOS_DEMO.map(({ id, nombre, direccion, chip, zona, etapa, semaforo, lat, lng, fotos }) => ({
+    return getEdificiosDemo(await getLocale()).map(({ id, nombre, direccion, chip, zona, etapa, semaforo, lat, lng, fotos }) => ({
       id, nombre, direccion, chip, zona, etapa, semaforo, lat, lng, foto: fotos[0]?.src ?? null,
     }))
   }

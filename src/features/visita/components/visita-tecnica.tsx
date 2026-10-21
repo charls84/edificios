@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import type { InformeVisita } from '@/features/ficha/types'
 import { borrarInforme, fotosDe, guardarInforme, informeVacio, useInformeLocal } from '../lib/almacen'
@@ -21,6 +22,7 @@ function normalizar(inf: InformeVisita): InformeVisita {
 
 export function VisitaTecnica({ edificioId, inicial }: { edificioId: string; inicial: InformeVisita | null }) {
   // Si hay cambios guardados en este navegador, mandan sobre el informe original
+  const t = useTranslations('visita')
   const local = useInformeLocal(edificioId)
   const guardado = local ?? inicial
   const editado = local !== null
@@ -31,13 +33,13 @@ export function VisitaTecnica({ edificioId, inicial }: { edificioId: string; ini
     if (!borrador) return
     const nuevo = normalizar(borrador)
     if (!guardarInforme(edificioId, nuevo)) {
-      setAviso('No se pudo guardar: el navegador no tiene espacio o bloquea el almacenamiento.')
+      setAviso(t('errorGuardar'))
       return
     }
     const siguen = new Set(fotosDe(nuevo))
     borrarFotos(fotosDe(guardado).filter((src) => !siguen.has(src)))
     setBorrador(null)
-    setAviso('Cambios guardados en este navegador.')
+    setAviso(t('guardado'))
   }
 
   function cancelar() {
@@ -47,35 +49,33 @@ export function VisitaTecnica({ edificioId, inicial }: { edificioId: string; ini
   }
 
   function restaurar() {
-    if (!confirm('¿Restaurar el informe original? Se perderán los cambios y las fotos subidas en este navegador.')) return
+    if (!confirm(t('confirmarRestaurar'))) return
     const originales = new Set(fotosDe(inicial))
     borrarFotos(fotosDe(guardado).filter((src) => !originales.has(src)))
     borrarInforme(edificioId)
-    setAviso('Se restauró el informe original.')
+    setAviso(t('restaurado'))
   }
 
   return (
     <section aria-labelledby="visita-tecnica" className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 id="visita-tecnica" className="text-2xl font-bold">Visita técnica</h2>
-          <p className="text-sm text-medio-texto">
-            Secciones revisadas en sitio, con sus fotos. En el demo, los cambios se guardan en este navegador.
-          </p>
+          <h2 id="visita-tecnica" className="text-2xl font-bold">{t('titulo')}</h2>
+          <p className="text-sm text-medio-texto">{t('subtitulo')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {borrador ? (
             <>
-              <button type="button" onClick={cancelar} className="rounded-xl border border-borde bg-white px-4 py-2 text-sm font-semibold">Cancelar</button>
-              <button type="button" onClick={guardar} className="boton w-auto">Guardar cambios</button>
+              <button type="button" onClick={cancelar} className="rounded-xl border border-borde bg-white px-4 py-2 text-sm font-semibold">{t('cancelar')}</button>
+              <button type="button" onClick={guardar} className="boton w-auto">{t('guardar')}</button>
             </>
           ) : (
             <>
               {editado && inicial && (
-                <button type="button" onClick={restaurar} className="rounded-xl border border-borde bg-white px-4 py-2 text-sm">Restaurar original</button>
+                <button type="button" onClick={restaurar} className="rounded-xl border border-borde bg-white px-4 py-2 text-sm">{t('restaurar')}</button>
               )}
               {guardado && (
-                <button type="button" onClick={() => { setAviso(null); setBorrador(structuredClone(guardado)) }} className="boton w-auto">Editar informe</button>
+                <button type="button" onClick={() => { setAviso(null); setBorrador(structuredClone(guardado)) }} className="boton w-auto">{t('editar')}</button>
               )}
             </>
           )}
@@ -90,12 +90,14 @@ export function VisitaTecnica({ edificioId, inicial }: { edificioId: string; ini
         <InformeVista informe={guardado} />
       ) : (
         <div className="bento text-center">
-          <p className="font-semibold">Aún no hay informe de visita</p>
-          <p className="mt-1 text-sm text-medio-texto">
-            Se crea con las 7 secciones del formato de Torna: fachada, estructura, redes, pisos, cubierta y entorno.
-          </p>
-          <button type="button" onClick={() => setBorrador(informeVacio())} className="boton mx-auto mt-4 w-auto">
-            Crear informe de visita
+          <p className="font-semibold">{t('vacioTitulo')}</p>
+          <p className="mt-1 text-sm text-medio-texto">{t('vacioTexto')}</p>
+          <button
+            type="button"
+            onClick={() => setBorrador(informeVacio(t('tituloInforme'), t.raw('seccionesPlantilla') as string[]))}
+            className="boton mx-auto mt-4 w-auto"
+          >
+            {t('crear')}
           </button>
         </div>
       )}

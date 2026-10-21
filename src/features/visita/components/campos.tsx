@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 export function Campo({
   label,
   value,
@@ -27,10 +29,11 @@ export function Campo({
 
 // Lista de textos editada como "uno por linea"
 export function CampoLista({ label, value, onChange }: { label: string; value: string[]; onChange: (v: string[]) => void }) {
+  const t = useTranslations('visita.editor')
   return (
     <label className="block">
       <span className="etiqueta">{label}</span>
-      <span className="block text-xs text-medio-texto">Uno por línea</span>
+      <span className="block text-xs text-medio-texto">{t('unoPorLinea')}</span>
       <textarea
         className="campo min-h-24"
         value={value.join('\n')}

@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Foto } from '../types'
@@ -7,6 +8,7 @@ import type { Foto } from '../types'
 const INTERVALO_MS = 5000
 
 export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
+  const t = useTranslations('galeria')
   const [actual, setActual] = useState(0)
   const [pausado, setPausado] = useState(false)
   const inicioToque = useRef<number | null>(null)
@@ -25,8 +27,8 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
 
   return (
     <section
-      aria-roledescription="carrusel"
-      aria-label={`Fotos de ${titulo}`}
+      aria-roledescription={t('carrusel')}
+      aria-label={t('fotosDe', { titulo })}
       className="relative aspect-video overflow-hidden rounded-2xl bg-torna lg:aspect-[16/7]"
       onMouseEnter={() => setPausado(true)}
       onMouseLeave={() => setPausado(false)}
@@ -48,8 +50,8 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
         <div
           key={f.src}
           role="group"
-          aria-roledescription="foto"
-          aria-label={`${i + 1} de ${total}: ${f.alt}`}
+          aria-roledescription={t('foto')}
+          aria-label={t('posicion', { actual: i + 1, total, alt: f.alt })}
           aria-hidden={i !== actual}
           className={`absolute inset-0 transition-opacity duration-700 ${i === actual ? 'opacity-100' : 'opacity-0'}`}
         >
@@ -67,7 +69,7 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
 
       {fotos[actual].ilustrativa && (
         <span className="absolute left-3 top-3 rounded-full bg-torna/85 px-3 py-1 text-xs font-medium text-white">
-          Imagen ilustrativa
+          {t('ilustrativa')}
         </span>
       )}
 
@@ -83,7 +85,7 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
           <button
             type="button"
             onClick={() => ir(actual - 1)}
-            aria-label="Foto anterior"
+            aria-label={t('anterior')}
             className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-torna shadow hover:bg-white"
           >
             ‹
@@ -91,7 +93,7 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
           <button
             type="button"
             onClick={() => ir(actual + 1)}
-            aria-label="Foto siguiente"
+            aria-label={t('siguiente')}
             className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-torna shadow hover:bg-white"
           >
             ›
@@ -102,7 +104,7 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
                 key={f.src}
                 type="button"
                 onClick={() => ir(i)}
-                aria-label={`Ver foto ${i + 1}: ${f.alt}`}
+                aria-label={t('verFoto', { n: i + 1, alt: f.alt })}
                 aria-current={i === actual}
                 className={`h-2.5 rounded-full transition-all ${i === actual ? 'w-6 bg-rojo' : 'w-2.5 bg-white/70 hover:bg-white'}`}
               />
