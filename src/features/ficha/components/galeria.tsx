@@ -73,11 +73,11 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
         </span>
       )}
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-torna/85 to-transparent p-5 pt-16">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-torna/85 to-transparent p-4 pr-28 pt-12 sm:p-5 sm:pr-32 sm:pt-16">
         <p className="text-xs font-semibold uppercase tracking-widest text-white/70">
           {actual + 1} / {total}
         </p>
-        <p className="mt-1 text-lg font-semibold text-white">{fotos[actual].alt}</p>
+        <p className="mt-1 text-sm font-semibold leading-snug text-white sm:text-lg">{fotos[actual].alt}</p>
       </div>
 
       {total > 1 && (
@@ -86,7 +86,7 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
             type="button"
             onClick={() => ir(actual - 1)}
             aria-label={t('anterior')}
-            className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-torna shadow hover:bg-white"
+            className="absolute left-3 top-1/2 hidden h-10 w-10 sm:flex -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-torna shadow hover:bg-white"
           >
             ‹
           </button>
@@ -94,11 +94,11 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
             type="button"
             onClick={() => ir(actual + 1)}
             aria-label={t('siguiente')}
-            className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-torna shadow hover:bg-white"
+            className="absolute right-3 top-1/2 hidden h-10 w-10 sm:flex -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-xl text-torna shadow hover:bg-white"
           >
             ›
           </button>
-          <div className="absolute bottom-5 right-5 flex gap-2">
+          <div className="absolute bottom-4 right-4 flex gap-2 sm:bottom-5 sm:right-5">
             {fotos.map((f, i) => (
               <button
                 key={f.src}

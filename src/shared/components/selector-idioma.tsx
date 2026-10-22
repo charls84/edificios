@@ -26,7 +26,7 @@ export function SelectorIdioma({ tono = 'oscuro' }: { tono?: 'oscuro' | 'claro' 
     <div
       role="group"
       aria-label={t('cambiar')}
-      className={`flex items-center gap-1 rounded-full border px-1.5 py-1 text-xs font-semibold ${base} ${pendiente ? 'opacity-60' : ''}`}
+      className={`inline-flex items-center gap-1 rounded-full border px-1.5 py-1 text-xs font-semibold ${base} ${pendiente ? 'opacity-60' : ''}`}
     >
       <Globo />
       {LOCALES.map((l) => (

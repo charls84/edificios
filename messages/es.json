@@ -212,5 +212,14 @@
       "errorFoto": "No se pudo cargar \"{nombre}\". Prueba con una foto JPG o PNG.",
       "agregarSeccion": "+ Agregar sección revisada"
     }
+  },
+  "nav": {
+    "navegacion": "Navegación principal",
+    "abrirMenu": "Abrir menú",
+    "cerrarMenu": "Cerrar menú",
+    "instalar": "Instalar app",
+    "instalarIosTitulo": "Instalar en iPhone o iPad",
+    "instalarIosPasos": "En Safari, toca <b>Compartir</b> y luego <b>Agregar a pantalla de inicio</b>.",
+    "cerrar": "Cerrar"
   }
 }

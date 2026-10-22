@@ -212,5 +212,14 @@
       "errorFoto": "\"{nombre}\" could not be loaded. Try a JPG or PNG photo.",
       "agregarSeccion": "+ Add inspected area"
     }
+  },
+  "nav": {
+    "navegacion": "Main navigation",
+    "abrirMenu": "Open menu",
+    "cerrarMenu": "Close menu",
+    "instalar": "Install app",
+    "instalarIosTitulo": "Install on iPhone or iPad",
+    "instalarIosPasos": "In Safari, tap <b>Share</b> and then <b>Add to Home Screen</b>.",
+    "cerrar": "Close"
   }
 }

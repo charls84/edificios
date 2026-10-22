@@ -14,8 +14,8 @@ export function PortafolioBento({ conteo, error }: { conteo: ConteoEtapas; error
   const total = Object.values(conteo).reduce((a, b) => a + b, 0)
 
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-      <section className="bento col-span-2 flex flex-col justify-between border-torna bg-torna text-white md:row-span-2 lg:col-span-3">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+      <section className="bento col-span-2 flex flex-col justify-between border-torna bg-torna text-white md:col-span-3 lg:row-span-2">
         <p className="text-xs font-semibold uppercase tracking-widest text-white/70">{t('portafolio.etiqueta')}</p>
         <div className="mt-8">
           <p className="text-6xl font-bold">{total}</p>
@@ -36,13 +36,13 @@ export function PortafolioBento({ conteo, error }: { conteo: ConteoEtapas; error
         <p className="mt-1 text-sm text-medio-texto">{t('portafolio.meta')}</p>
       </section>
 
-      <section className="bento col-span-2 md:col-span-4 lg:col-span-6">
+      <section className="bento col-span-2 md:col-span-3 lg:col-span-6">
         <h2 className="font-semibold">{t('portafolio.buscarTitulo')}</h2>
         <p className="mt-1 text-sm text-medio-texto">{t('portafolio.buscarTexto')}</p>
       </section>
 
       {error && (
-        <p role="alert" className="col-span-2 text-sm text-rojo-oscuro md:col-span-4 lg:col-span-6">
+        <p role="alert" className="col-span-2 text-sm text-rojo-oscuro md:col-span-3 lg:col-span-6">
           {t('portafolio.errorLectura')}
         </p>
       )}

@@ -16,6 +16,7 @@ deja todo con fuente y fecha.
 | Portafolio por etapas con mapa (OpenFreeMap) y miniaturas | ✅ Construido (sin buscador todavía) |
 | Ficha del edificio con carrusel de fotos | ✅ En modo demo; con datos reales en la Fase 1 |
 | Visita técnica editable con carga de fotos | ✅ En el demo se guarda en el navegador; en la Fase 1, en Supabase |
+| App instalable en celular (PWA) y menú lateral | ✅ Manifest, service worker sin interceptar peticiones (compatible con iPhone), botón "Instalar app" |
 | Español / inglés (selector ES/EN) | ✅ Textos en `messages/es.json` y `messages/en.json`; contenido del demo en `src/features/demo/en.ts` |
 | Esquema de base de datos de la Fase 1 con reglas de acceso (RLS) | ✅ Escrito, pendiente de instalar en Supabase |
 | Conexión con Supabase | ⏳ Pendiente (ver `docs/SETUP.md`) |

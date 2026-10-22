@@ -13,6 +13,10 @@ Fuente de verdad: `BUSINESS_LOGIC.md` (v0.3).
 - Diseño Bento Grid con la identidad de Torna (ver docs/MARCA.md). Nombre visible: Torna.
 - Login solo por invitación; usuarios nuevos nacen `sin_acceso`. Sin pagos ni multi-idioma (es-CO).
 - Ley 1581 (Colombia), no LFPDPPP.
+- PWA: src/app/manifest.ts, public/sw.js (SIN handler de fetch: rompe iOS), PWARegister en el layout raíz,
+  iconos en public/icons. El proxy excluye sw.js, manifest.webmanifest e icons/ (si no, redirige a /login).
+- Navegación: barra lateral fija en escritorio (lg+) y panel deslizable con ☰ en celular/tablet
+  (src/shared/components/navegacion.tsx).
 - Bilingüe ES/EN con next-intl (cookie NEXT_LOCALE, sin prefijo en URL; es por defecto). Glosario EN: ficha =
   building profile, en análisis = under review, presentado = presented to owner, en intervención = under
   rehabilitation, por validar = pending validation, visita técnica = technical site visit, certificado de
