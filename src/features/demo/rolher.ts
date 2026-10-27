@@ -25,6 +25,8 @@ export const ROLHER: Edificio = {
     { src: `${R}/estructura-escalera-curva.jpg`, alt: 'Escalera curva original' },
     { src: `${R}/cubierta-monserrate.jpg`, alt: 'Vista a Monserrate desde la cubierta' },
     { src: `${R}/entorno-transmilenio.jpg`, alt: 'Corredor de TransMilenio desde la cubierta' },
+    { src: `${R}/plano-fachada-1936.jpg`, alt: 'Plano original de la fachada, aprobado en 1936' },
+    { src: `${R}/plano-primer-piso-1936.jpg`, alt: 'Plano original del primer piso (1936)' },
   ],
   etapa: 'en_analisis',
   semaforo: 'amarillo',
@@ -62,6 +64,8 @@ export const ROLHER: Edificio = {
         { label: 'Centro Histórico (BIC nacional)', valor: 'Sí · proyecto autorizado por el Ministerio de Cultura (Res. 2724 de 2012)', fuente: `${LIC}, p. 1`, fecha: FECHA_DOCS, estado: 'por_validar' },
         { label: 'Intervención aprobada por el IDPC', valor: 'Demolición parcial sobre la Carrera 10, fachada nueva en piedra, reforzamiento NSR-10 y un local en sótano y primer piso', fuente: `${IDPC}, p. 4`, fecha: FECHA_DOCS, estado: 'por_validar' },
         { label: 'Nivel de intervención PEMP', valor: PENDIENTE, fuente: 'PEMP Centro Histórico (Res. 088 de 2021)', fecha: FECHA_DOCS, estado: 'por_validar' },
+        { label: 'Diseño original', valor: 'Edificio comercial "Uricoechea" de A. Manrique Martín y Cía. · aprobado por la Secretaría de Obras Públicas el 16-dic-1936', fuente: 'Planos originales de fachada y primer piso', fecha: FECHA_DOCS, estado: 'por_validar' },
+        { label: 'Construcción', valor: 'Declarada en 1943', fuente: `${CERT}, p. 1`, fecha: FECHA_DOCS, estado: 'por_validar' },
       ],
     },
     {

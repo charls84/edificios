@@ -164,6 +164,7 @@ Actualizado el 2026-10-27 con los documentos entregados por el propietario.
 - **Expropiación parcial:** el IDU tomó 36,60 m² en 2012 para el espacio público de la Carrera 10 (TransMilenio).
 - **Diferencia de áreas:** el lote mide 183,33 m² en el certificado y 173,33 m² en la licencia. Se aclara con Catastro.
 - **Propiedad horizontal cancelada en 2011:** el certificado aún lista 23 matrículas derivadas (locales, salones y depósitos). Hay que verificar que estén cerradas.
+- **Origen:** los planos originales muestran el "Edificio Uricoechea", proyecto comercial de A. Manrique Martín y Cía. aprobado por la Secretaría de Obras Públicas el 16 de diciembre de 1936. El certificado registra la declaración de construcción en 1943; la presentación del IDU lo fechaba en la década de 1940. El primer piso original marca unos 173 m² construidos, cifra cercana al lote de la licencia (173,33 m²).
 - **Dirección:** el informe de visita usaba "Carrera 10 # 13-22"; los documentos oficiales dicen Av. Jiménez # 9-82/88 (Calle 13 # 9-84 catastral) y Carrera 10 # 13-02/12. La ficha usa la dirección catastral.
 
 ### Documentos que faltan
@@ -172,7 +173,7 @@ Actualizado el 2026-10-27 con los documentos entregados por el propietario.
 - Escritura 2320 de 2011 (cancelación de la propiedad horizontal).
 - Estado de cuenta del predial y de valorización.
 - Certificado de permiso de ocupación o acta de terminación de la obra de 2013.
-- Planos aprobados (arquitectónicos y estructurales) de la licencia de 2013.
+- Planos aprobados (arquitectónicos y estructurales) de la licencia de 2013. Ya se tienen los planos originales de 1936 (fachada y primer piso).
 - Resolución 2724 de 2012 del Ministerio de Cultura.
 - Certificado de existencia y representación legal de Rolher Ltda. (vigente).
 - Autorización de tratamiento de datos firmada.

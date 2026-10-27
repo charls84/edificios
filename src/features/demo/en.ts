@@ -24,6 +24,8 @@ export const EN: Record<string, Parcial<Edificio>> = {
       { alt: 'Original curved staircase' },
       { alt: 'View of Monserrate from the roof' },
       { alt: 'TransMilenio corridor seen from the roof' },
+      { alt: 'Original façade drawing, approved in 1936' },
+      { alt: 'Original ground floor plan (1936)' },
     ],
     resumen:
       'Title free of attachments and mortgages, and a structure retrofitted under a 2013 permit. It is a listed heritage building in the Historic Center: any change of use needs heritage approval and a new permit.',
@@ -59,6 +61,8 @@ export const EN: Record<string, Parcial<Edificio>> = {
           { label: 'Historic Center (national BIC)', valor: 'Yes · project authorized by the Ministry of Culture (Res. 2724 of 2012)', fuente: `${LIC_EN}, p. 1` },
           { label: 'Intervention approved by the IDPC', valor: 'Partial demolition along Carrera 10, new stone façade, NSR-10 retrofit and one retail unit on the basement and ground floor', fuente: `${IDPC_EN}, p. 4` },
           { label: 'PEMP intervention level', valor: PENDIENTE_EN, fuente: 'Historic Center PEMP (Res. 088 of 2021)' },
+          { label: 'Original design', valor: '"Uricoechea" commercial building by A. Manrique Martín y Cía. · approved by the Public Works Department on Dec 16, 1936', fuente: 'Original façade and ground floor drawings' },
+          { label: 'Construction', valor: 'Recorded in 1943', fuente: `${CERT_EN}, p. 1` },
         ],
       },
       {
