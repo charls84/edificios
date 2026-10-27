@@ -10,7 +10,7 @@ export const ROLHER: Edificio = {
   id: 'rolher',
   nombre: 'Edificio Rolher',
   direccion: 'Carrera 10 # 13-22',
-  chip: null,
+  chip: 'AAA0257KADM',
   zona: 'Centro',
   // Ubicacion aproximada por direccion; se confirma con Catastro en la Fase 0
   lat: 4.6029,
