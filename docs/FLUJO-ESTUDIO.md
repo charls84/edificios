@@ -143,12 +143,36 @@ La plataforma exporta la ficha en PDF con fuentes y fecha de corte, sin datos pe
 
 ## 10. Estado del Edificio Rolher
 
+Actualizado el 2026-10-27 con los documentos entregados por el propietario.
+
 | Paso | Estado |
 |---|---|
-| 1. Matrícula | Hecho. CHIP AAA0257KADM, Carrera 10 # 13-22 |
-| 2. Datos oficiales | Pendiente: los datos actuales de la ficha son de ejemplo y se reemplazan con la consulta real por CHIP |
-| 3. Documentos | Pendiente: cargar la documentación que entregó el propietario |
+| 1. Matrícula | Hecho. CHIP AAA0257KADM, matrícula 50C-297658, Av. Jiménez (Calle 13) # 9-84, esquina Carrera 10 |
+| 2. Datos oficiales | Parcial: patrimonio, riesgo y norma de 2013 salen de la licencia y del IDPC. Falta la norma vigente (POT 555), el nivel PEMP y los incentivos |
+| 3. Documentos | Cargados: certificado de tradición (26-oct-2026), licencia LC 13-4-0066 (2013), Resolución IDPC 492 de 2012, presentación de patrimonio del IDU (2010) e informe de visita |
 | 4. Visita técnica | Hecho. Informe del 18 de octubre de 2026 con fotos |
-| 5. Validación | Pendiente |
-| 6. Decisión | Amarillo provisional (visita favorable, faltan norma, patrimonio y propiedad) |
+| 5. Validación | Pendiente: todos los datos extraídos están "por validar" |
+| 6. Decisión | Amarillo: sin bloqueos jurídicos, pero con pendientes de patrimonio, licencia y área |
 | 7. Presentación | Pendiente |
+
+### Hallazgos de los documentos
+
+- **Propiedad libre:** el dueño es Rolher Ltda. desde 1983. No hay embargos, hipotecas ni demandas vigentes.
+- **Bien de Interés Cultural Categoría B** (conservación tipológica) dentro del Centro Histórico, que es BIC nacional. Un proyecto nuevo necesita concepto del IDPC y autorización del Ministerio de Cultura.
+- **Obra ya aprobada en 2012–2013:** demolición parcial sobre la Carrera 10, fachada nueva en piedra, reforzamiento NSR-10 y un local en sótano y primer piso. Coincide con lo visto en la visita.
+- **Licencia vencida:** la LC 13-4-0066 tenía 24 meses de vigencia, más 12 de prórroga. Hay que confirmar si la obra se terminó y si existe el certificado de permiso de ocupación. Un cambio de uso (por ejemplo, a vivienda) requiere licencia nueva.
+- **Expropiación parcial:** el IDU tomó 36,60 m² en 2012 para el espacio público de la Carrera 10 (TransMilenio).
+- **Diferencia de áreas:** el lote mide 183,33 m² en el certificado y 173,33 m² en la licencia. Se aclara con Catastro.
+- **Propiedad horizontal cancelada en 2011:** el certificado aún lista 23 matrículas derivadas (locales, salones y depósitos). Hay que verificar que estén cerradas.
+- **Dirección:** el informe de visita usaba "Carrera 10 # 13-22"; los documentos oficiales dicen Av. Jiménez # 9-82/88 (Calle 13 # 9-84 catastral) y Carrera 10 # 13-02/12. La ficha usa la dirección catastral.
+
+### Documentos que faltan
+
+- Certificado catastral (área oficial del lote y avalúo).
+- Escritura 2320 de 2011 (cancelación de la propiedad horizontal).
+- Estado de cuenta del predial y de valorización.
+- Certificado de permiso de ocupación o acta de terminación de la obra de 2013.
+- Planos aprobados (arquitectónicos y estructurales) de la licencia de 2013.
+- Resolución 2724 de 2012 del Ministerio de Cultura.
+- Certificado de existencia y representación legal de Rolher Ltda. (vigente).
+- Autorización de tratamiento de datos firmada.

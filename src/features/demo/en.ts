@@ -9,11 +9,15 @@ const CATASTRO = 'Cadastre (sample)'
 const POT = 'POT 555 (sample)'
 const IDPC = 'IDPC (sample)'
 const CERTIFICADO = 'Certificate of title (sample).pdf'
+const CERT_EN = 'Certificate of title 50C-297658 (Oct 26, 2026)'
+const LIC_EN = 'Permit LC 13-4-0066, Curaduría 4'
+const IDPC_EN = 'IDPC Resolution 492 of 2012'
+const PENDIENTE_EN = 'Pending lookup (Phase 0)'
 
 export const EN: Record<string, Parcial<Edificio>> = {
   rolher: {
     nombre: 'Rolher Building',
-    zona: 'Downtown',
+    zona: 'Historic Center',
     fotos: [
       { alt: 'Stone façade on Carrera 10' },
       { alt: 'Open floor plan with new utilities' },
@@ -22,58 +26,75 @@ export const EN: Record<string, Parcial<Edificio>> = {
       { alt: 'TransMilenio corridor seen from the roof' },
     ],
     resumen:
-      'Favorable site visit: structure brought up to NSR-10 and new utilities. Zoning, heritage and ownership still need to be validated (Phase 0).',
+      'Title free of attachments and mortgages, and a structure retrofitted under a 2013 permit. It is a listed heritage building in the Historic Center: any change of use needs heritage approval and a new permit.',
     alertas: [
-      'Request the retrofit study and permit (NSR-10) from the owner.',
-      'Request the RETIE electrical certification and the plumbing drawings.',
-      'Stone façade of architectural value: check whether it is listed as an Asset of Cultural Interest (BIC).',
+      'Listed heritage building (Category B) in the Historic Center: a new project requires an IDPC opinion and authorization from the Ministry of Culture.',
+      'The 2013 permit has expired. Confirm whether the work was completed and whether an occupancy permit exists.',
+      'Lot areas do not match: 183.33 m² on the certificate of title and 173.33 m² on the permit. The IDU expropriated a 36.60 m² strip in 2012. Clarify with the Cadastre.',
+      'The condominium regime was cancelled in 2011, but the certificate lists 23 derived registration numbers. Check that they are closed.',
     ],
     secciones: [
       {
-        titulo: 'Cadastral identification',
+        titulo: 'Property identification',
         datos: [
-          { label: 'Lot area', fuente: CATASTRO },
-          { label: 'Built area', valor: '3,180 m²', fuente: CATASTRO },
-          { label: 'Floors', fuente: CATASTRO },
-          { label: 'Current use', valor: 'Offices (vacant)', fuente: CATASTRO },
+          { label: 'Property registration number', valor: '50C-297658 (active record)', fuente: `${CERT_EN}, p. 1` },
+          { label: 'Lot area', valor: '183.33 m² per the certificate · 173.33 m² per the permit', fuente: `${CERT_EN}, p. 1 · ${LIC_EN}, p. 1` },
+          { label: 'Built area', valor: '1,140.02 m²', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Floors', valor: '6 floors and basement · 20.55 m high', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Approved uses', valor: 'Retail 489 m² (1 unit) · offices 651 m² (4 units)', fuente: `${LIC_EN}, p. 1` },
         ],
       },
       {
-        titulo: 'POT zoning',
+        titulo: 'Zoning',
         datos: [
-          { label: 'Planning treatment', valor: 'Urban renewal', fuente: POT },
-          { label: 'Permitted uses', valor: 'Residential, retail, services', fuente: POT },
+          { label: 'Zoning under which it was permitted (2013)', valor: 'Decree 492 of 2007 · UPZ 93 Las Nieves · urban renewal, reactivation mode', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Approved ratios', valor: 'Lot coverage 0.84 · floor area ratio 6.57', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Current zoning (POT Decree 555 of 2021)', valor: PENDIENTE_EN },
         ],
       },
       {
-        titulo: 'Heritage and PEMP',
+        titulo: 'Heritage',
         datos: [
-          { label: 'Asset of Cultural Interest (BIC)', valor: 'No', fuente: IDPC },
-          { label: 'PEMP intervention level', valor: 'Level 4: allows adaptive reuse', fuente: IDPC },
+          { label: 'District Asset of Cultural Interest (BIC)', valor: 'Yes · Category B, typological conservation (Decree 678 of 1994)', fuente: `${IDPC_EN}, p. 2` },
+          { label: 'Historic Center (national BIC)', valor: 'Yes · project authorized by the Ministry of Culture (Res. 2724 of 2012)', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Intervention approved by the IDPC', valor: 'Partial demolition along Carrera 10, new stone façade, NSR-10 retrofit and one retail unit on the basement and ground floor', fuente: `${IDPC_EN}, p. 4` },
+          { label: 'PEMP intervention level', valor: PENDIENTE_EN, fuente: 'Historic Center PEMP (Res. 088 of 2021)' },
+        ],
+      },
+      {
+        titulo: 'Permits',
+        datos: [
+          { label: 'Latest permit', valor: 'LC 13-4-0066 · final on Jan 28, 2013 · valid for 24 months, extendable by 12', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Permit types', valor: 'Alteration, partial demolition (57.37 m²) and structural retrofit', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Structure', valor: 'Reinforced concrete frames on spread footings · NSR-10 dynamic analysis', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Earlier permits', valor: 'LC 283 and LC 2710 (1988)', fuente: `${LIC_EN}, p. 1` },
         ],
       },
       {
         titulo: 'Hazard and risk',
         datos: [
-          { label: 'Landslide', valor: 'Low', fuente: POT },
-          { label: 'Flooding', valor: 'Not applicable', fuente: POT },
+          { label: 'Landslide', valor: 'Not applicable (per the 2013 permit)', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Flooding', valor: 'Not applicable (per the 2013 permit)', fuente: `${LIC_EN}, p. 1` },
+          { label: 'Seismic microzone', valor: 'Piedemonte B', fuente: `${LIC_EN}, p. 1` },
         ],
       },
       {
         titulo: 'Incentives',
         datos: [
-          { label: 'RenoBo zone', valor: 'Yes', fuente: 'RenoBo (sample)' },
-          { label: '"Ciudad Inteligente" Agreement', valor: 'Applies (validity to be confirmed)', fuente: 'Internal rule' },
+          { label: 'RenoBo zone', valor: PENDIENTE_EN },
+          { label: '"Ciudad Inteligente" Agreement', valor: 'Possible exemption for the Historic Center (validity to be confirmed)', fuente: 'Internal rule' },
         ],
       },
     ],
     documento: {
-      nombre: CERTIFICADO,
+      nombre: 'Certificate of title · October 26, 2026',
       extracciones: [
-        { campo: 'Property registration number' },
-        { campo: 'Owner' },
-        { campo: 'Active attachments', valor: 'None' },
+        { campo: 'Current owner', valor: 'Rolher Ltda. (company), since 1983' },
+        { campo: 'Active attachments', valor: 'None in the 13 entries' },
         { campo: 'Active mortgages', valor: 'None' },
+        { campo: 'Partial expropriation', valor: 'IDU, 36.60 m² (Res. 5253 of 2011), for public space on Carrera 10' },
+        { campo: 'Condominium regime', valor: 'Created in 1991 and cancelled in 2011' },
+        { campo: 'Registered address' },
       ],
     },
     informe: {
