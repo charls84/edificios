@@ -1,6 +1,6 @@
 ---
 tipo: project
-actualizado: 2026-10-20
+actualizado: 2026-10-29
 ---
 # Estado del proyecto Edificios
 
@@ -25,17 +25,22 @@ Fuente de verdad: `BUSINESS_LOGIC.md` (v0.3).
 - RED Atlas (mercado) y Croma (debida diligencia) solo como candidatos de Fase 2.
 - Base catastral de Bogotá descargable (PostgreSQL, CC BY 4.0): usarla en Fase 0/1.
 
-**Edificio Rolher (real)** — Carrera 10 # 13-22. Visita técnica 2026-10-18 (Daniela Céspedes · Torna).
-Datos y fotos en `src/features/demo/rolher.ts` y `public/demo/rolher/` (incluye el PDF). Solo se usa lo que
-dice el informe; catastro, POT, patrimonio y propiedad quedan pendientes de la Fase 0. Coordenadas aproximadas.
+**Edificio Rolher (real)** — CHIP AAA0257KADM, matrícula 50C-297658, Av. Jiménez (Calle 13) # 9-84, esquina
+Carrera 10 (el informe de visita decía "Carrera 10 # 13-22", que es incorrecta). Ficha con datos reales de: certificado
+de tradición (26-oct-2026), licencia LC 13-4-0066 (2013), Res. IDPC 492 de 2012, presentación IDU 2010 y planos
+originales de 1936. Hallazgos y faltantes en `docs/FLUJO-ESTUDIO.md` (sección 10). Los PDF NO se publican en el demo
+(traen nombres y cédulas); solo los datos del edificio. Visita técnica editable en `src/features/visita/`.
 Los demás edificios del demo siguen siendo ficticios.
-En la ficha de Rolher se conservan los datos oficiales DE EJEMPLO (marcados "Por validar" + aviso) a pedido del
-usuario; el informe va en la sección "Visita técnica", editable y con carga de fotos (`src/features/visita/`).
-En el demo los cambios se guardan en el navegador (localStorage + IndexedDB); en la Fase 1 pasan a Supabase
-(tabla visit_notes / Storage "documentos").
 
-**Pendiente (a 2026-10-20)**
-- Proyecto Supabase `xeywtjnyoqqqmaomvfcd`: correr migración, cerrar registro, primer admin.
-- Rotar secret key y deshabilitar llaves legacy (se expusieron en el chat).
-- Entorno en la nube: permitir `*.supabase.co` y cargar variables; verificar con `npm run check:supabase`.
-- CHIP o direcciones de los edificios de los dos propietarios (bloquea Fase 0).
+**Metodología del estudio:** `docs/FLUJO-ESTUDIO.md` (7 pasos, matrícula, documentos obligatorios/recomendados).
+
+**Supabase (a 2026-10-29)** — el usuario ya hizo: rotar llaves y apagar legacy, correr la migración base (7 tablas,
+8 fuentes, bucket privado `documentos`), cerrar registro, plantillas de correo, crear su usuario admin.
+Pendiente del usuario: permitir `*.supabase.co` y cargar variables en el entorno en la nube y abrir sesión nueva.
+Pendiente de desarrollo: verificar con `npm run check:supabase`; construir modo real (matricular edificio, ficha
+desde BD, carga de documentos a Storage, visita en visit_notes); cargar el Rolher real. Decisión propuesta: el
+deploy actual (edificios-seven.vercel.app) sigue en modo demo para el cliente; la versión real va en un segundo
+proyecto de Vercel con las variables. Falta poner Site URL / Redirect URLs en Supabase al publicar esa versión.
+
+**Pendiente**
+- CHIP o direcciones de los edificios del segundo propietario (Fase 0).
