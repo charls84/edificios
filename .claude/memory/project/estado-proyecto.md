@@ -50,10 +50,12 @@ pesos norma 25 / estructura 25 / ubicación 20 / entorno 15 / historia 15, umbra
 data_points (categoria 'filtros'), sin migración. Catálogo: src/features/estudio/catalogo/filtros.ts. Por validar con Torna.
 Parámetros financieros: 12 % / 10 años / salida 12 % por defecto, editables, recuerdan la última corrida.
 
-**Deploy de la versión real** — la cuenta de Vercel conectada (team carlos-1645s-projects) da 403 al crear proyectos y no
-hay CLI ni token en el entorno: el usuario crea el proyecto `torna-edificios` desde el panel (rama
-claude/lucid-goodall-edgtor como Production Branch, 3 variables públicas + SUPABASE_SECRET_KEY él mismo). El demo
-(edificios-seven.vercel.app) está en otra cuenta y no se toca.
+**Deploy de la versión real (2026-10-30)** — mismo proyecto Vercel `edificios` (prj_mxfaUlMgYUa0N5PlsXNvoigywQ0u,
+team carlos-1645s-projects). Producción (`main`) = demo sin variables. Las 3 variables públicas de Supabase y
+NEXT_PUBLIC_SITE_URL están solo en Preview para la rama claude/lucid-goodall-edgtor →
+https://edificios-git-claude-lucid-goodall-edgtor-carlos-1645s-projects.vercel.app (protegida por Vercel Auth).
+SUPABASE_SECRET_KEY la agrega el usuario (solo invitaciones). Falta: Redirect URL de esa dirección en Supabase.
+Paso siguiente propuesto: proyecto propio para la versión real cuando la rama pase a main.
 
 Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizonte, costos de referencia, destinatario y firma del informe.
 
