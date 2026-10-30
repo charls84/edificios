@@ -18,6 +18,10 @@ export async function GET(request: Request) {
     ok = !(await supabase.auth.exchangeCodeForSession(code)).error
   } else if (tokenHash && type) {
     ok = !(await supabase.auth.verifyOtp({ token_hash: tokenHash, type })).error
+  } else {
+    // Las invitaciones traen la sesion en el fragmento (#access_token=...), que el servidor no ve.
+    // El navegador conserva el fragmento al redirigir: /confirmar lo lee.
+    return NextResponse.redirect(`${origin}/confirmar?next=${encodeURIComponent(next)}`)
   }
 
   return NextResponse.redirect(ok ? `${origin}${next}` : `${origin}/login?error=enlace_invalido`)

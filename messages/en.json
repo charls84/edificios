@@ -44,7 +44,18 @@
     "repiteContrasena": "Confirm password",
     "guardarContrasena": "Save password",
     "guardando": "Saving…",
-    "enlaceEnviado": "If this email belongs to the team, you will receive a link to reset your password."
+    "enlaceEnviado": "If this email belongs to the team, you will receive a link to reset your password.",
+    "confirmar": {
+      "titulo": "Activate access",
+      "subtitulo": "We are checking your link.",
+      "entrando": "Checking the link…",
+      "textoBoton": "Tap the button to continue and set your password.",
+      "continuar": "Continue",
+      "error": "The link expired or was already used.",
+      "queHacer": "Request a new link with your email. Open it only once, in this same browser.",
+      "pedirNuevo": "Request a new link",
+      "volver": "Back to sign in"
+    }
   },
   "errores": {
     "correoInvalido": "Invalid email",

@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { AuthShell, DemoLogin, LoginForm } from '@/features/auth/components'
+import { ReenvioHash } from '@/features/auth/components/reenvio-hash'
 import { IS_DEMO } from '@/shared/lib/demo'
 
 export default async function LoginPage({
@@ -12,6 +13,7 @@ export default async function LoginPage({
 
   return (
     <AuthShell title={t('auth.entrarTitulo')} subtitle={t('auth.entrarSubtitulo')}>
+      <ReenvioHash />
       {IS_DEMO ? (
         <DemoLogin />
       ) : (

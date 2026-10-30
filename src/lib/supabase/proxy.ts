@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { DEMO_COOKIE, IS_DEMO } from '@/shared/lib/demo'
 
 // Rutas accesibles sin sesion. No hay registro publico: solo invitacion.
-const PUBLIC_ROUTES = ['/login', '/forgot-password', '/callback']
+const PUBLIC_ROUTES = ['/login', '/forgot-password', '/callback', '/confirmar']
 // Rutas que un usuario con sesion no deberia ver (lo mandamos al portafolio)
 const GUEST_ONLY_ROUTES = ['/login', '/forgot-password']
 

@@ -25,7 +25,7 @@ export async function inviteMember(_prev: ActionState, formData: FormData): Prom
   const admin = createAdminClient()
   const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
     data: { full_name },
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback?next=/update-password`,
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/confirmar?next=/update-password`,
   })
   if (error) return { error: t('errores.invitacionFallo') }
 

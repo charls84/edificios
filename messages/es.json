@@ -44,7 +44,18 @@
     "repiteContrasena": "Repite la contraseña",
     "guardarContrasena": "Guardar contraseña",
     "guardando": "Guardando…",
-    "enlaceEnviado": "Si el correo pertenece al equipo, te llegará un enlace para restablecer la contraseña."
+    "enlaceEnviado": "Si el correo pertenece al equipo, te llegará un enlace para restablecer la contraseña.",
+    "confirmar": {
+      "titulo": "Activar acceso",
+      "subtitulo": "Estamos revisando tu enlace.",
+      "entrando": "Revisando el enlace…",
+      "textoBoton": "Toca el botón para continuar y definir tu contraseña.",
+      "continuar": "Continuar",
+      "error": "El enlace expiró o ya se usó.",
+      "queHacer": "Pide un enlace nuevo con tu correo. Ábrelo una sola vez, en este mismo navegador.",
+      "pedirNuevo": "Pedir un enlace nuevo",
+      "volver": "Volver a entrar"
+    }
   },
   "errores": {
     "correoInvalido": "Correo no válido",
