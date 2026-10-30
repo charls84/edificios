@@ -55,8 +55,10 @@ Dos proyectos Vercel (team carlos-1645s-projects), ambos publican producción de
 - `edificios` (prj_mxfaUlMgYUa0N5PlsXNvoigywQ0u) → demo del cliente, edificios-seven.vercel.app, SIN variables de Supabase en
   producción (por eso queda en modo demo). Tiene variables de Preview solo para la rama claude/lucid-goodall-edgtor.
 - `torna-edificios` (prj_LYrRKGD1WXGQ0VDZApVIIpHmCa2T) → versión real, con las 3 variables públicas de Supabase.
-  SUPABASE_SECRET_KEY la agrega el usuario (solo invitaciones). Supabase Site URL / Redirect URLs deben apuntar al dominio
-  de producción de este proyecto.
+  Dominio: torna-edificios.vercel.app. SUPABASE_SECRET_KEY (sensitive, Production) ya cargada por el usuario el 2026-10-30.
+  Supabase Site URL / Redirect URLs deben apuntar a torna-edificios.vercel.app.
+- Pendiente del usuario: borrar SUPABASE_SECRET_KEY del proyecto `edificios` (demo), quedó ahí por error.
+- Ojo: las variables sensitive de Vercel no se pueden renombrar ni borrar desde el conector; se hace en el panel.
 
 Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizonte, costos de referencia, destinatario y firma del informe.
 
