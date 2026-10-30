@@ -16,6 +16,8 @@ if (process.env.HTTPS_PROXY && !process.env.NODE_USE_ENV_PROXY) {
 if (existsSync('.env.local')) process.loadEnvFile('.env.local')
 
 const TABLES = ['profiles', 'buildings', 'data_points', 'documents', 'extractions', 'visit_notes', 'data_sources']
+// Segunda migracion (flujo del estudio): checklist, usos candidatos y analisis
+const TABLES_ESTUDIO = ['building_documents', 'checklist_items', 'candidate_uses', 'analyses']
 const EXPECTED_SOURCES = 8
 let failures = 0
 
@@ -52,8 +54,12 @@ const admin = createClient(url, secret, { auth: { persistSession: false } })
 const anon = createClient(url, publishable, { auth: { persistSession: false } })
 
 for (const table of TABLES) {
-  const { error } = await admin.from(table).select('*', { count: 'exact', head: true })
-  report(!error, `Tabla ${table}`, error ? 'no existe: corre la migración (docs/SETUP.md, Parte 2)' : '')
+  const { error } = await admin.from(table).select('*').limit(1)
+  report(!error, `Tabla ${table}`, error ? 'no existe: corre la migración base (docs/SETUP.md, Parte 2)' : '')
+}
+for (const table of TABLES_ESTUDIO) {
+  const { error } = await admin.from(table).select('*').limit(1)
+  report(!error, `Tabla ${table}`, error ? 'no existe: corre la migración del estudio (docs/SETUP.md, Parte 2)' : '')
 }
 
 const { count } = await admin.from('data_sources').select('*', { count: 'exact', head: true })
@@ -64,6 +70,8 @@ report((leaked ?? []).length === 0, 'Reglas de acceso (RLS)', 'sin sesión no se
 
 const { data: bucket } = await admin.storage.getBucket('documentos')
 report(bucket?.public === false, 'Almacenamiento privado de documentos', bucket ? '' : 'no existe')
+const { data: bucketFotos } = await admin.storage.getBucket('fotos')
+report(bucketFotos?.public === false, 'Almacenamiento privado de fotos', bucketFotos ? '' : 'no existe: corre la migración del estudio')
 
 const { count: admins } = await admin.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'admin')
 report((admins ?? 0) > 0, 'Primer administrador', `${admins ?? 0} admin(s) (docs/SETUP.md, Parte 3)`)

@@ -55,7 +55,7 @@ export function Galeria({ fotos, titulo }: { fotos: Foto[]; titulo: string }) {
           aria-hidden={i !== actual}
           className={`absolute inset-0 transition-opacity duration-700 ${i === actual ? 'opacity-100' : 'opacity-0'}`}
         >
-          {f.ilustrativa ? (
+          {f.ilustrativa || f.src.startsWith('/api/') ? (
             <Image src={f.src} alt={f.alt} fill unoptimized priority={i === 0} className="object-cover object-bottom" />
           ) : (
             <>

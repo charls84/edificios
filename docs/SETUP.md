@@ -27,16 +27,28 @@ Supabase → **Project Settings → API Keys**:
 
 ---
 
-## Parte 2 · Base de datos (3 min)
+## Parte 2 · Base de datos (5 min)
 
-**Para qué:** crear las tablas, las reglas de acceso y el almacenamiento privado de documentos.
+**Para qué:** crear las tablas, las reglas de acceso y el almacenamiento privado de documentos y fotos.
 
-1. Abrir `supabase/migrations/20261019000000_base.sql` en GitHub y copiar todo el contenido.
+Son dos migraciones y se corren en orden, cada una una sola vez:
+
+| # | Archivo | Qué crea |
+|---|---|---|
+| 1 | `supabase/migrations/20261019000000_base.sql` | 7 tablas base, 8 fuentes oficiales, bucket privado `documentos` |
+| 2 | `supabase/migrations/20261030000000_estudio.sql` | Flujo del estudio: checklist de documentos, checklist A–F, usos candidatos, análisis, bucket privado `fotos` |
+
+Para cada una:
+
+1. Abrir el archivo en GitHub y copiar todo el contenido.
 2. Supabase → **SQL Editor → New query**, pegar y dar **Run**.
 3. Debe decir *Success. No rows returned*.
-4. **Verificar:** en **Table Editor** deben aparecer 7 tablas: `profiles`, `buildings`,
-   `data_points`, `documents`, `extractions`, `visit_notes` y `data_sources`
-   (esta última con 8 filas: las fuentes oficiales).
+
+**Verificar:** en **Table Editor** deben aparecer 11 tablas: `profiles`, `buildings`, `data_points`,
+`documents`, `extractions`, `visit_notes`, `data_sources` (con 8 filas), `building_documents`,
+`checklist_items`, `candidate_uses` y `analyses`. En **Storage** deben existir los buckets `documentos` y `fotos`, ambos privados.
+
+> Si la migración base ya se corrió antes, solo hace falta la segunda.
 
 ---
 
@@ -99,7 +111,8 @@ npm run check:supabase
 Revisa, sin mostrar ninguna llave:
 - que las variables estén definidas;
 - que el proyecto responda;
-- que existan las 7 tablas y las 8 fuentes oficiales;
-- que la llave pública **no** pueda leer datos sin sesión (las reglas de acceso funcionan).
+- que existan las 11 tablas y las 8 fuentes oficiales;
+- que la llave pública **no** pueda leer datos sin sesión (las reglas de acceso funcionan);
+- que los dos buckets de archivos (documentos y fotos) sean privados.
 
 Si todo sale ✅, la configuración está completa.

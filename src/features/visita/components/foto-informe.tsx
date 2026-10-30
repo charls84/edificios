@@ -27,7 +27,7 @@ export function FotoInforme({ src, alt, className }: { src: string; alt: string;
   }, [src])
 
   if (!esFotoLocal(src)) {
-    return <Image src={src} alt={alt} width={600} height={800} sizes="(min-width: 768px) 25vw, 50vw" className={className} />
+    return <Image src={src} alt={alt} width={600} height={800} unoptimized={src.startsWith('/api/')} sizes="(min-width: 768px) 25vw, 50vw" className={className} />
   }
   if (!blobUrl) return <div className={`${className} animate-pulse bg-piedra`} aria-label={t('cargandoFoto')} />
   // eslint-disable-next-line @next/next/no-img-element -- foto local (blob), no pasa por el optimizador

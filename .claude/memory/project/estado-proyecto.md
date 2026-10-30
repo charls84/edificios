@@ -1,6 +1,6 @@
 ---
 tipo: project
-actualizado: 2026-10-29
+actualizado: 2026-10-30
 ---
 # Estado del proyecto Edificios
 
@@ -34,13 +34,30 @@ Los demás edificios del demo siguen siendo ficticios.
 
 **Metodología del estudio:** `docs/FLUJO-ESTUDIO.md` (7 pasos, matrícula, documentos obligatorios/recomendados).
 
-**Supabase (a 2026-10-29)** — el usuario ya hizo: rotar llaves y apagar legacy, correr la migración base (7 tablas,
-8 fuentes, bucket privado `documentos`), cerrar registro, plantillas de correo, crear su usuario admin.
-Pendiente del usuario: permitir `*.supabase.co` y cargar variables en el entorno en la nube y abrir sesión nueva.
-Pendiente de desarrollo: verificar con `npm run check:supabase`; construir modo real (matricular edificio, ficha
-desde BD, carga de documentos a Storage, visita en visit_notes); cargar el Rolher real. Decisión propuesta: el
-deploy actual (edificios-seven.vercel.app) sigue en modo demo para el cliente; la versión real va en un segundo
-proyecto de Vercel con las variables. Falta poner Site URL / Redirect URLs en Supabase al publicar esa versión.
+**Supabase (a 2026-10-30)** — las dos migraciones (base y estudio) aplicadas y verificadas con `npm run check:supabase`
+(11 tablas, buckets privados documentos y fotos). Sin conector de Supabase en la sesión: las migraciones las pega el
+usuario en SQL Editor.
+
+**Modo real (construido 2026-10-30, PRP-001)** — `src/features/estudio/`: catálogo de 44 documentos (lista de Torna)
+y 52 ítems A–F (guía de mayor y mejor uso), usos candidatos, tamizaje (reglas) y mayor y mejor uso (fórmulas: VPN/TIR
+mensual, sensibilidades, valor ajustado por riesgo), informe de 10 capítulos imprimible. Rutas:
+`/edificios/nuevo`, `/edificios/[id]/{editar,documentos,checklist,usos,visita,analisis,informe}`. Archivos privados por
+`/api/archivos/[bucket]/[...ruta]`; carga directa navegador→Storage. En demo, la ficha sigue siendo la de una página.
+Metodología: `docs/FLUJO-ESTUDIO.md` v0.2. Probado end-to-end (16 pasos). Pendiente: cargar el Rolher real,
+decidir deploy (segundo proyecto de Vercel para la versión real; el demo sigue igual).
+**5 filtros (2026-10-30)** — propuesta propia (Transformation Meter TU Delft adaptado a Bogotá): veto + criterios 0-2,
+pesos norma 25 / estructura 25 / ubicación 20 / entorno 15 / historia 15, umbrales 70/50, radar pentagonal. Se guardan en
+data_points (categoria 'filtros'), sin migración. Catálogo: src/features/estudio/catalogo/filtros.ts. Por validar con Torna.
+Parámetros financieros: 12 % / 10 años / salida 12 % por defecto, editables, recuerdan la última corrida.
+
+**Deploy de la versión real (2026-10-30)** — mismo proyecto Vercel `edificios` (prj_mxfaUlMgYUa0N5PlsXNvoigywQ0u,
+team carlos-1645s-projects). Producción (`main`) = demo sin variables. Las 3 variables públicas de Supabase y
+NEXT_PUBLIC_SITE_URL están solo en Preview para la rama claude/lucid-goodall-edgtor →
+https://edificios-git-claude-lucid-goodall-edgtor-carlos-1645s-projects.vercel.app (protegida por Vercel Auth).
+SUPABASE_SECRET_KEY la agrega el usuario (solo invitaciones). Falta: Redirect URL de esa dirección en Supabase.
+Paso siguiente propuesto: proyecto propio para la versión real cuando la rama pase a main.
+
+Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizonte, costos de referencia, destinatario y firma del informe.
 
 **Pendiente**
 - CHIP o direcciones de los edificios del segundo propietario (Fase 0).

@@ -1,7 +1,9 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState, useTransition } from 'react'
+import { guardarInformeVisita } from '@/features/estudio/services/analisis-actions'
 import type { InformeVisita } from '@/features/ficha/types'
 import { borrarInforme, fotosDe, guardarInforme, informeVacio, useInformeLocal } from '../lib/almacen'
 import { borrarFotos } from '../lib/fotos-db'
@@ -20,18 +22,40 @@ function normalizar(inf: InformeVisita): InformeVisita {
   }
 }
 
-export function VisitaTecnica({ edificioId, inicial }: { edificioId: string; inicial: InformeVisita | null }) {
-  // Si hay cambios guardados en este navegador, mandan sobre el informe original
+interface Props {
+  edificioId: string
+  inicial: InformeVisita | null
+  /** local: se guarda en este navegador (demo) · servidor: en Supabase, compartido con el equipo */
+  modo?: 'local' | 'servidor'
+}
+
+export function VisitaTecnica({ edificioId, inicial, modo = 'local' }: Props) {
+  // En modo local, si hay cambios guardados en este navegador, mandan sobre el informe original
   const t = useTranslations('visita')
+  const router = useRouter()
+  const [guardando, iniciar] = useTransition()
   const local = useInformeLocal(edificioId)
-  const guardado = local ?? inicial
-  const editado = local !== null
+  const guardado = modo === 'local' ? (local ?? inicial) : inicial
+  const editado = modo === 'local' && local !== null
   const [borrador, setBorrador] = useState<InformeVisita | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
 
   function guardar() {
     if (!borrador) return
     const nuevo = normalizar(borrador)
+    if (modo === 'servidor') {
+      iniciar(async () => {
+        const r = await guardarInformeVisita(edificioId, nuevo)
+        if (r.error) {
+          setAviso(t('errorServidor'))
+          return
+        }
+        setBorrador(null)
+        setAviso(t('guardadoServidor'))
+        router.refresh()
+      })
+      return
+    }
     if (!guardarInforme(edificioId, nuevo)) {
       setAviso(t('errorGuardar'))
       return
@@ -61,13 +85,13 @@ export function VisitaTecnica({ edificioId, inicial }: { edificioId: string; ini
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 id="visita-tecnica" className="text-2xl font-bold">{t('titulo')}</h2>
-          <p className="text-sm text-medio-texto">{t('subtitulo')}</p>
+          <p className="text-sm text-medio-texto">{modo === 'servidor' ? t('subtituloServidor') : t('subtitulo')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {borrador ? (
             <>
               <button type="button" onClick={cancelar} className="rounded-xl border border-borde bg-white px-4 py-2 text-sm font-semibold">{t('cancelar')}</button>
-              <button type="button" onClick={guardar} className="boton w-auto">{t('guardar')}</button>
+              <button type="button" onClick={guardar} disabled={guardando} className="boton w-auto">{guardando ? t('guardando') : t('guardar')}</button>
             </>
           ) : (
             <>
@@ -85,7 +109,7 @@ export function VisitaTecnica({ edificioId, inicial }: { edificioId: string; ini
       {aviso && <p role="status" className="rounded-xl bg-verde-claro px-4 py-2 text-sm text-verde">{aviso}</p>}
 
       {borrador ? (
-        <EditorInforme value={borrador} onChange={setBorrador} />
+        <EditorInforme edificioId={edificioId} value={borrador} onChange={setBorrador} />
       ) : guardado ? (
         <InformeVista informe={guardado} />
       ) : (
