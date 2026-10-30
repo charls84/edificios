@@ -22,7 +22,24 @@ function guard(request: NextRequest, hasUser: boolean) {
   return null
 }
 
+// Si Supabase no reconoce la direccion de retorno, manda los enlaces de correo
+// (recuperacion, invitacion) a la Site URL sin ruta: se reenvian a /callback.
+// Ambos flujos terminan definiendo la contrasena.
+function enlaceDeCorreo(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl
+  if (pathname !== '/' || !(searchParams.has('code') || searchParams.has('token_hash'))) return null
+  const destino = new URL('/callback', request.url)
+  for (const clave of ['code', 'token_hash', 'type']) {
+    const valor = searchParams.get(clave)
+    if (valor) destino.searchParams.set(clave, valor)
+  }
+  destino.searchParams.set('next', '/update-password')
+  return NextResponse.redirect(destino)
+}
+
 export async function updateSession(request: NextRequest) {
+  const reenvio = enlaceDeCorreo(request)
+  if (reenvio) return reenvio
   if (IS_DEMO) {
     return guard(request, request.cookies.has(DEMO_COOKIE)) ?? NextResponse.next({ request })
   }

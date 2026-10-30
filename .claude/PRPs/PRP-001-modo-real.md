@@ -106,4 +106,5 @@ imprimible. Detalle en `docs/FLUJO-ESTUDIO.md` v0.2.
 - `check:supabase` usaba `select(head: true, count)` y NO detecta tablas inexistentes con la secret key. Ahora consulta una fila real.
 - Los archivos privados se sirven por `/api/archivos/[bucket]/[...ruta]` con la sesión del usuario (RLS). `next/image` no puede optimizarlos (no tiene la cookie): usar `unoptimized` para rutas `/api/`.
 - Viabilidad: la primera versión usaba rentabilidad simple ≥ tasa y un VPN sin valor de salida; daba "Viable" con VPN negativo. Ahora el flujo incluye el valor de salida (neto ÷ tasa de capitalización) y viable = VPN ≥ 0.
+- Si la dirección de retorno no está en *Redirect URLs* de Supabase, el enlace de correo llega a la Site URL sin ruta (`/?code=`). El proxy ahora lo reenvía a `/callback`. Al publicar en un dominio nuevo: Site URL y Redirect URLs en Supabase SIEMPRE.
 - La carga de archivos va del navegador directo a Storage: las server actions tienen límite de 1 MB por defecto.
