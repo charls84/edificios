@@ -45,6 +45,16 @@ mensual, sensibilidades, valor ajustado por riesgo), informe de 10 capítulos im
 `/api/archivos/[bucket]/[...ruta]`; carga directa navegador→Storage. En demo, la ficha sigue siendo la de una página.
 Metodología: `docs/FLUJO-ESTUDIO.md` v0.2. Probado end-to-end (16 pasos). Pendiente: cargar el Rolher real,
 decidir deploy (segundo proyecto de Vercel para la versión real; el demo sigue igual).
+**5 filtros (2026-10-30)** — propuesta propia (Transformation Meter TU Delft adaptado a Bogotá): veto + criterios 0-2,
+pesos norma 25 / estructura 25 / ubicación 20 / entorno 15 / historia 15, umbrales 70/50, radar pentagonal. Se guardan en
+data_points (categoria 'filtros'), sin migración. Catálogo: src/features/estudio/catalogo/filtros.ts. Por validar con Torna.
+Parámetros financieros: 12 % / 10 años / salida 12 % por defecto, editables, recuerdan la última corrida.
+
+**Deploy de la versión real** — la cuenta de Vercel conectada (team carlos-1645s-projects) da 403 al crear proyectos y no
+hay CLI ni token en el entorno: el usuario crea el proyecto `torna-edificios` desde el panel (rama
+claude/lucid-goodall-edgtor como Production Branch, 3 variables públicas + SUPABASE_SECRET_KEY él mismo). El demo
+(edificios-seven.vercel.app) está en otra cuenta y no se toca.
+
 Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizonte, costos de referencia, destinatario y firma del informe.
 
 **Pendiente**
