@@ -119,6 +119,8 @@ export interface ResultadoTamizaje {
 export interface ParametrosFinancieros {
   tasaMinima: number
   horizonteAnios: number
+  /** Tasa con la que se capitaliza el ingreso neto para el valor de salida */
+  tasaSalida: number
   valorLoteVacio: number | null
 }
 

@@ -3,7 +3,7 @@ import { SemaforoBadge } from '@/features/ficha/components/badges'
 import type { InformeVisita } from '@/features/ficha/types'
 import { DOCUMENTOS, documentoPorCodigo } from '../catalogo/documentos'
 import { ITEMS_GUIA, itemsDelBloque } from '../catalogo/guia'
-import { COP, fecha, porcentaje, tx } from '../lib/texto'
+import { COP, fecha, numero, porcentaje, tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
 import { BotonImprimir } from './boton-imprimir'
 import { ResultadoMayorMejorUso as VistaMmu } from './resultado-mmu'
@@ -86,7 +86,7 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         {recomendado ? (
           <>
             <p className="text-lg font-semibold">{t('usoRecomendado', { uso: recomendado.nombre })}</p>
-            <p>{t('porque', { rentabilidad: porcentaje(locale, recomendado.rentabilidad ?? 0), vpn: COP(locale, recomendado.vpn ?? 0), recuperacion: (recomendado.recuperacionAnios ?? 0).toFixed(1) })}</p>
+            <p>{t('porque', { rentabilidad: porcentaje(locale, recomendado.rentabilidad ?? 0), vpn: COP(locale, recomendado.vpn ?? 0), recuperacion: numero(locale, recomendado.recuperacionAnios ?? 0) })}</p>
           </>
         ) : <p className="text-medio-texto">{t('sinRecomendacion')}</p>}
         {tamizaje && (
@@ -137,7 +137,7 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
 
       <Capitulo n={7} titulo={t('cap.7')}>
         <Bloque codigo="F" estados={estados} />
-        {r && <p className="text-xs text-medio-texto">{t('parametros', { tasa: porcentaje(locale, r.parametros.tasaMinima), anios: r.parametros.horizonteAnios })}</p>}
+        {r && <p className="text-xs text-medio-texto">{t('parametros', { tasa: porcentaje(locale, r.parametros.tasaMinima), anios: r.parametros.horizonteAnios, salida: r.parametros.tasaSalida ? porcentaje(locale, r.parametros.tasaSalida) : '—' })}</p>}
       </Capitulo>
 
       <Capitulo n={8} titulo={t('cap.8')}>

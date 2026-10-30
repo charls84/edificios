@@ -8,9 +8,11 @@ import { ITEMS_GUIA } from '../catalogo/guia'
 //   ingreso neto anual  = bruto - gastos anuales
 //   rentabilidad        = neto / inversion
 //   recuperacion (anos) = inversion / neto
-//   VPN y TIR sobre el horizonte, con los meses sin ingreso al inicio
+//   valor de salida     = neto anual / tasa de capitalizacion (lo que vale el inmueble al final del horizonte)
+//   VPN y TIR mensuales: inversion en el mes 0, meses sin ingreso, neto mensual y el valor de salida al final
+// Un uso es viable si VPN >= 0 a la tasa minima (equivale a TIR >= tasa minima).
 
-export const PARAMETROS_DEFAULT: ParametrosFinancieros = { tasaMinima: 0.12, horizonteAnios: 10, valorLoteVacio: null }
+export const PARAMETROS_DEFAULT: ParametrosFinancieros = { tasaMinima: 0.12, horizonteAnios: 10, tasaSalida: 0.12, valorLoteVacio: null }
 
 const PESO_RIESGO = { bajo: 1, medio: 0.9, alto: 0.8 } as const
 
@@ -23,13 +25,14 @@ interface Entradas {
   meses: number
 }
 
-function flujos(e: Entradas, horizonte: number): number[] {
-  // Flujo mensual: inversion en el mes 0, nada hasta el primer ingreso, luego neto mensual
-  const netoMensual = (e.m2 * e.canon * e.ocupacion * 12 - e.gastos) / 12
-  const total = horizonte * 12
+function flujos(e: Entradas, p: ParametrosFinancieros): number[] {
+  const netoAnual = e.m2 * e.canon * e.ocupacion * 12 - e.gastos
+  const total = p.horizonteAnios * 12
   const f = Array<number>(total + 1).fill(0)
   f[0] = -e.inversion
-  for (let m = 1; m <= total; m++) f[m] = m > e.meses ? netoMensual : 0
+  for (let m = 1; m <= total; m++) f[m] = m > e.meses ? netoAnual / 12 : 0
+  // Valor de salida: el inmueble sigue valiendo al final del horizonte
+  if (netoAnual > 0 && p.tasaSalida > 0) f[total] += netoAnual / p.tasaSalida
   return f
 }
 
@@ -82,13 +85,13 @@ export function metricasDeUso(u: UsoCandidato, p: ParametrosFinancieros): Metric
 
   const bruto = e.m2 * e.canon * e.ocupacion * 12
   const neto = bruto - e.gastos
-  const f = flujos(e, p.horizonteAnios)
+  const f = flujos(e, p)
   const valor = vpn(f, p.tasaMinima)
   const rentabilidad = neto / e.inversion
   return {
     ...base,
-    viable: neto > 0 && rentabilidad >= p.tasaMinima,
-    motivo: neto <= 0 ? 'ingreso' : rentabilidad < p.tasaMinima ? 'tasa' : null,
+    viable: neto > 0 && valor >= 0,
+    motivo: neto <= 0 ? 'ingreso' : valor < 0 ? 'tasa' : null,
     ingresoBruto: bruto,
     ingresoNeto: neto,
     rentabilidad,
@@ -99,7 +102,7 @@ export function metricasDeUso(u: UsoCandidato, p: ParametrosFinancieros): Metric
     sensibilidad: {
       canonMenos10: rentabilidadDe({ ...e, canon: e.canon * 0.9 }),
       obraMas20: rentabilidadDe({ ...e, inversion: e.inversion * 1.2 }),
-      colocacionLenta: vpn(flujos({ ...e, meses: e.meses + 6 }, p.horizonteAnios), p.tasaMinima),
+      colocacionLenta: vpn(flujos({ ...e, meses: e.meses + 6 }, p), p.tasaMinima),
     },
   }
 }

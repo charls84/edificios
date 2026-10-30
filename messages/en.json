@@ -455,7 +455,7 @@
         "ningunoTexto": "No use beats the hurdle rate with the current numbers. Review investment, rent or occupancy.",
         "porque": "Yield of {rentabilidad} and NPV of {vpn}. It leaves the most risk-adjusted value.",
         "loteVacio": "The vacant lot is worth more than the building's best use: the building is no longer the best use.",
-        "parametros": "Hurdle rate {tasa} · {anios}-year horizon.",
+        "parametros": "Hurdle rate {tasa} · {anios}-year horizon · exit cap {salida}.",
         "criterio": "Criterion",
         "si": "Yes",
         "no": "No",
@@ -484,9 +484,11 @@
           "demanda": "No demand",
           "datos": "Numbers missing",
           "ingreso": "Negative net income",
-          "tasa": "Below hurdle rate"
+          "tasa": "Negative NPV at the hurdle rate"
         },
-        "nota": "NPV and IRR on monthly cash flows: investment in month 0, no income until the first-income month, then the monthly net. Adjusted value: NPV × 1.0 (low risk), 0.9 (medium) or 0.8 (high)."
+        "nota": "NPV and IRR on monthly cash flows: investment in month 0, no income until the first-income month, then the monthly net and, at the end of the horizon, the exit value (net income ÷ cap rate). Viable: NPV ≥ 0 at the hurdle rate. Adjusted value: NPV × 1.0 (low risk), 0.9 (medium) or 0.8 (high).",
+        "salida": "Exit cap rate (%)",
+        "salidaAyuda": "For the property's value at the end: net income ÷ rate."
       }
     },
     "resumen": {
@@ -572,7 +574,7 @@
         "no": "No",
         "por_verificar": "To verify"
       },
-      "parametros": "Parameters: hurdle rate {tasa}, {anios}-year horizon.",
+      "parametros": "Parameters: hurdle rate {tasa}, {anios}-year horizon, exit cap rate {salida}.",
       "sinMatriz": "The matrix is filled when the highest and best use analysis runs.",
       "riesgoAlto": "{uso}: high risk according to the team.",
       "fragil": "{uso}: with rent 10% lower it drops below the hurdle rate.",

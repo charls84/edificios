@@ -455,7 +455,7 @@
         "ningunoTexto": "Ningún uso supera la tasa mínima con los números actuales. Revisa inversión, canon u ocupación.",
         "porque": "Rentabilidad del {rentabilidad} y VPN de {vpn}. Es el que deja más valor ajustado por riesgo.",
         "loteVacio": "El lote vacío vale más que el mejor uso del edificio: el edificio ya no es el mejor uso.",
-        "parametros": "Tasa mínima {tasa} · horizonte de {anios} años.",
+        "parametros": "Tasa mínima {tasa} · horizonte de {anios} años · salida al {salida}.",
         "criterio": "Criterio",
         "si": "Sí",
         "no": "No",
@@ -484,9 +484,11 @@
           "demanda": "Sin demanda",
           "datos": "Faltan números",
           "ingreso": "Ingreso neto negativo",
-          "tasa": "Bajo la tasa mínima"
+          "tasa": "VPN negativo a la tasa mínima"
         },
-        "nota": "VPN y TIR sobre flujos mensuales: la inversión en el mes 0, sin ingreso hasta el mes del primer ingreso, luego el neto mensual. Valor ajustado: VPN × 1,0 (riesgo bajo), 0,9 (medio) u 0,8 (alto)."
+        "nota": "VPN y TIR sobre flujos mensuales: la inversión en el mes 0, sin ingreso hasta el mes del primer ingreso, luego el neto mensual y, al final del horizonte, el valor de salida (ingreso neto ÷ tasa de capitalización). Viable: VPN ≥ 0 a la tasa mínima. Valor ajustado: VPN × 1,0 (riesgo bajo), 0,9 (medio) u 0,8 (alto).",
+        "salida": "Tasa de capitalización de salida (%)",
+        "salidaAyuda": "Para el valor del inmueble al final: ingreso neto ÷ tasa."
       }
     },
     "resumen": {
@@ -572,7 +574,7 @@
         "no": "No",
         "por_verificar": "Por verificar"
       },
-      "parametros": "Parámetros: tasa mínima {tasa}, horizonte de {anios} años.",
+      "parametros": "Parámetros: tasa mínima {tasa}, horizonte de {anios} años, tasa de salida {salida}.",
       "sinMatriz": "La matriz se llena al correr el análisis de mayor y mejor uso.",
       "riesgoAlto": "{uso}: riesgo alto según el equipo.",
       "fragil": "{uso}: con el canon un 10 % más bajo cae por debajo de la tasa mínima.",

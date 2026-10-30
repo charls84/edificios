@@ -1,6 +1,6 @@
 # PRP-001: Modo real con Supabase
 
-> **Estado**: EN PROGRESO (construido; falta correr la migración en Supabase y probar end-to-end)
+> **Estado**: EN PROGRESO (construido, migración aplicada y probado end-to-end; falta cargar el Rolher real y decidir deploy)
 > **Fecha**: 2026-10-30
 > **Proyecto**: Edificios (Torna)
 
@@ -85,7 +85,7 @@ empezar a medir el tiempo por análisis (meta: bajar de más de 6 horas).
 ## Alcance ampliado (2026-10-30)
 
 El cliente envió la *lista de documentos* y la *guía de mayor y mejor uso*. El PRP creció para cubrirlas:
-checklist de 44 documentos con carga de archivos, checklist A–F (46 ítems), usos candidatos (matriz G),
+checklist de 44 documentos con carga de archivos, checklist A–F (52 ítems), usos candidatos (matriz G),
 activador 1 (tamizaje, reglas) y activador 2 (mayor y mejor uso, fórmulas), e informe de 10 capítulos
 imprimible. Detalle en `docs/FLUJO-ESTUDIO.md` v0.2.
 
@@ -93,16 +93,17 @@ imprimible. Detalle en `docs/FLUJO-ESTUDIO.md` v0.2.
 
 | Fase | Estado |
 |---|---|
-| 1. Migración | Escrita (`20261030000000_estudio.sql`). **Pendiente: correrla en Supabase** |
+| 1. Migración | Aplicada el 2026-10-30 y verificada con `check:supabase` |
 | 2. Ficha desde la base | Hecho: resumen con avance, portafolio y mapa con coordenadas |
 | 3. Matricular y editar | Hecho (`/edificios/nuevo`, `/edificios/[id]/editar`) |
 | 4. Documentos | Hecho: estado + carga directa a Storage + apertura por `/api/archivos` |
 | 5. Visita técnica en la base | Hecho (`visit_notes.informe`, fotos en bucket `fotos`) |
 | 6. Cargar el Rolher | Pendiente (lo hace el equipo desde la app tras la migración) |
-| 7. Verificación | typecheck, lint y build en verde; smoke test en navegador con usuario temporal. Falta prueba end-to-end con la migración aplicada |
+| 7. Verificación | typecheck, lint y build en verde; smoke test en navegador con usuario temporal. Prueba end-to-end (16 pasos) en verde con la migración aplicada |
 
 ## Aprendizajes (self-annealing)
 
 - `check:supabase` usaba `select(head: true, count)` y NO detecta tablas inexistentes con la secret key. Ahora consulta una fila real.
 - Los archivos privados se sirven por `/api/archivos/[bucket]/[...ruta]` con la sesión del usuario (RLS). `next/image` no puede optimizarlos (no tiene la cookie): usar `unoptimized` para rutas `/api/`.
+- Viabilidad: la primera versión usaba rentabilidad simple ≥ tasa y un VPN sin valor de salida; daba "Viable" con VPN negativo. Ahora el flujo incluye el valor de salida (neto ÷ tasa de capitalización) y viable = VPN ≥ 0.
 - La carga de archivos va del navegador directo a Storage: las server actions tienen límite de 1 MB por defecto.

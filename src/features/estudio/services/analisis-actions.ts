@@ -44,6 +44,7 @@ export async function correrTamizajeAction(buildingId: string): Promise<Resultad
 const parametrosSchema = z.object({
   tasaMinima: z.number().min(0).max(1),
   horizonteAnios: z.number().int().min(1).max(40),
+  tasaSalida: z.number().min(0.01).max(1),
   valorLoteVacio: z.number().nonnegative().nullable(),
 })
 

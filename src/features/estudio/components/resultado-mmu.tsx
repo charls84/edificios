@@ -35,7 +35,7 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
         {r.loteVacioManda && <p className="mt-2 text-sm font-semibold text-rojo-oscuro">{t('loteVacio')}</p>}
       </div>
 
-      <p className="text-xs text-medio-texto">{t('parametros', { tasa: pct(r.parametros.tasaMinima), anios: r.parametros.horizonteAnios })}</p>
+      <p className="text-xs text-medio-texto">{t('parametros', { tasa: pct(r.parametros.tasaMinima), anios: r.parametros.horizonteAnios, salida: r.parametros.tasaSalida ? pct(r.parametros.tasaSalida) : '—' })}</p>
 
       <div className="overflow-x-auto rounded-xl border border-borde">
         <table className="w-full text-sm">

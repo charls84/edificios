@@ -74,7 +74,7 @@ El resultado se guarda con fecha y autor, pone el semáforo en la ficha y en el 
 
 ## 4. Paso 2 — Estudio detallado (checklist A–F)
 
-Pestaña **Checklist A–F**: los 46 ítems de la guía de Torna, agrupados por prueba y bloque, cada uno con dónde se consigue o por qué importa:
+Pestaña **Checklist A–F**: los 52 ítems de la guía de Torna, agrupados por prueba y bloque, cada uno con dónde se consigue o por qué importa:
 
 | Prueba | Bloques | Ítems |
 |---|---|---|
@@ -86,17 +86,18 @@ Cada ítem se marca **cumple · por verificar · no cumple · no aplica** con un
 
 ## 5. Paso 3 — Activador 2: Mayor y mejor uso
 
-Se habilita cuando el tamizaje se corrió, al menos un uso pasa norma y edificio, y esos usos tienen sus números. Los bloques D–F sin resolver se avisan pero no bloquean. Parámetros: **tasa mínima** (por defecto 12 % anual, por confirmar con Torna), **horizonte** (10 años) y, opcional, el **valor del lote vacío**.
+Se habilita cuando el tamizaje se corrió, al menos un uso pasa norma y edificio, y esos usos tienen sus números. Los bloques D–F sin resolver se avisan pero no bloquean. Parámetros: **tasa mínima** (por defecto 12 % anual, por confirmar con Torna), **horizonte** (10 años), **tasa de capitalización de salida** (por defecto 12 %) y, opcional, el **valor del lote vacío**.
 
 La plataforma calcula, solo con fórmulas (cada cifra se puede rastrear):
 
 - ingreso bruto = área neta × canon × 12 × ocupación; ingreso neto = bruto − gastos;
 - rentabilidad = neto ÷ inversión; recuperación = inversión ÷ neto;
-- **VPN** y **TIR** sobre flujos mensuales (inversión en el mes 0, sin ingreso hasta el primer ingreso);
+- **valor de salida** al final del horizonte = ingreso neto anual ÷ tasa de salida (el inmueble sigue valiendo);
+- **VPN** y **TIR** sobre flujos mensuales (inversión en el mes 0, sin ingreso hasta el primer ingreso, valor de salida al final);
 - sensibilidades: canon −10 %, obra +20 %, colocación +6 meses;
 - valor ajustado por riesgo: VPN × 1,0 (bajo) · 0,9 (medio) · 0,8 (alto).
 
-Un uso es **viable** si pasa las tres pruebas, su ingreso neto es positivo y su rentabilidad supera la tasa mínima. El **uso recomendado** es el viable con mayor valor ajustado. Si el lote vacío vale más que el mejor uso, el informe lo dice. El resultado llena la **matriz de decisión** (bloque G).
+Un uso es **viable** si pasa las tres pruebas, su ingreso neto es positivo y su **VPN a la tasa mínima es ≥ 0** (equivale a TIR ≥ tasa mínima). El **uso recomendado** es el viable con mayor valor ajustado. Si el lote vacío vale más que el mejor uso, el informe lo dice. El resultado llena la **matriz de decisión** (bloque G).
 
 ## 6. El informe de viabilidad
 

@@ -50,6 +50,7 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
   const [error, setError] = useState<string | null>(null)
   const [tasa, setTasa] = useState(String(PARAMETROS_DEFAULT.tasaMinima * 100))
   const [horizonte, setHorizonte] = useState(String(PARAMETROS_DEFAULT.horizonteAnios))
+  const [salida, setSalida] = useState(String(PARAMETROS_DEFAULT.tasaSalida * 100))
   const [lote, setLote] = useState('')
 
   const listoTamizaje = minimoFaltante.length === 0 && !sinUsos
@@ -69,6 +70,7 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
       correrMayorMejorUsoAction(edificioId, {
         tasaMinima: Math.max(0, Number(tasa) || 0) / 100,
         horizonteAnios: Math.round(Number(horizonte) || PARAMETROS_DEFAULT.horizonteAnios),
+        tasaSalida: Math.max(1, Number(salida) || PARAMETROS_DEFAULT.tasaSalida * 100) / 100,
         valorLoteVacio: lote.trim() ? Number(lote.replace(/[^\d.]/g, '')) : null,
       })
     )
@@ -128,7 +130,7 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
           </Requisito>
         </ul>
 
-        <div className="grid grid-cols-1 gap-3 rounded-xl bg-fondo p-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 rounded-xl bg-fondo p-4 sm:grid-cols-2 lg:grid-cols-4">
           <label className="block text-sm">
             <span className="etiqueta">{t('mmu.tasa')}</span>
             <input inputMode="decimal" value={tasa} onChange={(e) => setTasa(e.target.value)} className="campo" />
@@ -137,6 +139,11 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
           <label className="block text-sm">
             <span className="etiqueta">{t('mmu.horizonte')}</span>
             <input inputMode="numeric" value={horizonte} onChange={(e) => setHorizonte(e.target.value)} className="campo" />
+          </label>
+          <label className="block text-sm">
+            <span className="etiqueta">{t('mmu.salida')}</span>
+            <input inputMode="decimal" value={salida} onChange={(e) => setSalida(e.target.value)} className="campo" />
+            <span className="text-xs text-medio-texto">{t('mmu.salidaAyuda')}</span>
           </label>
           <label className="block text-sm">
             <span className="etiqueta">{t('mmu.lote')}</span>
