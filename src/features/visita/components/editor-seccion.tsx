@@ -3,11 +3,12 @@
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import type { FotoInforme as Foto, SeccionInforme } from '@/features/ficha/types'
-import { comprimirImagen, guardarFoto } from '../lib/fotos-db'
+import { subirFotoVisita } from '../lib/fotos'
 import { Campo } from './campos'
 import { FotoInforme } from './foto-informe'
 
 interface Props {
+  edificioId: string
   seccion: SeccionInforme
   numero: string
   onChange: (s: SeccionInforme) => void
@@ -17,7 +18,7 @@ interface Props {
   esUltima: boolean
 }
 
-export function EditorSeccion({ seccion: s, numero, onChange, onQuitar, onMover, esPrimera, esUltima }: Props) {
+export function EditorSeccion({ edificioId, seccion: s, numero, onChange, onQuitar, onMover, esPrimera, esUltima }: Props) {
   const t = useTranslations('visita.editor')
   const [subiendo, setSubiendo] = useState(0)
   const [error, setError] = useState<string | null>(null)
@@ -32,7 +33,7 @@ export function EditorSeccion({ seccion: s, numero, onChange, onQuitar, onMover,
     const nuevas: Foto[] = []
     for (const file of Array.from(files)) {
       try {
-        nuevas.push({ src: await guardarFoto(await comprimirImagen(file)), destacado: '', texto: '' })
+        nuevas.push({ src: await subirFotoVisita(file, edificioId), destacado: '', texto: '' })
       } catch {
         setError(t('errorFoto', { nombre: file.name }))
       }

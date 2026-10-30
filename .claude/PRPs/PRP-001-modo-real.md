@@ -1,6 +1,6 @@
 # PRP-001: Modo real con Supabase
 
-> **Estado**: PENDIENTE
+> **Estado**: EN PROGRESO (construido; falta correr la migración en Supabase y probar end-to-end)
 > **Fecha**: 2026-10-30
 > **Proyecto**: Edificios (Torna)
 
@@ -82,6 +82,27 @@ empezar a medir el tiempo por análisis (meta: bajar de más de 6 horas).
 
 ---
 
+## Alcance ampliado (2026-10-30)
+
+El cliente envió la *lista de documentos* y la *guía de mayor y mejor uso*. El PRP creció para cubrirlas:
+checklist de 44 documentos con carga de archivos, checklist A–F (46 ítems), usos candidatos (matriz G),
+activador 1 (tamizaje, reglas) y activador 2 (mayor y mejor uso, fórmulas), e informe de 10 capítulos
+imprimible. Detalle en `docs/FLUJO-ESTUDIO.md` v0.2.
+
+## Estado de las fases
+
+| Fase | Estado |
+|---|---|
+| 1. Migración | Escrita (`20261030000000_estudio.sql`). **Pendiente: correrla en Supabase** |
+| 2. Ficha desde la base | Hecho: resumen con avance, portafolio y mapa con coordenadas |
+| 3. Matricular y editar | Hecho (`/edificios/nuevo`, `/edificios/[id]/editar`) |
+| 4. Documentos | Hecho: estado + carga directa a Storage + apertura por `/api/archivos` |
+| 5. Visita técnica en la base | Hecho (`visit_notes.informe`, fotos en bucket `fotos`) |
+| 6. Cargar el Rolher | Pendiente (lo hace el equipo desde la app tras la migración) |
+| 7. Verificación | typecheck, lint y build en verde; smoke test en navegador con usuario temporal. Falta prueba end-to-end con la migración aplicada |
+
 ## Aprendizajes (self-annealing)
 
-(se llena durante la ejecución)
+- `check:supabase` usaba `select(head: true, count)` y NO detecta tablas inexistentes con la secret key. Ahora consulta una fila real.
+- Los archivos privados se sirven por `/api/archivos/[bucket]/[...ruta]` con la sesión del usuario (RLS). `next/image` no puede optimizarlos (no tiene la cookie): usar `unoptimized` para rutas `/api/`.
+- La carga de archivos va del navegador directo a Storage: las server actions tienen límite de 1 MB por defecto.

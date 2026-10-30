@@ -34,11 +34,18 @@ Los demás edificios del demo siguen siendo ficticios.
 
 **Metodología del estudio:** `docs/FLUJO-ESTUDIO.md` (7 pasos, matrícula, documentos obligatorios/recomendados).
 
-**Supabase (a 2026-10-30)** — configurado y verificado: `npm run check:supabase` todo en verde (variables, 7 tablas,
-8 fuentes, RLS, bucket privado, 1 admin). El entorno en la nube ya tiene `*.supabase.co` y las variables.
-Siguiente: construir el modo real según `.claude/PRPs/PRP-001-modo-real.md` (pendiente de aprobación).
-Decisión propuesta: el deploy actual (edificios-seven.vercel.app) sigue en modo demo para el cliente; la versión real
-va en un segundo proyecto de Vercel con las variables. Falta poner Site URL / Redirect URLs en Supabase al publicarla.
+**Supabase (a 2026-10-30)** — migración base aplicada y verificada. **Migración del estudio
+(`20261030000000_estudio.sql`) escrita pero NO aplicada**: el usuario la pega en SQL Editor (docs/SETUP.md Parte 2)
+y se verifica con `npm run check:supabase` (ahora detecta tablas faltantes de verdad).
+
+**Modo real (construido 2026-10-30, PRP-001)** — `src/features/estudio/`: catálogo de 44 documentos (lista de Torna)
+y 46 ítems A–F (guía de mayor y mejor uso), usos candidatos, tamizaje (reglas) y mayor y mejor uso (fórmulas: VPN/TIR
+mensual, sensibilidades, valor ajustado por riesgo), informe de 10 capítulos imprimible. Rutas:
+`/edificios/nuevo`, `/edificios/[id]/{editar,documentos,checklist,usos,visita,analisis,informe}`. Archivos privados por
+`/api/archivos/[bucket]/[...ruta]`; carga directa navegador→Storage. En demo, la ficha sigue siendo la de una página.
+Metodología: `docs/FLUJO-ESTUDIO.md` v0.2. Pendiente: aplicar migración, prueba end-to-end, cargar el Rolher real,
+decidir deploy (segundo proyecto de Vercel para la versión real; el demo sigue igual).
+Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizonte, costos de referencia, destinatario y firma del informe.
 
 **Pendiente**
 - CHIP o direcciones de los edificios del segundo propietario (Fase 0).

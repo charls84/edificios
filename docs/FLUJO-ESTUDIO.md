@@ -1,145 +1,144 @@
-# Flujo del estudio de prefactibilidad
+# Flujo del estudio: del inmueble matriculado al informe de viabilidad
 
-> Metodología de trabajo de Torna para evaluar un edificio, de la matrícula a la ficha presentada al propietario.
-> Versión 0.1 · 2026-10-27 · Preparado por DOUX.WORK
-> Estado: **propuesta para validar con Torna**. Los criterios de descarte y los tiempos objetivo son supuestos que se ajustan con los edificios de la Fase 0.
+> Metodología de trabajo de Torna para evaluar un edificio, de la matrícula al informe de mayor y mejor uso.
+> Versión 0.2 · 2026-10-30 · Preparado por DOUX.WORK
+> Fuentes: *Documentos para el análisis de un inmueble* (Torna, 27-oct-2026) y *Guía de análisis de mayor y mejor uso* v1.0 (Daniela Céspedes, Torna, 27-oct-2026).
+> Estado: **implementado en la plataforma** (ver sección 9). Los criterios de los 5 filtros y la tasa mínima siguen pendientes de Torna.
 
 ---
 
 ## 1. Resumen
 
-Cada edificio pasa por 7 pasos. El estudio termina con una de dos decisiones: **presentar** el edificio al propietario o **descartarlo**, y siempre con la razón escrita.
+El estudio responde una pregunta: **¿qué es lo mejor que se puede poner en este inmueble?** Se hace en tres pasos, con dos activadores en la plataforma.
 
-| # | Paso | Responsable | Etapa en el portafolio | Tiempo objetivo de trabajo* |
+| Paso | Qué se hace | Quién | Tiempo | Activador en la plataforma |
 |---|---|---|---|---|
-| 1 | Matricular el edificio | Analista | Identificado | 10 min |
-| 2 | Consultar datos oficiales | Plataforma + analista | En análisis | 15 min |
-| 3 | Solicitar y cargar documentos | Analista + propietario | En análisis | 15 min (más la espera) |
-| 4 | Visita técnica | Equipo técnico | En análisis | Medio día en campo |
-| 5 | Validar datos | Analista | En análisis | 15 min |
-| 6 | Decidir (semáforo) | Fundador | En análisis | 10 min |
-| 7 | Presentar la ficha | Fundador | Presentado o Descartado | — |
+| 0 · Matricular | Dar de alta el edificio con CHIP, dirección y contacto | Analista | 10 min | — |
+| 1 · Tamizaje | Mínimo de documentos, visita, lista de usos candidatos. Se descarta lo evidente | Analista + equipo técnico | Pocos días | **Tamizaje** |
+| 2 · Estudio detallado | Checklist A–F: papeles, norma, edificio, zona, mercado y números de los usos que quedaron | Analista + ingeniero + abogado | Semanas | — |
+| 3 · Decisión | Matriz de usos, uso recomendado, informe de 10 capítulos | Fundador | 1 día | **Mayor y mejor uso** |
 
-\* Tiempo de escritorio del analista, sin contar la espera de documentos ni la visita. La meta del proyecto es pasar de más de 6 horas a menos de 1 hora por edificio.
+El estudio termina con el **informe de viabilidad** que se exporta en PDF y se presenta al propietario. El edificio pasa a *Presentado* o se descarta con la razón escrita.
 
-Si el propietario acepta la propuesta, el edificio pasa a **En intervención** y sale del alcance de este estudio.
+## 2. Paso 0 — Matricular el edificio
 
-## 2. Paso 1 — Matricular un edificio nuevo
+En **Portafolio → Matricular edificio**. Datos: nombre, CHIP o dirección (el CHIP es la llave: si ya existe, se abre la ficha existente), matrícula inmobiliaria (si se conoce), zona, origen, contacto del propietario, coordenadas (opcional, para el mapa) y notas.
 
-Matricular es dar de alta el edificio en la plataforma para que tenga su ficha y aparezca en el mapa.
+Al matricular, la ficha nace en etapa **Identificado** con la checklist completa de documentos en *pendiente* y la checklist A–F vacía. La pestaña **Resumen** muestra siempre el siguiente paso.
 
-### Datos para matricular
+## 3. Paso 1 — Tamizaje
 
-| Dato | Obligatorio | Para qué sirve |
+### 3.1 Documentos: la checklist de Torna
+
+La pestaña **Documentos** es la lista de Torna del 27 de octubre, con 44 ítems en 4 grupos:
+
+| Grupo | Ítems | Ejemplos |
 |---|---|---|
-| CHIP **o** dirección | Sí (uno de los dos) | Identifica el predio. El CHIP es la llave principal; con la dirección la plataforma busca el CHIP |
-| Nombre del edificio | Sí | Cómo lo llama el equipo (ej. "Edificio Rolher") |
-| Origen | Sí | Cómo llegó: propietario conocido, recorrido, RenoBo, referido |
-| Contacto del propietario o intermediario | Sí | A quién se le piden los documentos y se presenta la ficha |
-| Matrícula inmobiliaria | No | Si ya se conoce; si no, sale del certificado de tradición |
-| Foto de fachada | No | Para reconocerlo en el portafolio |
+| 1. Al propietario | 25 | Cédula o certificado de existencia, escrituras, licencias con planos, estudios estructurales, RETIE, predial de 5 años, planos originales, lista de intervenciones |
+| 2. En fuentes públicas | 8 | Certificado de tradición, certificado catastral, consulta de norma en Mapas Bogotá, plusvalía y afectaciones, resoluciones que mencione el certificado |
+| 3. Lo que se genera o se contrata | 5 | Visita técnica con fotos, levantamiento, diagnóstico estructural, estudio de títulos, avalúo |
+| 4. Mercado y zona | 6 | Comparables, vacancia, datos del DANE, generadores de demanda, proyectos futuros |
 
-### Qué hace la plataforma al matricular
+Cada ítem muestra dónde se consigue (*en línea · parcial · no en línea*), si es **mínimo** para el tamizaje y si solo aplica en ciertos casos. Para cada uno el analista:
 
-1. Revisa que el CHIP no esté ya registrado. Si existe, abre la ficha existente en vez de crear una duplicada.
-2. Ubica el predio en el mapa con las coordenadas de Catastro.
-3. Crea la ficha en etapa **Identificado** con la lista de documentos pendientes (sección 5).
-4. Registra quién lo matriculó y cuándo.
+- cambia el **estado**: pendiente → solicitado → cargado → validado (o *no aplica*);
+- **carga el archivo** (PDF, imagen, planos; hasta 25 MB) al almacenamiento privado, que solo abre el equipo con sesión;
+- deja **notas** (a quién se pidió, cuándo llega).
 
-## 3. Paso 2 — Consultar datos oficiales
+Dos adiciones de la plataforma, marcadas con (+): la **autorización de tratamiento de datos** firmada por el propietario (Ley 1581 de 2012, porque el certificado y las escrituras traen nombres y cédulas) y la visita técnica se llena en su propia pestaña y queda *cargada* al guardarla.
 
-Con el CHIP, la plataforma trae lo que está en fuentes públicas. Cada dato queda con su **fuente, fecha de consulta y enlace**.
+**El mínimo para arrancar** (definido por Torna): certificado de tradición, certificado catastral, consulta de norma en Mapas Bogotá, licencias con planos y visita técnica. Los tres primeros se sacan en línea antes de reunirse con el propietario.
 
-| Bloque de la ficha | Fuente | Cómo llega |
+### 3.2 Visita técnica
+
+Pestaña **Visita técnica**: el informe con las 7 secciones del formato de Torna (fachada, estructura, redes eléctricas, redes hidráulicas, pisos superiores, cubierta, entorno), hallazgos, observaciones y documentos por solicitar. Las fotos se comprimen en el navegador (pierden los metadatos de ubicación) y se guardan en el almacenamiento privado. El informe lo ve todo el equipo.
+
+### 3.3 Usos candidatos
+
+Pestaña **Usos candidatos**: la lista de usos que vale la pena probar, con un clic desde los usos típicos de la guía (apartaestudios, vivienda estudiantil, coliving, renta corta, oficinas, coworking, consultorios, comercio, gastronomía, hotel, educación, cultura, mixto) o escribiendo otro. Cada uso es una columna de la matriz de decisión y lleva las tres primeras pruebas: **¿lo permite la norma? ¿el edificio lo soporta? ¿hay demanda?** (sí · por verificar · no, con nota y fuente).
+
+### 3.4 Activador 1: Tamizaje
+
+Se habilita cuando el mínimo de documentos está cargado y hay al menos un uso candidato. La plataforma revisa, sin IA:
+
+- los ítems de los bloques **A** (papeles), **B** (norma) y la **prueba rápida de conversión** (CV) de la checklist A–F;
+- qué usos pasan la norma y el edificio.
+
+| Semáforo | Regla | Siguiente acción |
 |---|---|---|
-| Identificación catastral: área, avalúo, uso, estrato | Catastro Bogotá (UAECD / IDECA) | Automático |
-| Norma POT: tratamiento, uso, edificabilidad | POT Decreto 555 de 2021 + SINUPOT | Automático en parte; interpretación revisada por el analista |
-| Patrimonio: BIC, sector de interés cultural | Capa BIC de Catastro + IDPC | Automático (detección); el concepto se pide aparte |
-| PEMP Centro Histórico: nivel de intervención | Res. 088 de 2021, mod. Res. 092 de 2023 | Automático |
-| Amenaza y riesgo | Mapas del POT 555 + IDIGER | Automático (indicativo, escala 1:5.000) |
-| Licencias previas | SINUPOT, módulo de curadurías | Consulta del analista |
-| Incentivos | RenoBo, Acuerdo "Ciudad Inteligente" | Reglas mantenidas por el equipo |
+| **Rojo** | Un ítem bloqueante marcado *no cumple* (A1 títulos, A6 afectaciones, B3 usos, B5 patrimonio, C1 estructura, CV1–CV5), o ningún uso pasa la norma | Descartar con la razón escrita, o resolver el bloqueo |
+| **Amarillo** | Falta algo del mínimo, hay ítems sin resolver o usos por verificar | Completar y volver a correr |
+| **Verde** | Mínimo completo, A/B/CV resueltos y al menos un uso pasa norma y edificio | Pasar al estudio detallado |
 
-La conexión automática con estas fuentes se construye y se prueba en la **Fase 0**. Mientras tanto, el analista las consulta a mano y las registra en la ficha.
+El resultado se guarda con fecha y autor, pone el semáforo en la ficha y en el portafolio, y lista los documentos que faltan para el estudio detallado. Si después cambia algo, el análisis se marca *desactualizado*.
 
-## 4. Paso 3 — Solicitar y cargar documentos
+## 4. Paso 2 — Estudio detallado (checklist A–F)
 
-El analista envía al propietario la lista de la sección 5 y compra los certificados que se piden en línea. Cada PDF se carga en la ficha; la IA extrae los campos clave con la página de donde salen y los deja **por validar**.
+Pestaña **Checklist A–F**: los 46 ítems de la guía de Torna, agrupados por prueba y bloque, cada uno con dónde se consigue o por qué importa:
 
-## 5. Documentos que se cargan en la plataforma
+| Prueba | Bloques | Ítems |
+|---|---|---|
+| 1 · Legal | A · Papeles del predio · B · Norma urbana | 7 + 9 |
+| 2 · Física | C · El edificio y el lote · CV · Prueba rápida de conversión | 13 + 6 |
+| 3 · Financiera | D · La zona · E · Mercado de cada uso · F · Números de cada uso | 6 + 5 + 6 |
 
-### A. Obligatorios para cerrar el estudio
+Cada ítem se marca **cumple · por verificar · no cumple · no aplica** con una nota (qué se encontró, documento y página). Para la prueba financiera, los números de cada uso se llenan en su tarjeta de **Usos candidatos** (bloque F): área neta, canon por m², ocupación esperada, inversión total, gastos anuales, meses hasta el primer ingreso y riesgo.
 
-| Documento | Quién lo da / dónde se obtiene | Qué extrae la plataforma | Vigencia recomendada |
-|---|---|---|---|
-| **Certificado de tradición y libertad** | Superintendencia de Notariado y Registro (SNR), en línea, COP 23.000 (2026) | Propietarios actuales, matrícula, embargos, hipotecas, demandas, afectaciones, englobes y desenglobes | Menos de 30 días |
-| **Certificado catastral** | Catastro Bogotá, en línea | CHIP, áreas de terreno y construida, avalúo, uso, estrato, destino económico | Del año en curso |
-| **Escritura pública vigente** | Propietario (o notaría) | Linderos, área, título de adquisición, régimen de propiedad horizontal | La última |
-| **Estado de cuenta del impuesto predial** | Secretaría Distrital de Hacienda o propietario | Deudas de predial por año | Del año en curso |
-| **Autorización de tratamiento de datos** firmada por el propietario | Torna (formato propio) | — | Una vez por propietario |
-| **Informe de visita técnica** | Equipo técnico de Torna | Estado por sistema: estructura, fachada, cubierta, redes, acabados | De la última visita |
-| **Fotos de la visita** | Equipo técnico | — | De la última visita |
+## 5. Paso 3 — Activador 2: Mayor y mejor uso
 
-La autorización de tratamiento de datos es necesaria porque el certificado de tradición y la escritura traen nombres y cédulas (Ley 1581 de 2012).
+Se habilita cuando el tamizaje se corrió, al menos un uso pasa norma y edificio, y esos usos tienen sus números. Los bloques D–F sin resolver se avisan pero no bloquean. Parámetros: **tasa mínima** (por defecto 12 % anual, por confirmar con Torna), **horizonte** (10 años) y, opcional, el **valor del lote vacío**.
 
-### B. Recomendados (pedir al propietario)
+La plataforma calcula, solo con fórmulas (cada cifra se puede rastrear):
 
-| Documento | Para qué sirve |
+- ingreso bruto = área neta × canon × 12 × ocupación; ingreso neto = bruto − gastos;
+- rentabilidad = neto ÷ inversión; recuperación = inversión ÷ neto;
+- **VPN** y **TIR** sobre flujos mensuales (inversión en el mes 0, sin ingreso hasta el primer ingreso);
+- sensibilidades: canon −10 %, obra +20 %, colocación +6 meses;
+- valor ajustado por riesgo: VPN × 1,0 (bajo) · 0,9 (medio) · 0,8 (alto).
+
+Un uso es **viable** si pasa las tres pruebas, su ingreso neto es positivo y su rentabilidad supera la tasa mínima. El **uso recomendado** es el viable con mayor valor ajustado. Si el lote vacío vale más que el mejor uso, el informe lo dice. El resultado llena la **matriz de decisión** (bloque G).
+
+## 6. El informe de viabilidad
+
+Pestaña **Informe**: los 10 capítulos de la guía (sección 07), armados con lo que hay en la ficha y exportables a PDF desde el navegador:
+
+1. Resumen ejecutivo con el uso recomendado y por qué
+2. Identificación del inmueble y estudio de títulos (A)
+3. Análisis normativo y patrimonial (B)
+4. Diagnóstico físico y áreas netas (C + visita técnica)
+5. Estudio de la zona (D)
+6. Estudio de mercado de cada uso (E)
+7. Modelo financiero y sensibilidades (F)
+8. Matriz de decisión y uso recomendado (G)
+9. Riesgos (bloqueos, usos de riesgo alto, usos frágiles ante canon −10 %)
+10. Siguientes pasos y documentos pendientes
+
+El pie del informe recuerda que los cálculos no reemplazan el concepto del IDPC, la certificación del IDIGER, la visita estructural (NSR-10) ni la licencia ante curaduría.
+
+## 7. Etapas del portafolio
+
+| Etapa | Cuándo |
 |---|---|
-| Planos arquitectónicos (estado actual) | Áreas reales, distribución y base para la cabida (Fase 3) |
-| Planos y estudio estructural; licencia de reforzamiento | Confirmar cumplimiento de la NSR-10 |
-| Licencias de construcción anteriores | Saber qué se aprobó y qué se construyó sin licencia |
-| Certificaciones RETIE (eléctrica) y planos hidrosanitarios | Estado de las redes y costo de adecuación |
-| Paz y salvo o estado de cuenta de valorización (IDU) | Deudas que se trasladan al comprador |
-| Últimas facturas de servicios públicos | Deudas y servicios activos |
-| Contratos de arrendamiento vigentes | Ocupación y compromisos con terceros |
+| Identificado | Al matricular |
+| En análisis | Al correr el primer tamizaje (automático) |
+| Presentado | Cuando el fundador presenta el informe al propietario |
+| Descartado | Rojo en el tamizaje o uso no viable, con la razón en las notas |
+| En intervención | El propietario aceptó; sale del alcance del estudio |
 
-### C. Solo si aplica
+## 8. Qué sigue (fuera del alcance actual)
 
-| Documento | Cuándo se pide |
-|---|---|
-| Resolución de declaratoria BIC o concepto técnico del IDPC | El predio aparece como Bien de Interés Cultural o en sector de interés cultural |
-| Certificación de amenaza y riesgo del IDIGER | El mapa del POT marca amenaza media o alta |
-| Reglamento de propiedad horizontal | El edificio está sometido a propiedad horizontal |
-| Certificado de existencia y representación legal (Cámara de Comercio) | El propietario es una empresa |
-| Poder o autorización del intermediario | Quien negocia no es el propietario |
+- **Lectura de PDF con IA:** extraer los campos clave de certificados y licencias con la página de donde salen, para pre-llenar la checklist A–F. Hoy el analista lee y marca.
+- **Consulta automática** a Catastro, POT y capa BIC (Fase 0 original).
+- **Comparables de mercado:** se registran a mano; copiar automáticamente de los portales choca con sus términos de uso.
+- **Los 5 filtros de Torna** (ubicación, estructura, entorno, norma e historia) no están definidos en los documentos del cliente; cuando lo estén, se suman al tamizaje.
 
-### Formato de carga
+## 9. Preguntas abiertas para Torna
 
-- PDF para documentos (escaneado legible o digital). Fotos en JPG o PNG.
-- Un archivo por documento, con su tipo elegido de la lista anterior.
-- Los documentos quedan privados: solo los ve el equipo con acceso a la plataforma.
-
-## 6. Paso 4 — Visita técnica
-
-El equipo técnico recorre el edificio y llena el informe en la sección **Visita técnica** de la ficha, con fotos por sección (estructura, fachada, cubierta, redes, acabados, entorno). El informe del Edificio Rolher del 18 de octubre de 2026 es el modelo.
-
-## 7. Paso 5 — Validar datos
-
-El analista revisa cada dato marcado **por validar** (consultado a mano o extraído por la IA) y lo confirma o lo corrige contra el documento. Solo los datos validados cuentan para el semáforo y salen en el PDF.
-
-## 8. Paso 6 — Decidir con el semáforo
-
-| Semáforo | Significado | Siguiente acción |
-|---|---|---|
-| Verde | Sin bloqueos: la norma permite el uso, la propiedad está libre y el estado es recuperable | Presentar al propietario |
-| Amarillo | Hay pendientes que no bloquean, pero falta información o hay un costo por precisar | Completar documentos o pedir conceptos; volver a decidir |
-| Rojo | Hay al menos un bloqueo | Descartar y escribir la razón |
-
-**Bloqueos propuestos (para validar con Torna):**
-
-- Embargo, demanda o falsa tradición que impide negociar el inmueble.
-- Norma que no permite el uso que se quiere dar al edificio.
-- Nivel de intervención del PEMP o del IDPC que impide la adecuación necesaria.
-- Riesgo alto no mitigable según el IDIGER.
-- Daño estructural cuyo costo hace inviable el proyecto.
-- Propietario que no está dispuesto a negociar.
-
-En la Fase 2 el semáforo se complementa con un puntaje de pesos editables (norma, patrimonio, riesgo, incentivos, estado).
-
-## 9. Paso 7 — Presentar la ficha
-
-La plataforma exporta la ficha en PDF con fuentes y fecha de corte, sin datos personales que no hagan falta. El fundador la presenta al propietario y mueve el edificio a **Presentado**. Si el propietario acepta, pasa a **En intervención**.
+1. Criterios y límites de cada uno de los 5 filtros.
+2. Tasa mínima de rentabilidad y horizonte para TIR y VPN (hoy 12 % y 10 años por defecto).
+3. Costos de referencia por m² de adecuación y reforzamiento, o se cotiza cada caso.
+4. Destinatario del informe (propietario, inversionistas o ambos): define qué datos personales se omiten.
+5. Quién firma el informe.
 
 ## 10. Estado del Edificio Rolher
 

@@ -25,3 +25,11 @@
       text-sm font-semibold text-white transition-colors hover:bg-torna-700 disabled:opacity-50;
   }
 }
+
+/* Informe: al imprimir queda solo el contenido (sin barra lateral, encabezado ni pestañas) */
+@media print {
+  aside, header.sticky, nav, .print\:hidden { display: none !important; }
+  .lg\:pl-64 { padding-left: 0 !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  body { background: #fff; }
+}

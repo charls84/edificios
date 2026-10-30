@@ -2,7 +2,7 @@ import 'server-only'
 import { getLocale } from 'next-intl/server'
 import { getEdificiosDemo } from '@/features/demo/data'
 import type { Semaforo } from '@/features/ficha/types'
-import { createClient } from '@/lib/supabase/server'
+import { listEdificiosReales } from '@/features/estudio/services/consultas'
 import { IS_DEMO } from '@/shared/lib/demo'
 import type { Etapa } from '@/shared/types/database'
 
@@ -25,22 +25,17 @@ export async function listEdificios(): Promise<ResumenEdificio[]> {
       id, nombre, direccion, chip, zona, etapa, semaforo, lat, lng, foto: fotos[0]?.src ?? null,
     }))
   }
-  const supabase = await createClient()
-  const { data } = await supabase
-    .from('buildings')
-    .select('id, direccion, chip, etapa')
-    .order('updated_at', { ascending: false })
-  return (data ?? []).map((b) => ({
+  return (await listEdificiosReales()).map((b) => ({
     id: b.id,
-    nombre: b.direccion,
+    nombre: b.nombre,
     direccion: b.direccion,
     chip: b.chip,
-    zona: null,
+    zona: b.zona,
     etapa: b.etapa,
-    semaforo: null,
-    // Coordenadas y fotos reales llegan con la ficha (Fase 1): geom en PostGIS y fotos de visita
-    lat: null,
-    lng: null,
+    semaforo: b.semaforo,
+    lat: b.lat,
+    lng: b.lng,
+    // La foto principal llega con la visita tecnica; en la lista se muestra el marcador neutro
     foto: null,
   }))
 }

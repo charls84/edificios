@@ -5,7 +5,7 @@ import type { InformeVisita, SeccionInforme } from '@/features/ficha/types'
 import { Campo, CampoLista } from './campos'
 import { EditorSeccion } from './editor-seccion'
 
-export function EditorInforme({ value: inf, onChange }: { value: InformeVisita; onChange: (v: InformeVisita) => void }) {
+export function EditorInforme({ edificioId, value: inf, onChange }: { edificioId: string; value: InformeVisita; onChange: (v: InformeVisita) => void }) {
   const t = useTranslations('visita.editor')
   const tv = useTranslations('visita')
   const set = (cambios: Partial<InformeVisita>) => onChange({ ...inf, ...cambios })
@@ -56,6 +56,7 @@ export function EditorInforme({ value: inf, onChange }: { value: InformeVisita; 
       {inf.secciones.map((s, i) => (
         <EditorSeccion
           key={i}
+          edificioId={edificioId}
           seccion={s}
           numero={String(i + 1).padStart(2, '0')}
           onChange={(x) => setSeccion(i, x)}
