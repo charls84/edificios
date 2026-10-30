@@ -1,6 +1,6 @@
 ---
 tipo: project
-actualizado: 2026-10-29
+actualizado: 2026-10-30
 ---
 # Estado del proyecto Edificios
 
@@ -34,13 +34,11 @@ Los demás edificios del demo siguen siendo ficticios.
 
 **Metodología del estudio:** `docs/FLUJO-ESTUDIO.md` (7 pasos, matrícula, documentos obligatorios/recomendados).
 
-**Supabase (a 2026-10-29)** — el usuario ya hizo: rotar llaves y apagar legacy, correr la migración base (7 tablas,
-8 fuentes, bucket privado `documentos`), cerrar registro, plantillas de correo, crear su usuario admin.
-Pendiente del usuario: permitir `*.supabase.co` y cargar variables en el entorno en la nube y abrir sesión nueva.
-Pendiente de desarrollo: verificar con `npm run check:supabase`; construir modo real (matricular edificio, ficha
-desde BD, carga de documentos a Storage, visita en visit_notes); cargar el Rolher real. Decisión propuesta: el
-deploy actual (edificios-seven.vercel.app) sigue en modo demo para el cliente; la versión real va en un segundo
-proyecto de Vercel con las variables. Falta poner Site URL / Redirect URLs en Supabase al publicar esa versión.
+**Supabase (a 2026-10-30)** — configurado y verificado: `npm run check:supabase` todo en verde (variables, 7 tablas,
+8 fuentes, RLS, bucket privado, 1 admin). El entorno en la nube ya tiene `*.supabase.co` y las variables.
+Siguiente: construir el modo real según `.claude/PRPs/PRP-001-modo-real.md` (pendiente de aprobación).
+Decisión propuesta: el deploy actual (edificios-seven.vercel.app) sigue en modo demo para el cliente; la versión real
+va en un segundo proyecto de Vercel con las variables. Falta poner Site URL / Redirect URLs en Supabase al publicarla.
 
 **Pendiente**
 - CHIP o direcciones de los edificios del segundo propietario (Fase 0).
