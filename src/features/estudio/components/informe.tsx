@@ -5,7 +5,11 @@ import { DOCUMENTOS, documentoPorCodigo } from '../catalogo/documentos'
 import { ITEMS_GUIA, itemsDelBloque } from '../catalogo/guia'
 import { COP, fecha, numero, porcentaje, tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
+import { FILTROS } from '../catalogo/filtros'
 import { BotonImprimir } from './boton-imprimir'
+import { RadarFiltros } from './radar-filtros'
+
+const TITULOS_FILTROS = Object.fromEntries(FILTROS.map((f) => [f.codigo, f.titulo]))
 import { ResultadoMayorMejorUso as VistaMmu } from './resultado-mmu'
 
 interface Props {
@@ -57,7 +61,7 @@ async function Bloque({ codigo, estados }: { codigo: string; estados: Map<string
 
 // Informe de viabilidad: los 10 capitulos de la guia (seccion 07), armados con lo que hay en la ficha
 export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu }: Props) {
-  const [t, locale] = await Promise.all([getTranslations('estudio.informe'), getLocale()])
+  const [t, tf, locale] = await Promise.all([getTranslations('estudio.informe'), getTranslations('estudio.filtros'), getLocale()])
   const estados = new Map(items.map((i) => [i.codigo, i]))
   const estadoDoc = new Map(docs.map((d) => [d.codigo, d]))
   const r = mmu?.resultado ?? null
@@ -89,6 +93,16 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
             <p>{t('porque', { rentabilidad: porcentaje(locale, recomendado.rentabilidad ?? 0), vpn: COP(locale, recomendado.vpn ?? 0), recuperacion: numero(locale, recomendado.recuperacionAnios ?? 0) })}</p>
           </>
         ) : <p className="text-medio-texto">{t('sinRecomendacion')}</p>}
+        {tamizaje?.resultado.filtros && (
+          <div className="grid grid-cols-1 items-center gap-4 rounded-xl bg-fondo p-4 sm:grid-cols-[220px_1fr] print:bg-white">
+            <RadarFiltros filtros={tamizaje.resultado.filtros.filtros} titulos={TITULOS_FILTROS} locale={locale} tamano={220} descripcion={tf('radar', { potencial: tamizaje.resultado.filtros.potencial ?? 0 })} />
+            <div>
+              <p className="font-semibold">{tf('titulo')}</p>
+              <p className="text-3xl font-bold tabular-nums">{tamizaje.resultado.filtros.potencial ?? '—'}<span className="text-base text-medio-texto">/100</span></p>
+              <p>{tf(`lectura.${tamizaje.resultado.filtros.lectura}`)}</p>
+            </div>
+          </div>
+        )}
         {tamizaje && (
           <p className="flex items-center gap-2"><SemaforoBadge semaforo={tamizaje.resultado.semaforo} /> {t('tamizajeDel', { fecha: fecha(locale, tamizaje.fecha) })}</p>
         )}

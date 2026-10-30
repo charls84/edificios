@@ -48,9 +48,18 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
   const router = useRouter()
   const [pendiente, iniciar] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [tasa, setTasa] = useState(String(PARAMETROS_DEFAULT.tasaMinima * 100))
-  const [horizonte, setHorizonte] = useState(String(PARAMETROS_DEFAULT.horizonteAnios))
-  const [salida, setSalida] = useState(String(PARAMETROS_DEFAULT.tasaSalida * 100))
+  // Arranca con los parametros de la ultima corrida; si no hay, con los valores por defecto
+  const previos = { ...PARAMETROS_DEFAULT, ...mmu?.resultado.parametros }
+  const pct = (v: number) => String(Math.round(v * 1000) / 10)
+  const [tasa, setTasa] = useState(pct(previos.tasaMinima))
+  const [horizonte, setHorizonte] = useState(String(previos.horizonteAnios))
+  const [salida, setSalida] = useState(pct(previos.tasaSalida))
+  const enDefecto = Number(tasa) === PARAMETROS_DEFAULT.tasaMinima * 100 && Number(horizonte) === PARAMETROS_DEFAULT.horizonteAnios && Number(salida) === PARAMETROS_DEFAULT.tasaSalida * 100
+  const restablecer = () => {
+    setTasa(pct(PARAMETROS_DEFAULT.tasaMinima))
+    setHorizonte(String(PARAMETROS_DEFAULT.horizonteAnios))
+    setSalida(pct(PARAMETROS_DEFAULT.tasaSalida))
+  }
   const [lote, setLote] = useState('')
 
   const listoTamizaje = minimoFaltante.length === 0 && !sinUsos
@@ -130,7 +139,14 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
           </Requisito>
         </ul>
 
-        <div className="grid grid-cols-1 gap-3 rounded-xl bg-fondo p-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl bg-fondo p-4">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-semibold">{t('mmu.parametrosTitulo')}</p>
+            {enDefecto
+              ? <span className="text-xs text-medio-texto">{t('mmu.porDefecto')}</span>
+              : <button type="button" onClick={restablecer} className="text-xs font-medium text-rojo hover:underline">{t('mmu.restablecer')}</button>}
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <label className="block text-sm">
             <span className="etiqueta">{t('mmu.tasa')}</span>
             <input inputMode="decimal" value={tasa} onChange={(e) => setTasa(e.target.value)} className="campo" />
@@ -139,6 +155,7 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
           <label className="block text-sm">
             <span className="etiqueta">{t('mmu.horizonte')}</span>
             <input inputMode="numeric" value={horizonte} onChange={(e) => setHorizonte(e.target.value)} className="campo" />
+            <span className="text-xs text-medio-texto">{t('mmu.horizonteAyuda')}</span>
           </label>
           <label className="block text-sm">
             <span className="etiqueta">{t('mmu.salida')}</span>
@@ -150,6 +167,7 @@ export function Analisis({ edificioId, minimoFaltante, sinUsos, faltantesMmu, ta
             <input inputMode="decimal" value={lote} onChange={(e) => setLote(e.target.value)} className="campo" placeholder="COP" />
             <span className="text-xs text-medio-texto">{t('mmu.loteAyuda')}</span>
           </label>
+        </div>
         </div>
 
         <Estado a={mmu} t={t} />

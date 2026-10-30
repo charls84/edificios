@@ -1,6 +1,7 @@
 import 'server-only'
 import type { InformeVisita } from '@/features/ficha/types'
 import { createClient } from '@/lib/supabase/server'
+import type { EvaluacionCriterio } from '../lib/filtros'
 import type {
   AnalisisGuardado,
   EdificioReal,
@@ -197,4 +198,15 @@ export async function getInformeVisita(buildingId: string): Promise<InformeVisit
     .limit(1)
     .maybeSingle()
   return ((data as { informe: InformeVisita | null } | null)?.informe) ?? null
+}
+
+// Los 5 filtros se guardan en data_points (categoria 'filtros'): no necesitan tabla propia
+export async function getFiltros(buildingId: string): Promise<EvaluacionCriterio[]> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('data_points').select('clave, valor').eq('building_id', buildingId).eq('categoria', 'filtros')
+  return ((data ?? []) as { clave: string; valor: { puntaje?: number | null; nota?: string | null } }[]).map((d) => ({
+    codigo: d.clave,
+    puntaje: d.valor?.puntaje === 0 || d.valor?.puntaje === 1 || d.valor?.puntaje === 2 ? d.valor.puntaje : null,
+    nota: d.valor?.nota ?? null,
+  }))
 }

@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const PESTANAS = ['resumen', 'documentos', 'checklist', 'usos', 'visita', 'analisis', 'informe'] as const
+const PESTANAS = ['resumen', 'documentos', 'visita', 'filtros', 'usos', 'checklist', 'analisis', 'informe'] as const
 
 // Navegacion de la ficha: cada pestaña es una ruta, asi el enlace se puede compartir
 export function Pestanas({ edificioId }: { edificioId: string }) {

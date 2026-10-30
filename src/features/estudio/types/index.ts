@@ -1,5 +1,6 @@
 import type { Semaforo } from '@/features/ficha/types'
 import type { Etapa } from '@/shared/types/database'
+import type { ResultadoFiltros } from '../lib/filtros'
 
 /** Texto en los dos idiomas de la app */
 export interface Texto {
@@ -114,6 +115,8 @@ export interface ResultadoTamizaje {
   documentosMinimoFaltantes: string[]
   usos: { id: string; nombre: string; pasaLegal: Veredicto; pasaFisica: Veredicto }[]
   documentosParaEstudio: string[]
+  /** Los 5 filtros de Torna (corridas anteriores no lo traen) */
+  filtros?: ResultadoFiltros
 }
 
 export interface ParametrosFinancieros {

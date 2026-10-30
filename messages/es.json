@@ -245,7 +245,8 @@
       "usos": "Usos candidatos",
       "visita": "Visita técnica",
       "analisis": "Análisis",
-      "informe": "Informe"
+      "informe": "Informe",
+      "filtros": "5 filtros"
     },
     "formulario": {
       "titulo": "Matricular un edificio",
@@ -435,7 +436,8 @@
         "uso": "Uso",
         "norma": "Norma",
         "edificio": "Edificio",
-        "paraEstudio": "Documentos para el estudio detallado ({n})"
+        "paraEstudio": "Documentos para el estudio detallado ({n})",
+        "filtros": "5 filtros: {potencial}/100 · {lectura}"
       },
       "mmu": {
         "titulo": "Análisis de mayor y mejor uso",
@@ -446,7 +448,7 @@
         "reqBloques": "Bloques D, E y F resueltos",
         "itemsPendientes": "{n} ítems pendientes (no bloquea)",
         "tasa": "Tasa mínima (% anual)",
-        "tasaAyuda": "Rentabilidad mínima aceptable. Por confirmar con Torna.",
+        "tasaAyuda": "Por defecto 12 %. Rentabilidad mínima aceptable.",
         "horizonte": "Horizonte (años)",
         "lote": "Valor del lote vacío (opcional)",
         "loteAyuda": "Si lo tienes, se compara con el mejor uso del edificio.",
@@ -488,7 +490,11 @@
         },
         "nota": "VPN y TIR sobre flujos mensuales: la inversión en el mes 0, sin ingreso hasta el mes del primer ingreso, luego el neto mensual y, al final del horizonte, el valor de salida (ingreso neto ÷ tasa de capitalización). Viable: VPN ≥ 0 a la tasa mínima. Valor ajustado: VPN × 1,0 (riesgo bajo), 0,9 (medio) u 0,8 (alto).",
         "salida": "Tasa de capitalización de salida (%)",
-        "salidaAyuda": "Para el valor del inmueble al final: ingreso neto ÷ tasa."
+        "salidaAyuda": "Por defecto 12 %. Valor del inmueble al final: ingreso neto ÷ tasa.",
+        "parametrosTitulo": "Parámetros del cálculo",
+        "porDefecto": "Valores por defecto",
+        "restablecer": "Restablecer valores por defecto",
+        "horizonteAyuda": "Por defecto 10 años."
       }
     },
     "resumen": {
@@ -499,7 +505,8 @@
         "tamizaje": "Tamizaje",
         "detallado": "Estudio detallado",
         "mmu": "Mayor y mejor uso",
-        "informe": "Informe"
+        "informe": "Informe",
+        "filtros": "5 filtros"
       },
       "deN": "{a} de {b}",
       "usosDetalle": "{total} usos · {pasan} pasan norma y edificio",
@@ -518,11 +525,12 @@
       "ayuda": {
         "1": "Revisa los datos básicos del edificio.",
         "2": "Saca en línea el certificado de tradición, el catastral y la norma; carga licencias y la visita.",
-        "3": "Agrega los usos que tendría sentido probar en este edificio.",
-        "4": "Corre el tamizaje para saber si el inmueble merece el estudio detallado.",
-        "5": "Resuelve los ítems de la checklist A–F con los documentos y los estudios.",
-        "6": "Llena los números de cada uso y corre el análisis de mayor y mejor uso.",
-        "7": "Revisa el informe, corrige y expórtalo en PDF para el propietario."
+        "3": "Puntúa los 5 filtros de Torna con lo que ya tienes: documentos del mínimo y visita.",
+        "4": "Agrega los usos que tendría sentido probar en este edificio.",
+        "5": "Corre el tamizaje para saber si el inmueble merece el estudio detallado.",
+        "6": "Resuelve los ítems de la checklist A–F con los documentos y los estudios.",
+        "7": "Llena los números de cada uso y corre el análisis de mayor y mejor uso.",
+        "8": "Revisa el informe, corrige y expórtalo en PDF para el propietario."
       },
       "ir": "Ir →",
       "bloqueos": "Bloqueos encontrados",
@@ -540,7 +548,10 @@
       "origen": "Origen",
       "contacto": "Contacto",
       "zona": "Zona",
-      "ubicacion": "Coordenadas"
+      "ubicacion": "Coordenadas",
+      "sinEvaluar": "Sin evaluar",
+      "potencialDe": "{n}/100 · {lectura}",
+      "verFiltros": "Evaluar los 5 filtros →"
     },
     "informe": {
       "etiqueta": "Informe de viabilidad · Mayor y mejor uso",
@@ -583,6 +594,54 @@
       "porVerificar": "Ítems por verificar ({n})",
       "documentosPendientes": "Documentos pendientes ({n})",
       "pie": "Informe generado por la plataforma de Torna con los datos validados por el equipo. Los cálculos financieros son fórmulas sobre los datos ingresados; no reemplazan el concepto del IDPC, la certificación del IDIGER, la visita estructural (NSR-10) ni la licencia ante curaduría."
+    },
+    "filtros": {
+      "titulo": "Los 5 filtros de Torna",
+      "texto": "Tamizaje rápido para decidir si el inmueble merece el estudio detallado. Cada filtro tiene un criterio de veto que descarta de una y criterios que se puntúan de 0 a 2. Se puede llenar con el mínimo de documentos y la visita.",
+      "propuesta": "Propuesta por validar con Torna",
+      "radar": "Gráfico de los 5 filtros. Potencial total {potencial} de 100.",
+      "potencial": "Potencial de rehabilitación",
+      "cobertura": "Criterios evaluados (%)",
+      "evaluados": "{a} de {b} evaluados",
+      "peso": "Peso en el potencial: {peso} %",
+      "veto": "Veto",
+      "cumple": "Cumple",
+      "noCumple": "No cumple",
+      "nivel": {
+        "0": "0 · Desfavorable",
+        "1": "1 · Aceptable",
+        "2": "2 · Favorable"
+      },
+      "fuente": "Dónde se ve: {fuente}",
+      "puntajeDe": "Puntaje del criterio {criterio}",
+      "ocultarNota": "Ocultar nota",
+      "verNota": "Ver nota",
+      "agregarNota": "Agregar nota",
+      "notaEj": "Qué se vio y de dónde sale.",
+      "notaDe": "Nota del criterio {criterio}",
+      "vetosFallidos": "No cumple un criterio de veto ({codigos}). Se recomienda descartar o resolver ese punto antes de seguir.",
+      "lectura": {
+        "alto": "Potencial alto",
+        "medio": "Potencial medio",
+        "bajo": "Potencial bajo",
+        "descartar": "Descartar",
+        "incompleto": "Evaluación incompleta"
+      },
+      "explica": {
+        "alto": "{alto} o más: pasa al estudio detallado.",
+        "medio": "Entre {medio} y {alto}: pasa con condiciones; los filtros bajos dicen qué estudiar primero.",
+        "bajo": "Menos de {medio}: se recomienda descartar salvo una razón estratégica escrita.",
+        "descartar": "Un criterio de veto no se cumple.",
+        "incompleto": "Faltan los criterios de veto o menos del 60 % de los criterios tiene puntaje."
+      },
+      "metodoTitulo": "Cómo se calcula",
+      "metodo": [
+        "Método del Transformation Meter (Geraedts y van der Voordt, TU Delft), citado en la guía de Torna: primero vetos, después criterios graduales.",
+        "Puntaje de cada filtro = suma de puntos ÷ (2 × criterios evaluados), de 0 a 100. Los criterios sin evaluar no restan.",
+        "Potencial total = promedio ponderado: norma 25 %, estructura 25 %, ubicación 20 %, entorno 15 %, historia 15 %.",
+        "Lectura: 70 o más, alto · 50 a 69, medio · menos de 50, bajo. Un veto en «no cumple» descarta.",
+        "El tamizaje usa este resultado junto con la checklist: gana el color más grave."
+      ]
     }
   }
 }

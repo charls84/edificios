@@ -8,7 +8,8 @@ import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
 import { correrMayorMejorUso, faltantesMayorMejorUso, PARAMETROS_DEFAULT } from '../lib/finanzas'
 import { correrTamizaje, puedeCorrerTamizaje } from '../lib/tamizaje'
-import { getDocumentos, getItemsGuia, getUsos } from './consultas'
+import { calcularFiltros } from '../lib/filtros'
+import { getDocumentos, getFiltros, getItemsGuia, getUsos } from './consultas'
 
 // Los dos activadores del estudio. Cada corrida se guarda en `analyses`;
 // la ultima es la vigente y se marca desactualizada si algo cambia despues.
@@ -20,10 +21,10 @@ export async function correrTamizajeAction(buildingId: string): Promise<Resultad
   if (IS_DEMO) return { error: 'demo' }
   if (!uuid.safeParse(buildingId).success) return { error: 'invalido' }
   const profile = await requireProfile()
-  const [docs, items, usos] = await Promise.all([getDocumentos(buildingId), getItemsGuia(buildingId), getUsos(buildingId)])
+  const [docs, items, usos, filtros] = await Promise.all([getDocumentos(buildingId), getItemsGuia(buildingId), getUsos(buildingId), getFiltros(buildingId)])
   if (!puedeCorrerTamizaje(docs, usos)) return { error: 'faltaMinimo' }
 
-  const resultado = correrTamizaje(docs, items, usos)
+  const resultado = correrTamizaje(docs, items, usos, calcularFiltros(filtros))
   const supabase = await createClient()
   const { error } = await supabase.from('analyses').insert({ building_id: buildingId, tipo: 'tamizaje', resultado, corrido_por: profile.id })
   if (error) return { error: error.message }

@@ -57,7 +57,23 @@ Pestaña **Visita técnica**: el informe con las 7 secciones del formato de Torn
 
 Pestaña **Usos candidatos**: la lista de usos que vale la pena probar, con un clic desde los usos típicos de la guía (apartaestudios, vivienda estudiantil, coliving, renta corta, oficinas, coworking, consultorios, comercio, gastronomía, hotel, educación, cultura, mixto) o escribiendo otro. Cada uso es una columna de la matriz de decisión y lleva las tres primeras pruebas: **¿lo permite la norma? ¿el edificio lo soporta? ¿hay demanda?** (sí · por verificar · no, con nota y fuente).
 
-### 3.4 Activador 1: Tamizaje
+### 3.4 Los 5 filtros de Torna (propuesta)
+
+Pestaña **5 filtros**. Torna definió los filtros (ubicación, estructura, entorno, norma e historia) pero no sus criterios. **Propuesta de DOUX.WORK, por validar con Torna**, con el método del *Transformation Meter* (Geraedts y van der Voordt, TU Delft), que la guía ya cita: cada filtro tiene un **criterio de veto** que descarta de una y **criterios graduales** que se puntúan 0 (desfavorable), 1 (aceptable) o 2 (favorable). Cada opción describe qué significa en Bogotá.
+
+| Filtro | Peso | Veto | Criterios graduales |
+|---|---|---|---|
+| Ubicación | 20 % | U1 · acceso por vía pública, sin afectación total | U2 transporte masivo (≤ 500 m) · U3 generadores de demanda (≤ 1 km) · U4 frente y visibilidad |
+| Estructura | 25 % | E1 · sin daño severo que haga inviable el reforzamiento | E2 sistema y NSR-10 · E3 altura libre (≥ 3,0 m) · E4 luz y profundidad (≤ 15 m) · E5 puntos fijos y redes |
+| Entorno | 15 % | N1 · sin amenaza alta no mitigable (IDIGER) | N2 seguridad día/noche · N3 vacancia de la zona (alerta > 25 %) · N4 inversión pública cercana |
+| Norma | 25 % | R1 · al menos un uso candidato permitido | R2 tratamiento · R3 nivel BIC (1 integral, 2 tipológica) · R4 incentivos · R5 tipo de trámite |
+| Historia | 15 % | H1 · sin embargos, demandas ni falsa tradición | H2 propiedad y disposición · H3 coherencia registro–catastro–licencias · H4 información disponible · H5 valor arquitectónico aprovechable |
+
+**Cálculo:** puntaje del filtro = puntos ÷ (2 × criterios evaluados), de 0 a 100. Potencial = promedio ponderado. Lectura: **70 o más, alto** (pasa al estudio detallado) · **50 a 69, medio** (pasa con condiciones) · **menos de 50, bajo** (descartar salvo razón escrita). Un veto en *no cumple* descarta. Con menos del 60 % evaluado o vetos sin evaluar, la lectura es *incompleta*. Se ve como un pentágono (radar) en la pestaña, en el resumen y en el capítulo 1 del informe.
+
+Pesos y umbrales están en `src/features/estudio/catalogo/filtros.ts` y se ajustan cuando Torna los valide.
+
+### 3.5 Activador 1: Tamizaje
 
 Se habilita cuando el mínimo de documentos está cargado y hay al menos un uso candidato. La plataforma revisa, sin IA:
 
@@ -69,6 +85,8 @@ Se habilita cuando el mínimo de documentos está cargado y hay al menos un uso 
 | **Rojo** | Un ítem bloqueante marcado *no cumple* (A1 títulos, A6 afectaciones, B3 usos, B5 patrimonio, C1 estructura, CV1–CV5), o ningún uso pasa la norma | Descartar con la razón escrita, o resolver el bloqueo |
 | **Amarillo** | Falta algo del mínimo, hay ítems sin resolver o usos por verificar | Completar y volver a correr |
 | **Verde** | Mínimo completo, A/B/CV resueltos y al menos un uso pasa norma y edificio | Pasar al estudio detallado |
+
+Los 5 filtros se suman al semáforo: veto o potencial bajo dan rojo; incompleto o medio, amarillo. Gana el color más grave.
 
 El resultado se guarda con fecha y autor, pone el semáforo en la ficha y en el portafolio, y lista los documentos que faltan para el estudio detallado. Si después cambia algo, el análisis se marca *desactualizado*.
 
@@ -86,7 +104,7 @@ Cada ítem se marca **cumple · por verificar · no cumple · no aplica** con un
 
 ## 5. Paso 3 — Activador 2: Mayor y mejor uso
 
-Se habilita cuando el tamizaje se corrió, al menos un uso pasa norma y edificio, y esos usos tienen sus números. Los bloques D–F sin resolver se avisan pero no bloquean. Parámetros: **tasa mínima** (por defecto 12 % anual, por confirmar con Torna), **horizonte** (10 años), **tasa de capitalización de salida** (por defecto 12 %) y, opcional, el **valor del lote vacío**.
+Se habilita cuando el tamizaje se corrió, al menos un uso pasa norma y edificio, y esos usos tienen sus números. Los bloques D–F sin resolver se avisan pero no bloquean. Parámetros (todos con valor por defecto y editables; la pantalla recuerda los de la última corrida y tiene *Restablecer valores por defecto*): **tasa mínima** (12 % anual), **horizonte** (10 años), **tasa de capitalización de salida** (por defecto 12 %) y, opcional, el **valor del lote vacío**.
 
 La plataforma calcula, solo con fórmulas (cada cifra se puede rastrear):
 
@@ -131,12 +149,11 @@ El pie del informe recuerda que los cálculos no reemplazan el concepto del IDPC
 - **Lectura de PDF con IA:** extraer los campos clave de certificados y licencias con la página de donde salen, para pre-llenar la checklist A–F. Hoy el analista lee y marca.
 - **Consulta automática** a Catastro, POT y capa BIC (Fase 0 original).
 - **Comparables de mercado:** se registran a mano; copiar automáticamente de los portales choca con sus términos de uso.
-- **Los 5 filtros de Torna** (ubicación, estructura, entorno, norma e historia) no están definidos en los documentos del cliente; cuando lo estén, se suman al tamizaje.
 
 ## 9. Preguntas abiertas para Torna
 
-1. Criterios y límites de cada uno de los 5 filtros.
-2. Tasa mínima de rentabilidad y horizonte para TIR y VPN (hoy 12 % y 10 años por defecto).
+1. Validar la propuesta de los 5 filtros (criterios, pesos y umbrales, sección 3.4).
+2. Tasa mínima, horizonte y tasa de salida: quedan por defecto en 12 %, 10 años y 12 %, ajustables por análisis.
 3. Costos de referencia por m² de adecuación y reforzamiento, o se cotiza cada caso.
 4. Destinatario del informe (propietario, inversionistas o ambos): define qué datos personales se omiten.
 5. Quién firma el informe.

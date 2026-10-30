@@ -7,7 +7,12 @@ import { ITEMS_GUIA } from '../catalogo/guia'
 import { progresoDocumentos, progresoPrueba, resumenUsos } from '../lib/progreso'
 import { fecha, tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
+import { FILTROS, UMBRALES } from '../catalogo/filtros'
+import { calcularFiltros, COLOR_LECTURA, type EvaluacionCriterio } from '../lib/filtros'
 import { Progreso } from './progreso'
+import { RadarFiltros } from './radar-filtros'
+
+const TITULOS_FILTROS = Object.fromEntries(FILTROS.map((f) => [f.codigo, f.titulo]))
 
 interface Props {
   edificio: EdificioReal
@@ -17,6 +22,7 @@ interface Props {
   informe: InformeVisita | null
   tamizaje: AnalisisGuardado<ResultadoTamizaje> | null
   mmu: AnalisisGuardado<ResultadoMayorMejorUso> | null
+  filtros: EvaluacionCriterio[]
 }
 
 type Paso = { n: number; titulo: string; estado: 'hecho' | 'en_curso' | 'pendiente'; detalle: string; href: string }
@@ -26,7 +32,7 @@ function siguientePaso(pasos: Paso[]) {
 }
 
 // Pestaña Resumen: donde va el estudio y cual es el siguiente paso
-export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu }: Props) {
+export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros }: Props) {
   const [t, locale] = await Promise.all([getTranslations('estudio.resumen'), getLocale()])
   const base = `/edificios/${edificio.id}`
   const pd = progresoDocumentos(docs)
@@ -36,16 +42,19 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
   const ru = resumenUsos(usos)
   const detalladoTotal = legal.total + fisica.total + financiera.total
   const detalladoHecho = legal.resueltos + fisica.resueltos + financiera.resueltos
+  const rf = calcularFiltros(filtros)
+  const tf = await getTranslations('estudio.filtros')
   const recomendado = mmu ? mmu.resultado.usos.find((u) => u.id === mmu.resultado.recomendado) : null
 
   const pasos: Paso[] = [
     { n: 1, titulo: t('pasos.matricula'), estado: 'hecho', detalle: fecha(locale, edificio.createdAt), href: `${base}/editar` },
     { n: 2, titulo: t('pasos.minimo'), estado: pd.minimoListos === pd.minimo ? 'hecho' : pd.minimoListos > 0 ? 'en_curso' : 'pendiente', detalle: t('deN', { a: pd.minimoListos, b: pd.minimo }), href: `${base}/documentos` },
-    { n: 3, titulo: t('pasos.usos'), estado: ru.total > 0 ? 'hecho' : 'pendiente', detalle: t('usosDetalle', { total: ru.total, pasan: ru.pasanEdificio }), href: `${base}/usos` },
-    { n: 4, titulo: t('pasos.tamizaje'), estado: tamizaje ? 'hecho' : 'pendiente', detalle: tamizaje ? t(`semaforo.${tamizaje.resultado.semaforo}`) : t('sinCorrer'), href: `${base}/analisis` },
-    { n: 5, titulo: t('pasos.detallado'), estado: detalladoHecho === detalladoTotal ? 'hecho' : detalladoHecho > 0 ? 'en_curso' : 'pendiente', detalle: t('deN', { a: detalladoHecho, b: detalladoTotal }), href: `${base}/checklist` },
-    { n: 6, titulo: t('pasos.mmu'), estado: mmu ? 'hecho' : 'pendiente', detalle: recomendado ? recomendado.nombre : mmu ? t('sinViable') : t('sinCorrer'), href: `${base}/analisis` },
-    { n: 7, titulo: t('pasos.informe'), estado: mmu ? 'en_curso' : 'pendiente', detalle: mmu ? t('informeListo') : t('informeTras'), href: `${base}/informe` },
+    { n: 3, titulo: t('pasos.filtros'), estado: rf.lectura !== 'incompleto' ? 'hecho' : rf.cobertura > 0 ? 'en_curso' : 'pendiente', detalle: rf.potencial == null ? t('sinEvaluar') : t('potencialDe', { n: rf.potencial, lectura: tf(`lectura.${rf.lectura}`) }), href: `${base}/filtros` },
+    { n: 4, titulo: t('pasos.usos'), estado: ru.total > 0 ? 'hecho' : 'pendiente', detalle: t('usosDetalle', { total: ru.total, pasan: ru.pasanEdificio }), href: `${base}/usos` },
+    { n: 5, titulo: t('pasos.tamizaje'), estado: tamizaje ? 'hecho' : 'pendiente', detalle: tamizaje ? t(`semaforo.${tamizaje.resultado.semaforo}`) : t('sinCorrer'), href: `${base}/analisis` },
+    { n: 6, titulo: t('pasos.detallado'), estado: detalladoHecho === detalladoTotal ? 'hecho' : detalladoHecho > 0 ? 'en_curso' : 'pendiente', detalle: t('deN', { a: detalladoHecho, b: detalladoTotal }), href: `${base}/checklist` },
+    { n: 7, titulo: t('pasos.mmu'), estado: mmu ? 'hecho' : 'pendiente', detalle: recomendado ? recomendado.nombre : mmu ? t('sinViable') : t('sinCorrer'), href: `${base}/analisis` },
+    { n: 8, titulo: t('pasos.informe'), estado: mmu ? 'en_curso' : 'pendiente', detalle: mmu ? t('informeListo') : t('informeTras'), href: `${base}/informe` },
   ]
   const siguiente = siguientePaso(pasos)
   const fotos = (informe?.secciones ?? []).flatMap((s) => s.fotos).slice(0, 8).map((f) => ({ src: f.src, alt: f.destacado || f.texto || t('fotoVisita') }))
@@ -97,6 +106,21 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
           )}
         </section>
       )}
+
+      <section className="bento md:col-span-4">
+        <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-[240px_1fr]">
+          <RadarFiltros filtros={rf.filtros} titulos={TITULOS_FILTROS} locale={locale} tamano={240} descripcion={tf('radar', { potencial: rf.potencial ?? 0 })} />
+          <div>
+            <h2 className="font-semibold">{tf('titulo')}</h2>
+            <p className="mt-2 flex flex-wrap items-center gap-3">
+              <span className="text-4xl font-bold tabular-nums">{rf.potencial ?? '—'}<span className="text-base text-medio-texto">/100</span></span>
+              <span className={`rounded-full px-3 py-1 text-xs font-semibold ${COLOR_LECTURA[rf.lectura]}`}>{tf(`lectura.${rf.lectura}`)}</span>
+            </p>
+            <p className="mt-2 text-sm text-medio-texto">{tf(`explica.${rf.lectura}`, { alto: UMBRALES.alto, medio: UMBRALES.medio })}</p>
+            <Link href={`${base}/filtros`} className="mt-3 inline-block text-sm text-rojo hover:underline">{t('verFiltros')}</Link>
+          </div>
+        </div>
+      </section>
 
       <section className="bento md:col-span-2">
         <h2 className="font-semibold">{t('documentos')}</h2>

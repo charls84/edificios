@@ -1,6 +1,7 @@
 import { useLocale, useTranslations } from 'next-intl'
 import { SemaforoBadge } from '@/features/ficha/components/badges'
 import { documentoPorCodigo } from '../catalogo/documentos'
+import { FILTROS } from '../catalogo/filtros'
 import { ITEMS_GUIA } from '../catalogo/guia'
 import { tx } from '../lib/texto'
 import type { ResultadoTamizaje } from '../types'
@@ -29,6 +30,7 @@ function Lista({ titulo, items, tono = 'normal' }: { titulo: string; items: stri
 export function ResultadoTamizaje({ r }: { r: ResultadoTamizaje }) {
   const t = useTranslations('estudio.analisis.tamizaje')
   const tv = useTranslations('estudio.usos.veredictos')
+  const tf = useTranslations('estudio.filtros')
   const locale = useLocale()
 
   return (
@@ -37,6 +39,22 @@ export function ResultadoTamizaje({ r }: { r: ResultadoTamizaje }) {
         <SemaforoBadge semaforo={r.semaforo} />
         <p className="text-sm">{t(`lectura.${r.semaforo}`)}</p>
       </div>
+
+      {r.filtros && (
+        <div className="rounded-xl bg-fondo p-4">
+          <h4 className="text-sm font-semibold">{t('filtros', { potencial: r.filtros.potencial ?? '—', lectura: tf(`lectura.${r.filtros.lectura}`) })}</h4>
+          <ul className="mt-2 flex flex-wrap gap-2 text-xs">
+            {r.filtros.filtros.map((f) => {
+              const fc = FILTROS.find((x) => x.codigo === f.codigo)!
+              return (
+                <li key={f.codigo} className={`rounded-full px-2.5 py-1 ${f.vetoFallido ? 'bg-rojo-claro text-rojo-oscuro' : 'bg-white'}`}>
+                  {tx(fc.titulo, locale)}: <strong>{f.vetoFallido ? tf('veto') : f.puntaje ?? '—'}</strong>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )}
 
       <Lista titulo={t('bloqueos')} items={r.bloqueos.map((c) => textoItem(c, locale))} tono="rojo" />
       <Lista titulo={t('minimoFaltante')} items={r.documentosMinimoFaltantes.map((c) => textoDoc(c, locale))} />

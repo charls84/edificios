@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
 import { documentoPorCodigo } from '../catalogo/documentos'
+import { CRITERIOS_FILTROS } from '../catalogo/filtros'
 import { ITEMS_GUIA } from '../catalogo/guia'
 import { CATEGORIAS_USO } from '../catalogo/usos'
 
@@ -194,6 +195,35 @@ export async function eliminarUso(id: string, buildingId: string): Promise<Resul
   const { supabase } = await contexto()
   const { error } = await supabase.from('candidate_uses').delete().eq('id', id)
   if (error) return { error: error.message }
+  refrescar(buildingId)
+  return {}
+}
+
+// ---------- Los 5 filtros (se guardan en data_points, categoria 'filtros') ----------
+
+const filtroSchema = z.object({
+  buildingId: uuid,
+  codigo: z.string().refine((c) => CRITERIOS_FILTROS.some((x) => x.codigo === c)),
+  puntaje: z.union([z.literal(0), z.literal(1), z.literal(2)]).nullable(),
+  nota: z.string().trim().max(1000).nullable(),
+})
+
+export async function setCriterioFiltro(entrada: z.infer<typeof filtroSchema>): Promise<Resultado> {
+  if (IS_DEMO) return { error: 'demo' }
+  const parsed = filtroSchema.safeParse(entrada)
+  if (!parsed.success) return { error: 'invalido' }
+  const { buildingId, codigo, puntaje, nota } = parsed.data
+  const { profile, supabase } = await contexto()
+  const { error } = await supabase.from('data_points').upsert(
+    {
+      building_id: buildingId, categoria: 'filtros', clave: codigo, valor: { puntaje, nota },
+      estado: 'validado', validado_por: profile.id, fecha_consulta: ahora(),
+    },
+    { onConflict: 'building_id,categoria,clave' }
+  )
+  if (error) return { error: error.message }
+  // Toca el edificio para que los analisis corridos antes queden "desactualizados"
+  await supabase.from('buildings').update({ updated_at: ahora() }).eq('id', buildingId)
   refrescar(buildingId)
   return {}
 }
