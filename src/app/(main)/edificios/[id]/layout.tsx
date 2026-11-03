@@ -7,6 +7,10 @@ import { getEdificio } from '@/features/estudio/services/consultas'
 import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
 
+// El analista de IA y las consultas a Catastro corren en las acciones de estas páginas:
+// se da hasta 5 minutos (con modelos gratuitos puede probar varios seguidos)
+export const maxDuration = 300
+
 // En modo real la ficha es un estudio con pestañas; en el demo sigue siendo la ficha de una sola pagina
 export default async function EdificioLayout({ children, params }: { children: React.ReactNode; params: Promise<{ id: string }> }) {
   if (IS_DEMO) return children

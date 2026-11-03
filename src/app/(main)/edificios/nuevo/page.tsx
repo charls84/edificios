@@ -4,6 +4,10 @@ import { FormularioEdificio } from '@/features/estudio/components/formulario-edi
 import { crearEdificio } from '@/features/estudio/services/edificios-actions'
 import { IS_DEMO } from '@/shared/lib/demo'
 
+// El analista de IA y las consultas a Catastro corren en las acciones de estas páginas:
+// se da hasta 5 minutos (con modelos gratuitos puede probar varios seguidos)
+export const maxDuration = 300
+
 export default async function NuevoEdificioPage() {
   const t = await getTranslations()
 

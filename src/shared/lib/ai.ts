@@ -10,11 +10,45 @@ const LLAVE = process.env.OPENROUTER_API_KEY || process.env.OPEN_ROUTER_API_KEY_
 
 export const IA_DISPONIBLE = Boolean(LLAVE)
 
-/**
- * Modelo del analista: razonamiento sobre datos estructurados en español, una corrida por
- * predio (no por usuario), así que se prefiere calidad sobre costo. Se cambia sin tocar
- * código con la variable TORNA_IA_MODELO.
- */
-export const MODELO_ANALISTA = process.env.TORNA_IA_MODELO || 'anthropic/claude-sonnet-4.5'
-
 export const openrouter = createOpenRouter({ apiKey: LLAVE })
+
+/**
+ * Modelo fijo opcional (de pago), por ejemplo "anthropic/claude-sonnet-4.5". Si no se
+ * define TORNA_IA_MODELO, se usan los modelos gratuitos de OpenRouter (sin saldo).
+ */
+export const MODELO_FIJO = process.env.TORNA_IA_MODELO || null
+
+interface ModeloOpenRouter {
+  id: string
+  context_length?: number
+  supported_parameters?: string[]
+}
+
+// Familias que mejor siguen instrucciones y esquemas en español, en orden de preferencia
+const PREFERIDOS = [/deepseek/i, /qwen/i, /llama-3\.3|llama-4/i, /gemini|gemma/i, /mistral/i, /gpt-oss/i]
+
+/**
+ * Modelos gratuitos (":free") disponibles hoy en OpenRouter que aceptan respuestas
+ * estructuradas y expedientes largos. La lista cambia seguido: se consulta en vivo
+ * (con caché de una hora) en vez de dejar un modelo fijo que puede desaparecer.
+ */
+export async function modelosGratis(max = 4): Promise<string[]> {
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/models', { next: { revalidate: 3600 }, signal: AbortSignal.timeout(10_000) })
+    const { data } = (await res.json()) as { data: ModeloOpenRouter[] }
+    const aptos = data.filter((m) =>
+      m.id.endsWith(':free') &&
+      (m.context_length ?? 0) >= 32_000 &&
+      (m.supported_parameters ?? []).some((p) => p === 'structured_outputs' || p === 'response_format' || p === 'tools')
+    )
+    const rango = (id: string) => { const i = PREFERIDOS.findIndex((re) => re.test(id)); return i < 0 ? PREFERIDOS.length : i }
+    return aptos.sort((a, b) => rango(a.id) - rango(b.id) || (b.context_length ?? 0) - (a.context_length ?? 0)).slice(0, max).map((m) => m.id)
+  } catch {
+    return []
+  }
+}
+
+/** Modelos a probar, en orden: el fijo si existe; si no, los gratuitos de hoy */
+export async function modelosAnalista(): Promise<string[]> {
+  return MODELO_FIJO ? [MODELO_FIJO] : modelosGratis()
+}

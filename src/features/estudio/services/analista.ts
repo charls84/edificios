@@ -2,7 +2,7 @@ import 'server-only'
 import { generateObject } from 'ai'
 import { resumirVisita } from '@/features/visita/lib/calificacion'
 import { createClient } from '@/lib/supabase/server'
-import { IA_DISPONIBLE, MODELO_ANALISTA, openrouter } from '@/shared/lib/ai'
+import { IA_DISPONIBLE, modelosAnalista, openrouter } from '@/shared/lib/ai'
 import { CAMPOS_FUENTES } from '../catalogo/fuentes'
 import { ITEMS_GUIA } from '../catalogo/guia'
 import { esquemaAnalisisIA, INSTRUCCIONES_ANALISTA, puntajeGlobal, type AnalisisIAGuardado } from '../lib/analista-ia'
@@ -63,28 +63,34 @@ export async function correrAnalista(buildingId: string): Promise<ResultadoAnali
   if (!IA_DISPONIBLE) return { ok: false, error: 'sinLlave' }
   const expediente = await armarExpediente(buildingId)
   if (!expediente) return { ok: false, error: 'sinPredio' }
-  try {
-    const { object } = await generateObject({
-      model: openrouter(MODELO_ANALISTA),
-      schema: esquemaAnalisisIA,
-      system: INSTRUCCIONES_ANALISTA,
-      prompt: `Expediente del predio:\n${JSON.stringify(expediente)}`,
-      temperature: 0.2,
-      maxOutputTokens: 4000,
-      abortSignal: AbortSignal.timeout(90_000),
-    })
-    const analisis: AnalisisIAGuardado = { fecha: new Date().toISOString(), modelo: MODELO_ANALISTA, puntajeGlobal: puntajeGlobal(object), resultado: object }
-    const supabase = await createClient()
-    await supabase.from('data_points').upsert(
-      { building_id: buildingId, categoria: 'ia', clave: 'analista', valor: analisis, estado: 'automatico', fecha_consulta: analisis.fecha },
-      { onConflict: 'building_id,categoria,clave' }
-    )
-    return { ok: true, analisis }
-  } catch (e) {
-    // Solo el mensaje del error (sin el expediente ni la llave), para revisarlo en los logs de Vercel
-    console.error('[analista-ia]', MODELO_ANALISTA, e instanceof Error ? e.message : 'error desconocido')
-    return { ok: false, error: 'fallo' }
+  const modelos = await modelosAnalista()
+  if (modelos.length === 0) console.error('[analista-ia] no se pudo obtener la lista de modelos gratuitos de OpenRouter')
+  // Se prueba un modelo tras otro: los gratuitos a veces están saturados o devuelven JSON inválido
+  for (const modelo of modelos) {
+    try {
+      const { object } = await generateObject({
+        model: openrouter(modelo),
+        schema: esquemaAnalisisIA,
+        system: INSTRUCCIONES_ANALISTA,
+        prompt: `Expediente del predio:\n${JSON.stringify(expediente)}`,
+        temperature: 0.2,
+        maxOutputTokens: 5000,
+        maxRetries: 0,
+        abortSignal: AbortSignal.timeout(75_000),
+      })
+      const analisis: AnalisisIAGuardado = { fecha: new Date().toISOString(), modelo, puntajeGlobal: puntajeGlobal(object), resultado: object }
+      const supabase = await createClient()
+      await supabase.from('data_points').upsert(
+        { building_id: buildingId, categoria: 'ia', clave: 'analista', valor: analisis, estado: 'automatico', fecha_consulta: analisis.fecha },
+        { onConflict: 'building_id,categoria,clave' }
+      )
+      return { ok: true, analisis }
+    } catch (e) {
+      // Solo el mensaje del error (sin el expediente ni la llave), para revisarlo en los logs de Vercel
+      console.error('[analista-ia]', modelo, e instanceof Error ? e.message.slice(0, 300) : 'error desconocido')
+    }
   }
+  return { ok: false, error: 'fallo' }
 }
 
 export async function getAnalisisIA(buildingId: string): Promise<AnalisisIAGuardado | null> {
