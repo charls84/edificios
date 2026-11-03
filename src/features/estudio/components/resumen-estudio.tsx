@@ -147,7 +147,7 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
         <h2 className="font-semibold">{t('documentos')}</h2>
         <div className="mt-3 space-y-3">
           <Progreso label={t('minimo')} valor={pd.minimoListos} total={pd.minimo} destacado />
-          <Progreso label={t('todos')} valor={pd.listos} total={pd.total} />
+          <p className="text-sm text-medio-texto">{t('soloCertificado')}</p>
         </div>
         <Link href={`${base}/documentos`} className="mt-3 inline-block text-sm text-rojo hover:underline">{t('verDocumentos')}</Link>
       </section>

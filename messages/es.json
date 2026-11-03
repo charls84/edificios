@@ -316,11 +316,11 @@
       ]
     },
     "documentos": {
-      "titulo": "Documentos para el análisis",
-      "texto": "Para el tamizaje solo se necesita el certificado de tradición y libertad (el CHIP ya está en la ficha). El resto de la lista de Torna es apoyo para el estudio detallado: cárgalo cuando lo tengas.",
+      "titulo": "Documentos que hay que cargar",
+      "texto": "Solo se necesita el certificado de tradición y libertad. El CHIP ya está en la ficha y lo demás lo busca la plataforma sola.",
       "filtroMinimo": "Solo lo necesario para el tamizaje",
       "filtroNoAplica": "Ocultar los que no aplican",
-      "progresoMinimo": "Necesario para el tamizaje",
+      "progresoMinimo": "Documentos cargados",
       "progresoTotal": "Todos los documentos",
       "leyenda": "En línea: se descarga o consulta por internet · Parcial: se consulta en línea, pero el documento completo se pide aparte · No en línea: lo tiene el propietario o hay que generarlo.",
       "minimo": "Necesario",
@@ -349,7 +349,21 @@
       "errorGuardar": "No se pudo guardar. Intenta de nuevo.",
       "errorTamano": "El archivo pesa más de {max} MB.",
       "errorSubir": "No se pudo cargar \"{nombre}\". Intenta de nuevo.",
-      "confirmarQuitar": "¿Quitar \"{nombre}\"? El archivo se borra del almacenamiento."
+      "confirmarQuitar": "¿Quitar \"{nombre}\"? El archivo se borra del almacenamiento.",
+      "automaticoTitulo": "Lo que la plataforma busca sola",
+      "automatico": [
+        "Norma, patrimonio (BIC y PEMP), licencias, reserva vial, plusvalía y amenaza · Catastro",
+        "Transporte, universidades y uso de la manzana · Catastro",
+        "Espacio público · DADEP",
+        "Árboles y especies protegidas · Jardín Botánico",
+        "Extinción de dominio, embargos y demandas · se leen del certificado",
+        "Estado del edificio · visita técnica calificada"
+      ],
+      "verFuentes": "Ver lo que encontró →",
+      "opcionalesTitulo": "Otros documentos (opcional)",
+      "opcionalesTexto": "Apoyo para el estudio detallado. {n} de {total} cargados.",
+      "verOpcionales": "Ver la lista",
+      "ocultarOpcionales": "Ocultar la lista"
     },
     "checklist": {
       "titulo": "Checklist de la guía de mayor y mejor uso",
@@ -588,7 +602,8 @@
       "verFiltros": "Evaluar los 5 filtros →",
       "certificadoYFuentes": "{cert} · {a} de {b} fuentes",
       "certificadoListo": "Certificado cargado",
-      "certificadoFalta": "Falta el certificado"
+      "certificadoFalta": "Falta el certificado",
+      "soloCertificado": "Solo se carga el certificado de tradición. Lo demás lo busca la plataforma."
     },
     "informe": {
       "etiqueta": "Informe de viabilidad · Mayor y mejor uso",
@@ -629,7 +644,7 @@
       "loteVacio": "El lote vacío vale más que el mejor uso del edificio.",
       "sinRiesgos": "Sin riesgos registrados todavía.",
       "porVerificar": "Ítems por verificar ({n})",
-      "documentosPendientes": "Documentos pendientes ({n})",
+      "documentosPendientes": "Documentos por cargar ({n})",
       "pie": "Informe generado por la plataforma de Torna con los datos validados por el equipo. Los cálculos financieros son fórmulas sobre los datos ingresados; no reemplazan el concepto del IDPC, la certificación del IDIGER, la visita estructural (NSR-10) ni la licencia ante curaduría.",
       "consultasEnLinea": "Consultas en línea (SINUPOT, Mapas Bogotá, DADEP, SIGAU, SAE)",
       "sinConsultar": "Sin consultar"

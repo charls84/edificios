@@ -74,7 +74,8 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
   const r = mmu?.resultado ?? null
   const recomendado = r ? r.usos.find((u) => u.id === r.recomendado) ?? null : null
   const cargados = DOCUMENTOS.filter((d) => ['cargado', 'validado'].includes(estadoDoc.get(d.codigo)?.estado ?? ''))
-  const faltantes = DOCUMENTOS.filter((d) => !d.siAplica && !['cargado', 'validado', 'no_aplica'].includes(estadoDoc.get(d.codigo)?.estado ?? ''))
+  // Solo cuentan como pendientes los documentos que hay que cargar (hoy, el certificado de tradición)
+  const faltantes = DOCUMENTOS.filter((d) => d.minimo && !['cargado', 'validado'].includes(estadoDoc.get(d.codigo)?.estado ?? ''))
   const porVerificar = ITEMS_GUIA.filter((i) => estados.get(i.codigo)?.estado === 'por_verificar')
   const fragiles = r ? r.usos.filter((u) => u.viable && u.sensibilidad.canonMenos10 != null && u.sensibilidad.canonMenos10 < r.parametros.tasaMinima) : []
   const hoy = fecha(locale, new Date().toISOString())
