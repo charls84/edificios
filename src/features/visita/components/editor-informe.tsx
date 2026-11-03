@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import type { InformeVisita, SeccionInforme } from '@/features/ficha/types'
+import { CLAVES_VISITA } from '../lib/calificacion'
 import { Campo, CampoLista } from './campos'
 import { EditorSeccion } from './editor-seccion'
 
@@ -10,6 +11,11 @@ export function EditorInforme({ edificioId, value: inf, onChange }: { edificioId
   const tv = useTranslations('visita')
   const set = (cambios: Partial<InformeVisita>) => onChange({ ...inf, ...cambios })
   const setSeccion = (i: number, s: SeccionInforme) => set({ secciones: inf.secciones.map((x, j) => (j === i ? s : x)) })
+
+  // Informes anteriores al formato calificable: se agregan las secciones que falten
+  const faltan = CLAVES_VISITA.filter((c) => !inf.secciones.some((s) => s.clave === c))
+  const agregarCalificables = () =>
+    set({ secciones: [...faltan.map((clave) => ({ numero: '', clave, etiqueta: tv(`claves.${clave}`), titulo: '', puntaje: null, fotos: [] })), ...inf.secciones] })
 
   function mover(i: number, delta: -1 | 1) {
     const secciones = [...inf.secciones]
@@ -52,6 +58,13 @@ export function EditorInforme({ edificioId, value: inf, onChange }: { edificioId
           <CampoLista label={tv('documentos')} value={inf.documentosPorSolicitar} onChange={(v) => set({ documentosPorSolicitar: v })} />
         </div>
       </section>
+
+      {faltan.length > 0 && (
+        <div className="bento flex flex-wrap items-center justify-between gap-3 border-ambar/40 bg-ambar-claro">
+          <p className="text-sm">{t('faltanCalificables', { n: faltan.length })}</p>
+          <button type="button" onClick={agregarCalificables} className="boton w-auto">{t('agregarCalificables')}</button>
+        </div>
+      )}
 
       {inf.secciones.map((s, i) => (
         <EditorSeccion

@@ -6,11 +6,13 @@ import { useState, useTransition } from 'react'
 import { FUENTES, type CampoFuente, type Fuente } from '../catalogo/fuentes'
 import { fecha, tx } from '../lib/texto'
 import { setCampoFuente } from '../services/estudio-actions'
+import type { ConsultaPredio } from '../types'
+import { ConsultaAutomatica } from './consulta-automatica'
 import { Progreso } from './progreso'
 
-type Valores = Record<string, { texto: string; fecha: string }>
+type Valores = Record<string, { texto: string; fecha: string; auto?: boolean }>
 
-function Campo({ edificioId, fuente, campo, valor }: { edificioId: string; fuente: Fuente; campo: CampoFuente; valor?: { texto: string; fecha: string } }) {
+function Campo({ edificioId, fuente, campo, valor }: { edificioId: string; fuente: Fuente; campo: CampoFuente; valor?: { texto: string; fecha: string; auto?: boolean } }) {
   const t = useTranslations('estudio.fuentes')
   const locale = useLocale()
   const router = useRouter()
@@ -31,7 +33,10 @@ function Campo({ edificioId, fuente, campo, valor }: { edificioId: string; fuent
   return (
     <li className="py-3">
       <label htmlFor={clave} className="flex flex-wrap items-baseline justify-between gap-2">
-        <span className="text-sm font-medium">{tx(campo.texto, locale)}</span>
+        <span className="text-sm font-medium">
+          {tx(campo.texto, locale)}
+          {valor?.auto && !guardado && <span className="ml-2 rounded-full bg-torna/10 px-2 py-0.5 text-xs font-semibold text-torna">{t('auto')}</span>}
+        </span>
         <span className="text-xs text-medio-texto">{t('alimenta', { codigos: campo.alimenta.join(', ') })}</span>
       </label>
       <textarea
@@ -50,7 +55,7 @@ function Campo({ edificioId, fuente, campo, valor }: { edificioId: string; fuent
   )
 }
 
-export function FuentesEnLinea({ edificioId, chip, valores }: { edificioId: string; chip: string | null; valores: Valores }) {
+export function FuentesEnLinea({ edificioId, chip, valores, consulta }: { edificioId: string; chip: string | null; valores: Valores; consulta: ConsultaPredio | null }) {
   const t = useTranslations('estudio.fuentes')
   const locale = useLocale()
   const [copiado, setCopiado] = useState(false)
@@ -68,6 +73,7 @@ export function FuentesEnLinea({ edificioId, chip, valores }: { edificioId: stri
 
   return (
     <div className="space-y-4">
+      <ConsultaAutomatica edificioId={edificioId} consulta={consulta} />
       <section className="bento">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="max-w-2xl">
@@ -100,7 +106,8 @@ export function FuentesEnLinea({ edificioId, chip, valores }: { edificioId: stri
           </div>
           <ul className="mt-2 divide-y divide-borde">
             {f.campos.map((c) => (
-              <Campo key={c.codigo} edificioId={edificioId} fuente={f} campo={c} valor={valores[`${f.codigo}.${c.codigo}`]} />
+              // La llave incluye la fecha: si la consulta automática trae un dato nuevo, el campo se recarga
+              <Campo key={`${c.codigo}-${valores[`${f.codigo}.${c.codigo}`]?.fecha ?? ''}`} edificioId={edificioId} fuente={f} campo={c} valor={valores[`${f.codigo}.${c.codigo}`]} />
             ))}
           </ul>
         </section>

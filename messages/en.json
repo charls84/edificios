@@ -179,15 +179,6 @@
     "sinFotos": "No photos yet.",
     "loQueSeVio": "What we found",
     "cargandoFoto": "Loading photo",
-    "seccionesPlantilla": [
-      "Façade and entrance",
-      "Structure",
-      "Electrical systems",
-      "Plumbing",
-      "Condition of upper floors",
-      "Roof",
-      "Surroundings"
-    ],
     "editor": {
       "datos": "Visit details",
       "fecha": "Date",
@@ -227,12 +218,42 @@
       "agregarFotos": "Add photos",
       "subiendo": "Uploading {n}…",
       "errorFoto": "\"{nombre}\" could not be loaded. Try a JPG or PNG photo.",
-      "agregarSeccion": "+ Add inspected area"
+      "agregarSeccion": "+ Add inspected area",
+      "calificacion": "Inspector's score (0 to 10)",
+      "notas": "Additional notes",
+      "notasEj": "Measurements, marks, things to check again…",
+      "faltanCalificables": "This report is missing {n} of the 6 scored sections. Without them, the visit doesn't fully count in the analysis.",
+      "agregarCalificables": "Add sections"
     },
     "errorServidor": "The report could not be saved. Check your connection and try again.",
     "guardadoServidor": "Report saved. The whole team sees this version.",
     "subtituloServidor": "Sections reviewed on site, with photos. Saved to the database and visible to the whole team.",
-    "guardando": "Saving…"
+    "guardando": "Saving…",
+    "claves": {
+      "electricas": "Electrical installations",
+      "hidraulicas": "Plumbing",
+      "estructurales": "Structural elements",
+      "no_estructurales": "Non-structural elements",
+      "acabados": "Building finishes",
+      "general": "Overall visible condition of the building"
+    },
+    "puntaje": {
+      "quitar": "Clear score",
+      "sinCalificar": "Not scored. Pick 0 to 10.",
+      "promedio": "Average",
+      "deSeis": "{n} of 6 sections scored",
+      "aria": "Score {n} out of 10",
+      "nivel": {
+        "critico": "Critical",
+        "regular": "Fair",
+        "bueno": "Good"
+      },
+      "ayuda": {
+        "critico": "Needs major work or puts the project in doubt.",
+        "regular": "Works, but repairs must be budgeted.",
+        "bueno": "Usable with minor maintenance."
+      }
+    }
   },
   "nav": {
     "navegacion": "Main navigation",
@@ -659,11 +680,13 @@
         "Total potential = weighted average: rules 25%, structure 25%, location 20%, surroundings 15%, history 15%.",
         "Reading: 70 or more, high · 50 to 69, medium · below 50, low. A veto marked «does not meet» rules out.",
         "The screening uses this result together with the checklist: the most severe color wins."
-      ]
+      ],
+      "auto": "Automatic",
+      "autoAyuda": "Suggested by the platform from official data or the site visit. If you pick another score, yours wins."
     },
     "fuentes": {
       "titulo": "Online lookups",
-      "texto": "With the CHIP, check these four official sources and record what you find. Each field shows which criterion of the 5 filters or the A–F checklist it helps resolve. It saves when you leave each field.",
+      "texto": "The platform looks up Cadastre, DADEP and the Botanical Garden with the property address and fills in what it finds. Review each item, complete what's missing and fix anything that doesn't match: what you write wins. Saves when you leave each field.",
       "copiarChip": "Copy CHIP {chip}",
       "chipCopiado": "CHIP copied",
       "progreso": "Sources checked",
@@ -672,7 +695,85 @@
       "guardando": "Saving…",
       "guardado": "Saved.",
       "consultado": "Recorded on {fecha}",
-      "ejemplo": "E.g.: {texto}"
+      "ejemplo": "E.g.: {texto}",
+      "auto": "Automatic",
+      "autoTitulo": "Automatic lookup"
+    },
+    "auto": {
+      "titulo": "Automatic lookup",
+      "texto": "Crosses the lot with official Cadastre, DADEP and Botanical Garden layers. Fills the sources, suggests 5-filter scores and advances the checklist. Doesn't change what the team already wrote.",
+      "boton": "Look up now",
+      "repetir": "Look up again",
+      "consultando": "Querying official layers…",
+      "ultima": "Last lookup: {fecha}",
+      "nunca": "This property hasn't been looked up yet.",
+      "codigoLote": "Cadastre lot code (optional)",
+      "codigoLoteAyuda": "Use it if the address isn't recognized. 12 digits, for example 003109005017.",
+      "listo": "Lookup done. {n} items filled.",
+      "listoSinCambios": "Lookup done. There were no empty items to fill.",
+      "error": {
+        "sinLote": "We couldn't find the lot with that address. Enter the Cadastre lot code and try again.",
+        "sinRespuesta": "Cadastre didn't respond. Try again in a few minutes.",
+        "invalido": "The lot code must contain only numbers.",
+        "demo": "The automatic lookup isn't available in the demo."
+      },
+      "estado": {
+        "ok": "Data found",
+        "sin_datos": "Nothing found",
+        "error": "No response"
+      },
+      "fuentes": {
+        "ubicacion": "Address → lot",
+        "lote": "Lot",
+        "construccion": "Construction",
+        "patrimonio": "Heritage (BIC and PEMP)",
+        "transporte": "Transit",
+        "upl": "UPL",
+        "reserva_vial": "Road reserve",
+        "universidades": "Universities",
+        "plusvalia": "Land value capture",
+        "manzana": "Block use and value",
+        "licencias": "Permits",
+        "espacio_publico": "Public space",
+        "renobo": "RenoBo",
+        "arqueologia": "Archaeology",
+        "amenaza": "Hazard",
+        "arbolado": "Trees"
+      },
+      "datos": {
+        "lote": "Lot",
+        "area": "{n} m²",
+        "pisos": "{p} floors · {s, plural, =0 {no basement} one {# basement} other {# basements}}",
+        "valor": "Reference value {anio}",
+        "estrato": "Stratum {n}",
+        "estacion": "{nombre}, {m} m away",
+        "unidades": "{n} cadastral units"
+      }
+    },
+    "decision": {
+      "titulo": "Suggested decision",
+      "subtitulo": "Based on the 5 filters, the automatic lookup, the site visit and the financial analysis. The committee makes the final call.",
+      "opcion": {
+        "continuar": "Continue",
+        "continuar_condiciones": "Continue with conditions",
+        "descartar": "Don't continue",
+        "falta_informacion": "Missing information"
+      },
+      "explica": {
+        "continuar": "The property passes every filter and no conditions are open.",
+        "continuar_condiciones": "The property has potential, with conditions to resolve before committing resources.",
+        "descartar": "There is a veto or the potential is low. Review the reasons before closing.",
+        "falta_informacion": "There isn't enough data yet to suggest a decision."
+      },
+      "razones": "Why",
+      "condiciones": "Conditions to move forward",
+      "alertas": "Alerts",
+      "faltantes": "What's missing"
+    },
+    "visitaAnalisis": {
+      "titulo": "Site visit",
+      "sinVisita": "No scored visit yet.",
+      "ir": "Go to the visit"
     }
   }
 }

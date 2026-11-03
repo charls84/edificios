@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { EvaluacionCriterio } from '../lib/filtros'
 import type {
   AnalisisGuardado,
+  ConsultaPredio,
   EdificioReal,
   EstadoDocumentoEdificio,
   EstadoItemEdificio,
@@ -203,21 +204,29 @@ export async function getInformeVisita(buildingId: string): Promise<InformeVisit
 // Los 5 filtros se guardan en data_points (categoria 'filtros'): no necesitan tabla propia
 export async function getFiltros(buildingId: string): Promise<EvaluacionCriterio[]> {
   const supabase = await createClient()
-  const { data } = await supabase.from('data_points').select('clave, valor').eq('building_id', buildingId).eq('categoria', 'filtros')
-  return ((data ?? []) as { clave: string; valor: { puntaje?: number | null; nota?: string | null } }[]).map((d) => ({
+  const { data } = await supabase.from('data_points').select('clave, valor, estado').eq('building_id', buildingId).eq('categoria', 'filtros')
+  return ((data ?? []) as { clave: string; valor: { puntaje?: number | null; nota?: string | null }; estado: string }[]).map((d) => ({
     codigo: d.clave,
     puntaje: d.valor?.puntaje === 0 || d.valor?.puntaje === 1 || d.valor?.puntaje === 2 ? d.valor.puntaje : null,
     nota: d.valor?.nota ?? null,
+    auto: d.estado === 'automatico',
   }))
 }
 
 // Consultas en línea (SINUPOT, BIC, DADEP, SIGAU): también en data_points, categoria 'fuentes'
-export async function getFuentes(buildingId: string): Promise<Record<string, { texto: string; fecha: string }>> {
+export async function getFuentes(buildingId: string): Promise<Record<string, { texto: string; fecha: string; auto?: boolean }>> {
   const supabase = await createClient()
-  const { data } = await supabase.from('data_points').select('clave, valor, fecha_consulta').eq('building_id', buildingId).eq('categoria', 'fuentes')
-  const salida: Record<string, { texto: string; fecha: string }> = {}
-  for (const d of (data ?? []) as { clave: string; valor: { texto?: string }; fecha_consulta: string }[]) {
-    if (d.valor?.texto) salida[d.clave] = { texto: d.valor.texto, fecha: d.fecha_consulta }
+  const { data } = await supabase.from('data_points').select('clave, valor, fecha_consulta, estado').eq('building_id', buildingId).eq('categoria', 'fuentes')
+  const salida: Record<string, { texto: string; fecha: string; auto?: boolean }> = {}
+  for (const d of (data ?? []) as { clave: string; valor: { texto?: string }; fecha_consulta: string; estado: string }[]) {
+    if (d.valor?.texto) salida[d.clave] = { texto: d.valor.texto, fecha: d.fecha_consulta, auto: d.estado === 'automatico' }
   }
   return salida
+}
+
+// Última consulta automática a Catastro, DADEP y Jardín Botánico (categoria 'auto')
+export async function getConsultaAuto(buildingId: string): Promise<ConsultaPredio | null> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('data_points').select('valor').eq('building_id', buildingId).eq('categoria', 'auto').eq('clave', 'consulta').maybeSingle()
+  return ((data as { valor: ConsultaPredio } | null)?.valor) ?? null
 }

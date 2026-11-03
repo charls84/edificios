@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { z } from 'zod'
@@ -8,6 +9,7 @@ import type { ActionState } from '@/features/auth/types'
 import { createClient } from '@/lib/supabase/server'
 import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
+import { consultarYAplicar } from './auto-aplicar'
 
 const texto = (max: number) => z.string().trim().max(max)
 const opcional = (max: number) => texto(max).transform((v) => v || null)
@@ -66,6 +68,18 @@ export async function crearEdificio(_prev: ActionState, formData: FormData): Pro
     .select('id')
     .single()
   if (error || !data) return { error: t('noSeGuardo') }
+
+  // La consulta a Catastro, DADEP y Jardín Botánico corre después de responder:
+  // la ficha abre de una y los datos aparecen en segundos
+  const id = (data as { id: string }).id
+  after(async () => {
+    try {
+      await consultarYAplicar(supabase, id)
+      revalidatePath(`/edificios/${id}`, 'layout')
+    } catch {
+      // Si falla, el equipo la lanza desde la pestaña Fuentes
+    }
+  })
 
   revalidatePath('/dashboard')
   redirect(`/edificios/${(data as { id: string }).id}`)

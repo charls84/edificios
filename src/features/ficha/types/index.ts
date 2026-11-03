@@ -1,3 +1,4 @@
+import type { ClaveVisita } from '@/features/visita/lib/calificacion'
 import type { Etapa } from '@/shared/types/database'
 
 export type Semaforo = 'verde' | 'amarillo' | 'rojo'
@@ -39,6 +40,12 @@ export interface FotoInforme {
 
 export interface SeccionInforme {
   numero: string
+  /** Una de las seis secciones calificables de la visita (las demás son libres) */
+  clave?: ClaveVisita
+  /** Calificación del inspector, de 0 a 10 */
+  puntaje?: number | null
+  /** Anotaciones adicionales del inspector */
+  notas?: string
   etiqueta: string
   titulo: string
   texto?: string

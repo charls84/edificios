@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { guardarInformeVisita } from '@/features/estudio/services/analisis-actions'
 import type { InformeVisita } from '@/features/ficha/types'
+import type { ClaveVisita } from '../lib/calificacion'
 import { borrarInforme, fotosDe, guardarInforme, informeVacio, useInformeLocal } from '../lib/almacen'
 import { borrarFotos } from '../lib/fotos-db'
 import { EditorInforme } from './editor-informe'
@@ -118,7 +119,7 @@ export function VisitaTecnica({ edificioId, inicial, modo = 'local' }: Props) {
           <p className="mt-1 text-sm text-medio-texto">{t('vacioTexto')}</p>
           <button
             type="button"
-            onClick={() => setBorrador(informeVacio(t('tituloInforme'), t.raw('seccionesPlantilla') as string[]))}
+            onClick={() => setBorrador(informeVacio(t('tituloInforme'), t.raw('claves') as Record<ClaveVisita, string>))}
             className="boton mx-auto mt-4 w-auto"
           >
             {t('crear')}

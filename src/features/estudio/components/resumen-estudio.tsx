@@ -10,6 +10,10 @@ import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoIte
 import { FILTROS, UMBRALES } from '../catalogo/filtros'
 import { FUENTES } from '../catalogo/fuentes'
 import { calcularFiltros, COLOR_LECTURA, type EvaluacionCriterio } from '../lib/filtros'
+import { CalificacionVisita } from '@/features/visita/components/calificacion-visita'
+import { resumirVisita } from '@/features/visita/lib/calificacion'
+import type { SugerenciaDecision } from '../lib/decision'
+import { DecisionSugerida } from './decision-sugerida'
 import { Progreso } from './progreso'
 import { RadarFiltros } from './radar-filtros'
 
@@ -25,6 +29,7 @@ interface Props {
   mmu: AnalisisGuardado<ResultadoMayorMejorUso> | null
   filtros: EvaluacionCriterio[]
   fuentes: Record<string, { texto: string; fecha: string }>
+  decision: SugerenciaDecision
 }
 
 type Paso = { n: number; titulo: string; estado: 'hecho' | 'en_curso' | 'pendiente'; detalle: string; href: string }
@@ -34,7 +39,7 @@ function siguientePaso(pasos: Paso[]) {
 }
 
 // Pestaña Resumen: donde va el estudio y cual es el siguiente paso
-export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros, fuentes }: Props) {
+export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros, fuentes, decision }: Props) {
   const [t, locale] = await Promise.all([getTranslations('estudio.resumen'), getLocale()])
   const base = `/edificios/${edificio.id}`
   const pd = progresoDocumentos(docs)
@@ -60,12 +65,25 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
     { n: 8, titulo: t('pasos.informe'), estado: mmu ? 'en_curso' : 'pendiente', detalle: mmu ? t('informeListo') : t('informeTras'), href: `${base}/informe` },
   ]
   const siguiente = siguientePaso(pasos)
+  const visita = resumirVisita(informe)
+  const tva = await getTranslations('estudio.visitaAnalisis')
   const fotos = (informe?.secciones ?? []).flatMap((s) => s.fotos).slice(0, 8).map((f) => ({ src: f.src, alt: f.destacado || f.texto || t('fotoVisita') }))
   const bloqueos = tamizaje?.resultado.bloqueos ?? []
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
       {fotos.length > 0 && <div className="md:col-span-4"><Galeria fotos={fotos} titulo={edificio.nombre} /></div>}
+
+      <DecisionSugerida sugerencia={decision} className="md:col-span-4" />
+      {visita && visita.calificadas > 0 && (
+        <section className="bento md:col-span-4" aria-labelledby="visita-resumen">
+          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+            <h2 id="visita-resumen" className="text-lg font-bold">{tva('titulo')}</h2>
+            <Link href={`${base}/visita`} className="text-sm text-rojo hover:underline">{tva('ir')}</Link>
+          </div>
+          <CalificacionVisita resumen={visita} />
+        </section>
+      )}
 
       <section className="bento md:col-span-3">
         <h2 className="text-lg font-bold">{t('avance')}</h2>

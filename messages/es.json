@@ -179,15 +179,6 @@
     "sinFotos": "Sin fotos todavía.",
     "loQueSeVio": "Lo que se vio",
     "cargandoFoto": "Cargando foto",
-    "seccionesPlantilla": [
-      "Fachada y acceso",
-      "Estructura",
-      "Redes eléctricas",
-      "Redes hidráulicas",
-      "Estado de los pisos superiores",
-      "Cubierta",
-      "Entorno"
-    ],
     "editor": {
       "datos": "Datos de la visita",
       "fecha": "Fecha",
@@ -227,12 +218,42 @@
       "agregarFotos": "Agregar fotos",
       "subiendo": "Subiendo {n}…",
       "errorFoto": "No se pudo cargar \"{nombre}\". Prueba con una foto JPG o PNG.",
-      "agregarSeccion": "+ Agregar sección revisada"
+      "agregarSeccion": "+ Agregar sección revisada",
+      "calificacion": "Calificación del inspector (0 a 10)",
+      "notas": "Anotaciones adicionales",
+      "notasEj": "Medidas, marcas, lo que hay que volver a revisar…",
+      "faltanCalificables": "A este informe le faltan {n} de las 6 secciones calificables. Sin ellas, la visita no entra completa al análisis.",
+      "agregarCalificables": "Agregar secciones"
     },
     "errorServidor": "No se pudo guardar el informe. Revisa la conexión e intenta de nuevo.",
     "guardadoServidor": "Informe guardado. Todo el equipo ve esta versión.",
     "subtituloServidor": "Secciones revisadas en sitio, con sus fotos. Se guarda en la base de datos y lo ve todo el equipo.",
-    "guardando": "Guardando…"
+    "guardando": "Guardando…",
+    "claves": {
+      "electricas": "Instalaciones eléctricas",
+      "hidraulicas": "Instalaciones hidráulicas",
+      "estructurales": "Elementos estructurales",
+      "no_estructurales": "Elementos no estructurales",
+      "acabados": "Acabados de la edificación",
+      "general": "Estado general a la vista del edificio"
+    },
+    "puntaje": {
+      "quitar": "Quitar calificación",
+      "sinCalificar": "Sin calificar. Elige de 0 a 10.",
+      "promedio": "Promedio",
+      "deSeis": "{n} de 6 secciones calificadas",
+      "aria": "Calificación {n} de 10",
+      "nivel": {
+        "critico": "Crítico",
+        "regular": "Regular",
+        "bueno": "Bueno"
+      },
+      "ayuda": {
+        "critico": "Requiere intervención mayor o pone en duda el proyecto.",
+        "regular": "Funciona, pero hay que presupuestar arreglos.",
+        "bueno": "Se puede aprovechar con mantenimiento menor."
+      }
+    }
   },
   "nav": {
     "navegacion": "Navegación principal",
@@ -659,11 +680,13 @@
         "Potencial total = promedio ponderado: norma 25 %, estructura 25 %, ubicación 20 %, entorno 15 %, historia 15 %.",
         "Lectura: 70 o más, alto · 50 a 69, medio · menos de 50, bajo. Un veto en «no cumple» descarta.",
         "El tamizaje usa este resultado junto con la checklist: gana el color más grave."
-      ]
+      ],
+      "auto": "Automático",
+      "autoAyuda": "Lo sugirió la plataforma con datos oficiales o la visita. Si eliges otro puntaje, manda el tuyo."
     },
     "fuentes": {
       "titulo": "Consultas en línea",
-      "texto": "Con el CHIP, consulta estas cuatro fuentes oficiales y anota lo que encuentres. Cada dato indica qué criterio de los 5 filtros o de la checklist A–F ayuda a resolver. Se guarda al salir de cada campo.",
+      "texto": "La plataforma consulta Catastro, DADEP y el Jardín Botánico con la dirección del predio y llena lo que encuentra. Revisa cada dato, completa lo que falte y corrige lo que no cuadre: lo que escribas manda. Se guarda al salir de cada campo.",
       "copiarChip": "Copiar CHIP {chip}",
       "chipCopiado": "CHIP copiado",
       "progreso": "Fuentes consultadas",
@@ -672,7 +695,85 @@
       "guardando": "Guardando…",
       "guardado": "Guardado.",
       "consultado": "Anotado el {fecha}",
-      "ejemplo": "Ej.: {texto}"
+      "ejemplo": "Ej.: {texto}",
+      "auto": "Automático",
+      "autoTitulo": "Consulta automática"
+    },
+    "auto": {
+      "titulo": "Consulta automática",
+      "texto": "Cruza el lote con las capas oficiales de Catastro, DADEP y Jardín Botánico. Llena las fuentes, sugiere puntajes de los 5 filtros y avanza la checklist. No cambia lo que el equipo ya escribió.",
+      "boton": "Consultar ahora",
+      "repetir": "Volver a consultar",
+      "consultando": "Consultando capas oficiales…",
+      "ultima": "Última consulta: {fecha}",
+      "nunca": "Aún no se ha consultado este predio.",
+      "codigoLote": "Código de lote de Catastro (opcional)",
+      "codigoLoteAyuda": "Úsalo si la dirección no se reconoce. Son 12 dígitos, por ejemplo 003109005017.",
+      "listo": "Consulta lista. Se llenaron {n} datos.",
+      "listoSinCambios": "Consulta lista. No había datos vacíos por llenar.",
+      "error": {
+        "sinLote": "No encontramos el lote con esa dirección. Escribe el código de lote de Catastro y vuelve a consultar.",
+        "sinRespuesta": "Catastro no respondió. Intenta de nuevo en unos minutos.",
+        "invalido": "El código de lote debe tener solo números.",
+        "demo": "La consulta automática no está disponible en el demo."
+      },
+      "estado": {
+        "ok": "Con datos",
+        "sin_datos": "Sin hallazgos",
+        "error": "No respondió"
+      },
+      "fuentes": {
+        "ubicacion": "Dirección → lote",
+        "lote": "Lote",
+        "construccion": "Construcción",
+        "patrimonio": "Patrimonio (BIC y PEMP)",
+        "transporte": "Transporte",
+        "upl": "UPL",
+        "reserva_vial": "Reserva vial",
+        "universidades": "Universidades",
+        "plusvalia": "Plusvalía",
+        "manzana": "Uso y valor de la manzana",
+        "licencias": "Licencias",
+        "espacio_publico": "Espacio público",
+        "renobo": "RenoBo",
+        "arqueologia": "Arqueología",
+        "amenaza": "Amenaza",
+        "arbolado": "Arbolado"
+      },
+      "datos": {
+        "lote": "Lote",
+        "area": "{n} m²",
+        "pisos": "{p} pisos · {s, plural, =0 {sin sótano} one {# sótano} other {# sótanos}}",
+        "valor": "Valor de referencia {anio}",
+        "estrato": "Estrato {n}",
+        "estacion": "{nombre} a {m} m",
+        "unidades": "{n} unidades prediales"
+      }
+    },
+    "decision": {
+      "titulo": "Sugerencia de decisión",
+      "subtitulo": "Sale de los 5 filtros, la consulta automática, la visita y el análisis financiero. La decisión final es del comité.",
+      "opcion": {
+        "continuar": "Continuar",
+        "continuar_condiciones": "Continuar con condiciones",
+        "descartar": "No continuar",
+        "falta_informacion": "Falta información"
+      },
+      "explica": {
+        "continuar": "El predio pasa todos los filtros y no hay condiciones abiertas.",
+        "continuar_condiciones": "El predio tiene potencial, con condiciones que hay que resolver antes de comprometer recursos.",
+        "descartar": "Hay un veto o el potencial es bajo. Revisa las razones antes de cerrar.",
+        "falta_informacion": "Aún no hay datos suficientes para sugerir una decisión."
+      },
+      "razones": "Por qué",
+      "condiciones": "Condiciones para avanzar",
+      "alertas": "Alertas",
+      "faltantes": "Qué falta"
+    },
+    "visitaAnalisis": {
+      "titulo": "Visita técnica",
+      "sinVisita": "Aún no hay visita calificada.",
+      "ir": "Ir a la visita"
     }
   }
 }

@@ -181,3 +181,38 @@ export interface EdificioReal {
   createdAt: string
   updatedAt: string
 }
+
+// ---------- Consulta automática de fuentes oficiales (Catastro, DADEP, Jardín Botánico) ----------
+
+export type EstadoFuenteAuto = 'ok' | 'sin_datos' | 'error'
+
+export interface ConsultaPredio {
+  fecha: string
+  /** Por fuente: ok, sin datos o error (con mensaje) */
+  estado: Record<string, { estado: EstadoFuenteAuto; mensaje?: string }>
+  lote: {
+    codigo: string
+    areaM2: number
+    lat: number
+    lng: number
+    unidadesPrediales: number | null
+    manzana: string | null
+    anillo: number[][]
+  } | null
+  bic: { ambito: string | null; nivel: string | null; localizacion: string | null; acto: string | null } | null
+  pemp: 'afectada' | 'influencia' | null
+  sectorInteresCultural: string | null
+  licencias: { acto: string; tipo: string; decision: string; fecha: string | null }[]
+  reservaVial: { nombre: string; areaM2: number } | null
+  plusvalia: boolean | null
+  construccion: { pisos: number; sotanos: number } | null
+  manzana: { uso: string | null; valorReferencia: number | null; anioValor: number | null; estrato: number | null } | null
+  upl: string | null
+  arqueologia: string | null
+  amenazaRemocion: string | null
+  transporte: { troncalCercana: string | null; estacion: string | null; distanciaEstacion: number | null; metro: string | null; distanciaMetro: number | null }
+  universidades: { nombre: string; distancia: number }[]
+  espacioPublico: { alameda: string | null; andenMaxM: number | null; vias: number; prediosPublicos: number }
+  arboles: { a10m: number; masCercano: { especie: string; distancia: number } | null; protegidos: { especie: string; distancia: number }[] }
+  renobo: string | null
+}
