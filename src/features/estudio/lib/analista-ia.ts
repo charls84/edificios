@@ -12,11 +12,11 @@ export const PESOS_DIMENSION: Record<Dimension, number> = {
 }
 
 const dimension = z.object({
-  puntaje: z.number().int().min(0).max(100).nullable().describe('0 a 100. null si no hay datos suficientes para puntuar esta dimensión'),
+  puntaje: z.number().min(0).max(100).nullable().describe('0 a 100. null si no hay datos suficientes para puntuar esta dimensión'),
   confianza: z.enum(['alta', 'media', 'baja']).describe('Qué tan completos y confiables son los datos de esta dimensión'),
   resumen: z.string().describe('Una o dos frases en español, concretas, con cifras del expediente'),
-  evidencias: z.array(z.string()).max(5).describe('Datos del expediente que sostienen el puntaje, citando la fuente entre paréntesis'),
-  riesgos: z.array(z.string()).max(4).describe('Riesgos de esta dimensión; vacío si no hay'),
+  evidencias: z.array(z.string()).describe('Máximo 5. Datos del expediente que sostienen el puntaje, citando la fuente entre paréntesis'),
+  riesgos: z.array(z.string()).describe('Máximo 4. Riesgos de esta dimensión; vacío si no hay'),
 })
 
 export const esquemaAnalisisIA = z.object({
@@ -24,9 +24,9 @@ export const esquemaAnalisisIA = z.object({
   resumenEjecutivo: z.string().describe('Tres a cinco frases para el comité: qué es el predio, su mayor fortaleza, su mayor riesgo y la recomendación'),
   usoRecomendado: z.string().nullable().describe('Uso o mezcla de usos que mejor encaja con lo que dicen los datos; null si no se puede sugerir'),
   dimensiones: z.object(Object.fromEntries(DIMENSIONES.map((d) => [d, dimension])) as Record<Dimension, typeof dimension>),
-  condiciones: z.array(z.string()).max(8).describe('Lo que debe cumplirse para avanzar'),
-  proximosPasos: z.array(z.string()).max(6).describe('Acciones concretas, en orden, con responsable sugerido (abogado, arquitecto, ingeniero, comercial)'),
-  datosFaltantes: z.array(z.string()).max(8).describe('Datos que cambiarían el puntaje si se consiguieran'),
+  condiciones: z.array(z.string()).describe('Máximo 8. Lo que debe cumplirse para avanzar'),
+  proximosPasos: z.array(z.string()).describe('Máximo 6. Acciones concretas, en orden, con responsable sugerido (abogado, arquitecto, ingeniero, comercial)'),
+  datosFaltantes: z.array(z.string()).describe('Máximo 8. Datos que cambiarían el puntaje si se consiguieran'),
 })
 
 export type AnalisisIA = z.infer<typeof esquemaAnalisisIA>
@@ -45,7 +45,7 @@ export function puntajeGlobal(a: AnalisisIA): number | null {
   for (const d of DIMENSIONES) {
     const p = a.dimensiones[d].puntaje
     if (p == null) continue
-    suma += p * PESOS_DIMENSION[d]
+    suma += Math.round(p) * PESOS_DIMENSION[d]
     pesos += PESOS_DIMENSION[d]
   }
   return pesos >= 50 ? Math.round(suma / pesos) : null
@@ -76,3 +76,31 @@ Reglas:
 6. BIC nivel 2 o 3 no descarta: permite adecuar el interior con aprobación del IDPC. Nivel 1 limita mucho la intervención.
 7. Si tu decisión difiere de la sugerencia por reglas, explica por qué en el resumen ejecutivo.
 8. Escribe en español de Colombia, claro y directo, sin jerga. Cifras con separador de miles con punto.`
+
+/**
+ * Saca el JSON de la respuesta de un modelo (puede venir entre ```json o con texto alrededor)
+ * y lo valida con el esquema. Los modelos gratuitos no siempre aceptan el modo estructurado.
+ */
+export function leerRespuestaIA(texto: string): AnalisisIA | null {
+  const inicio = texto.indexOf('{')
+  const fin = texto.lastIndexOf('}')
+  if (inicio < 0 || fin <= inicio) return null
+  try {
+    const r = esquemaAnalisisIA.safeParse(JSON.parse(texto.slice(inicio, fin + 1)))
+    if (!r.success) return null
+    // Redondeo y topes de listas para que la tarjeta se vea pareja
+    const a = r.data
+    for (const d of DIMENSIONES) {
+      const x = a.dimensiones[d]
+      if (x.puntaje != null) x.puntaje = Math.round(x.puntaje)
+      x.evidencias = x.evidencias.slice(0, 5)
+      x.riesgos = x.riesgos.slice(0, 4)
+    }
+    return { ...a, condiciones: a.condiciones.slice(0, 8), proximosPasos: a.proximosPasos.slice(0, 6), datosFaltantes: a.datosFaltantes.slice(0, 8) }
+  } catch {
+    return null
+  }
+}
+
+/** Formato que se le pide al modelo, en JSON Schema */
+export const FORMATO_RESPUESTA = JSON.stringify(z.toJSONSchema(esquemaAnalisisIA))

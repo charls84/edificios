@@ -32,17 +32,18 @@ const PREFERIDOS = [/deepseek/i, /qwen/i, /llama-3\.3|llama-4/i, /gemini|gemma/i
  * estructuradas y expedientes largos. La lista cambia seguido: se consulta en vivo
  * (con caché de una hora) en vez de dejar un modelo fijo que puede desaparecer.
  */
-export async function modelosGratis(max = 4): Promise<string[]> {
+export async function modelosGratis(max = 6): Promise<string[]> {
   try {
     const res = await fetch('https://openrouter.ai/api/v1/models', { next: { revalidate: 3600 }, signal: AbortSignal.timeout(10_000) })
     const { data } = (await res.json()) as { data: ModeloOpenRouter[] }
-    const aptos = data.filter((m) =>
-      m.id.endsWith(':free') &&
-      (m.context_length ?? 0) >= 32_000 &&
-      (m.supported_parameters ?? []).some((p) => p === 'structured_outputs' || p === 'response_format' || p === 'tools')
-    )
+    // Los "inkling" solo funcionan dentro de agentes de código: no sirven para una llamada directa
+    const aptos = data.filter((m) => m.id.endsWith(':free') && !/inkling/i.test(m.id) && (m.context_length ?? 0) >= 32_000)
+    const estructurado = (m: ModeloOpenRouter) => ((m.supported_parameters ?? []).some((p) => p === 'structured_outputs' || p === 'response_format') ? 0 : 1)
     const rango = (id: string) => { const i = PREFERIDOS.findIndex((re) => re.test(id)); return i < 0 ? PREFERIDOS.length : i }
-    return aptos.sort((a, b) => rango(a.id) - rango(b.id) || (b.context_length ?? 0) - (a.context_length ?? 0)).slice(0, max).map((m) => m.id)
+    return aptos
+      .sort((a, b) => rango(a.id) - rango(b.id) || estructurado(a) - estructurado(b) || (b.context_length ?? 0) - (a.context_length ?? 0))
+      .slice(0, max)
+      .map((m) => m.id)
   } catch {
     return []
   }
