@@ -1,7 +1,7 @@
 # Flujo del estudio: del inmueble matriculado al informe de viabilidad
 
 > Metodología de trabajo de Torna para evaluar un edificio, de la matrícula al informe de mayor y mejor uso.
-> Versión 0.2 · 2026-10-30 · Preparado por DOUX.WORK
+> Versión 0.3 · 2026-11-03 · Preparado por DOUX.WORK
 > Fuentes: *Documentos para el análisis de un inmueble* (Torna, 27-oct-2026) y *Guía de análisis de mayor y mejor uso* v1.0 (Daniela Céspedes, Torna, 27-oct-2026).
 > Estado: **implementado en la plataforma** (ver sección 9). Los criterios de los 5 filtros y la tasa mínima siguen pendientes de Torna.
 
@@ -47,7 +47,20 @@ Cada ítem muestra dónde se consigue (*en línea · parcial · no en línea*), 
 
 Dos adiciones de la plataforma, marcadas con (+): la **autorización de tratamiento de datos** firmada por el propietario (Ley 1581 de 2012, porque el certificado y las escrituras traen nombres y cédulas) y la visita técnica se llena en su propia pestaña y queda *cargada* al guardarla.
 
-**El mínimo para arrancar** (definido por Torna): certificado de tradición, certificado catastral, consulta de norma en Mapas Bogotá, licencias con planos y visita técnica. Los tres primeros se sacan en línea antes de reunirse con el propietario.
+**Lo necesario para el tamizaje** (Torna, actualización del 3-nov-2026): el **CHIP** del predio, que se exige al matricular, y el **certificado de tradición y libertad**. El resto de la lista queda como apoyo para el estudio detallado.
+
+### 3.1 bis Consultas en línea (pestaña Fuentes)
+
+Con el CHIP se consultan cuatro fuentes oficiales y lo encontrado se anota campo por campo. Cada campo indica qué criterio de los 5 filtros o de la checklist A–F ayuda a resolver, y todo sale en el capítulo 3 del informe.
+
+| Fuente | Entidad | Qué se anota |
+|---|---|---|
+| [SINUPOT](https://sinupot.sdp.gov.co/) | Secretaría Distrital de Planeación | UPL y área de actividad, tratamiento, usos permitidos, edificabilidad, licencias registradas, plusvalía, amenaza y riesgo |
+| [Mapas Bogotá (BIC)](https://mapas.bogota.gov.co/?l=61568&e=-74.14935460883873,4.620915254405697,-74.0190636237315,4.68028563650382,4686&b=7256&show_menu=true&m=41900) | IDECA · IDPC | Si es BIC, categoría o nivel de intervención, sector de interés cultural o PEMP |
+| [Observatorio DADEP](https://geo.dadep.gov.co/observatorio/) | DADEP | Espacio público colindante, afectaciones o cesiones, ocupación del espacio público |
+| [SIGAU](https://geoportal.jbb.gov.co/SigauJBB/VisorPublico/VisorPublico) | Jardín Botánico de Bogotá | Árboles en el frente, impacto en accesos u obra, permiso ambiental |
+
+Los datos se guardan en `data_points` (categoría `fuentes`), sin migración. Catálogo: `src/features/estudio/catalogo/fuentes.ts`. Cuando la red lo permita, se puede automatizar la consulta por CHIP a los servicios GIS del Distrito.
 
 ### 3.2 Visita técnica
 

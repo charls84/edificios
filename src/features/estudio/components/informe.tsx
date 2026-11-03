@@ -6,6 +6,7 @@ import { ITEMS_GUIA, itemsDelBloque } from '../catalogo/guia'
 import { COP, fecha, numero, porcentaje, tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
 import { FILTROS } from '../catalogo/filtros'
+import { FUENTES } from '../catalogo/fuentes'
 import { BotonImprimir } from './boton-imprimir'
 import { RadarFiltros } from './radar-filtros'
 
@@ -20,6 +21,7 @@ interface Props {
   informe: InformeVisita | null
   tamizaje: AnalisisGuardado<ResultadoTamizaje> | null
   mmu: AnalisisGuardado<ResultadoMayorMejorUso> | null
+  fuentes: Record<string, { texto: string; fecha: string }>
 }
 
 const ESTADO_COLOR: Record<EstadoItemEdificio['estado'], string> = {
@@ -60,7 +62,7 @@ async function Bloque({ codigo, estados }: { codigo: string; estados: Map<string
 }
 
 // Informe de viabilidad: los 10 capitulos de la guia (seccion 07), armados con lo que hay en la ficha
-export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu }: Props) {
+export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu, fuentes }: Props) {
   const [t, tf, locale] = await Promise.all([getTranslations('estudio.informe'), getTranslations('estudio.filtros'), getLocale()])
   const estados = new Map(items.map((i) => [i.codigo, i]))
   const estadoDoc = new Map(docs.map((d) => [d.codigo, d]))
@@ -119,7 +121,21 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         <p className="text-xs text-medio-texto">{t('documentosCargados', { n: cargados.length })}: {cargados.map((d) => d.codigo).join(', ') || '—'}</p>
       </Capitulo>
 
-      <Capitulo n={3} titulo={t('cap.3')}><Bloque codigo="B" estados={estados} /></Capitulo>
+      <Capitulo n={3} titulo={t('cap.3')}>
+        <h3 className="font-semibold">{t('consultasEnLinea')}</h3>
+        <dl className="divide-y divide-borde">
+          {FUENTES.flatMap((f) => f.campos.map((c) => {
+            const v = fuentes[`${f.codigo}.${c.codigo}`]
+            return (
+              <div key={`${f.codigo}.${c.codigo}`} className="grid grid-cols-1 gap-1 py-1.5 sm:grid-cols-[1fr_2fr]">
+                <dt className="text-medio-texto">{tx(f.nombre, locale).split(' · ')[0]} · {tx(c.texto, locale)}</dt>
+                <dd className={v ? '' : 'text-medio-texto'}>{v ? v.texto : t('sinConsultar')}</dd>
+              </div>
+            )
+          }))}
+        </dl>
+        <Bloque codigo="B" estados={estados} />
+      </Capitulo>
 
       <Capitulo n={4} titulo={t('cap.4')}>
         {informe && (

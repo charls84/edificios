@@ -1,0 +1,404 @@
+<title>Viabilidad Edificio Rolher</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Informe técnico de una columna, con la identidad de Torna: azul profundo, rojo de acento, gris piedra */
+:root {
+  --bg: #F4F5F7;
+  --papel: #FFFFFF;
+  --tinta: #0B1F3A;
+  --suave: #55606F;
+  --linea: #DCE0E6;
+  --piedra: #EBEDEF;
+  --rojo: #D10A0A;
+  --rojo-fondo: #FCECEC;
+  --verde: #2C7A4B;
+  --verde-fondo: #E5F2EA;
+  --ambar: #8A5A0E;
+  --ambar-fondo: #FBF1DE;
+  --banda: #0B1F3A;
+  --banda-tinta: #FFFFFF;
+  --banda-suave: rgba(255,255,255,.72);
+  --f-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-texto: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1322; --papel: #111D30; --tinta: #E8ECF2; --suave: #A3AEBD; --linea: #26354C; --piedra: #1A283D;
+    --rojo: #FF5A52; --rojo-fondo: #3A1618; --verde: #6CCB93; --verde-fondo: #12301F; --ambar: #E9B261; --ambar-fondo: #33270F;
+    --banda: #13233D; --banda-tinta: #F2F4F8; --banda-suave: rgba(242,244,248,.72); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1322; --papel: #111D30; --tinta: #E8ECF2; --suave: #A3AEBD; --linea: #26354C; --piedra: #1A283D;
+  --rojo: #FF5A52; --rojo-fondo: #3A1618; --verde: #6CCB93; --verde-fondo: #12301F; --ambar: #E9B261; --ambar-fondo: #33270F;
+  --banda: #13233D; --banda-tinta: #F2F4F8; --banda-suave: rgba(242,244,248,.72); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--tinta); font-family: var(--f-texto); font-size: 17px; line-height: 1.55; }
+.envoltura { max-width: 980px; margin: 0 auto; padding-block: 0 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h2 { font-size: 1.55rem; font-weight: 800; }
+h3 { font-size: 1.1rem; font-weight: 700; }
+p { margin: 0; }
+.prosa { max-width: 68ch; }
+.etiqueta { font-family: var(--f-display); font-size: .74rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--rojo); }
+.suave { color: var(--suave); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Portada */
+.portada { background: var(--banda); color: var(--banda-tinta); padding-block: 40px 36px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); border-bottom: 3px solid var(--rojo); }
+.portada .interior { max-width: 980px; margin: 0 auto; display: grid; gap: 18px; }
+.portada h1 { font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 800; letter-spacing: -.01em; }
+.portada .bajada { color: var(--banda-suave); max-width: 62ch; font-size: 1.05rem; }
+.ficha { display: flex; flex-wrap: wrap; gap: 10px 28px; font-size: .92rem; }
+.ficha div { display: grid; }
+.ficha dt { color: var(--banda-suave); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+.ficha dd { margin: 0; font-weight: 600; }
+
+/* Secciones */
+main { display: grid; gap: 22px; margin-top: 28px; }
+section.bloque { background: var(--papel); border: 1px solid var(--linea); border-radius: 14px; padding: 26px; display: grid; gap: 16px; min-width: 0; }
+.encabezado { display: grid; gap: 6px; }
+
+/* Veredicto */
+.veredicto { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 26px; align-items: start; }
+.sello { display: inline-flex; align-items: center; gap: 10px; background: var(--verde-fondo); color: var(--verde); border-radius: 999px; padding: 8px 16px; font-family: var(--f-display); font-weight: 800; font-size: 1.05rem; width: fit-content; }
+.sello::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--verde); }
+.lista { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.potencial { background: var(--piedra); border-radius: 12px; padding: 16px; display: grid; gap: 4px; justify-items: center; text-align: center; }
+.potencial .cifra { font-family: var(--f-display); font-size: 3rem; font-weight: 800; line-height: 1; }
+.potencial .cifra small { font-size: 1.1rem; color: var(--suave); font-weight: 600; }
+.radar text { font-family: var(--f-texto); fill: var(--tinta); }
+.radar .valor { fill: var(--suave); }
+
+/* Tablas */
+.tabla-scroll { overflow-x: auto; border: 1px solid var(--linea); border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: .93rem; }
+th, td { padding: 9px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--linea); }
+tr:last-child td { border-bottom: 0; }
+thead th { background: var(--piedra); font-family: var(--f-display); font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--suave); white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.destacada td { background: var(--verde-fondo); }
+.chip { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+.chip.ok { background: var(--verde-fondo); color: var(--verde); }
+.chip.ver { background: var(--ambar-fondo); color: var(--ambar); }
+.chip.no { background: var(--rojo-fondo); color: var(--rojo); }
+.codigo { font-variant-numeric: tabular-nums; color: var(--suave); font-size: .82rem; margin-right: 6px; }
+
+/* Rejillas de apoyo */
+.dos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.caja { border: 1px solid var(--linea); border-radius: 10px; padding: 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.caja.alerta { border-color: var(--rojo); background: var(--rojo-fondo); }
+.caja.nota { background: var(--piedra); border-color: transparent; }
+.pasos { counter-reset: paso; display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.pasos li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; align-items: start; }
+.pasos li::before { counter-increment: paso; content: counter(paso); width: 30px; height: 30px; border-radius: 8px; background: var(--tinta); color: var(--papel); display: grid; place-items: center; font-family: var(--f-display); font-weight: 800; font-size: .9rem; }
+.pasos strong { display: block; }
+.fuentes-lista { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; font-size: .9rem; }
+a { color: var(--tinta); text-decoration-color: var(--rojo); text-underline-offset: 3px; }
+a:focus-visible { outline: 2px solid var(--rojo); outline-offset: 2px; }
+.pie { font-size: .85rem; color: var(--suave); max-width: 80ch; }
+
+@media (max-width: 760px) {
+  .veredicto, .dos { grid-template-columns: minmax(0, 1fr); }
+  section.bloque { padding: 18px; }
+}
+</style>
+
+<header class="portada">
+  <div class="interior">
+    <p class="etiqueta" style="color: var(--banda-suave)">Informe de viabilidad · Mayor y mejor uso</p>
+    <h1>Edificio Rolher</h1>
+    <p class="bajada">¿Seguimos con el proyecto? Este informe junta lo que dicen los documentos del edificio, la visita técnica y las fuentes públicas que pudimos revisar, y responde con una recomendación y las condiciones para sostenerla.</p>
+    <dl class="ficha">
+      <div><dt>Dirección</dt><dd>Av. Jiménez (Calle 13) # 9-84 · esquina Carrera 10</dd></div>
+      <div><dt>CHIP</dt><dd class="num">AAA0257KADM</dd></div>
+      <div><dt>Matrícula</dt><dd class="num">50C-297658</dd></div>
+      <div><dt>Fecha de corte</dt><dd>3 de noviembre de 2026</dd></div>
+      <div><dt>Preparado por</dt><dd>DOUX.WORK para Torna</dd></div>
+    </dl>
+  </div>
+</header>
+
+<div class="envoltura">
+<main>
+
+  <section class="bloque" aria-labelledby="decision">
+    <div class="encabezado">
+      <p class="etiqueta">1 · Decisión</p>
+      <h2 id="decision">Recomendamos continuar, con tres condiciones antes de invertir en obra</h2>
+    </div>
+    <div class="veredicto">
+      <div style="display: grid; gap: 14px; min-width: 0">
+        <span class="sello">Continuar con condiciones</span>
+        <p class="prosa">El Rolher tiene la obra más cara y riesgosa ya hecha: estructura reforzada a la NSR-10 en 2013 y redes nuevas. La propiedad no tiene hipotecas ni embargos, y la esquina sobre TransMilenio es de las mejores del Centro. Lo que falta es poner los papeles al día, adecuar y arrendar.</p>
+        <p class="prosa"><strong>El uso que mejor responde hoy es mixto:</strong> el local comercial en sótano, primer y segundo piso, y oficinas en los pisos 3 a 6, preferiblemente con un operador de oficinas flexibles. Son los mismos usos que ya están licenciados, así que no exigen cambio de uso y caben en la meta de arrendar en unos 18 meses.</p>
+        <p class="prosa"><strong>Las tres condiciones:</strong></p>
+        <ol class="lista">
+          <li>Consultar con el CHIP las cuatro fuentes oficiales (SINUPOT, Mapas Bogotá, DADEP y SIGAU) y confirmar que no hay un bloqueo de norma, patrimonio o espacio público.</li>
+          <li>Cerrar las dos alertas del certificado de tradición con un estudio de títulos: la oferta de compra del IDU y los 23 folios de la antigua propiedad horizontal.</li>
+          <li>Confirmar con 5 a 10 comparables que las oficinas de los pisos 3 a 6 se arriendan por encima de unos $25.000 por m² al mes. El local aguanta escenarios mucho más bajos.</li>
+        </ol>
+      </div>
+      <div class="potencial">
+        <p class="etiqueta" style="color: var(--suave)">Potencial · 5 filtros</p>
+        <svg class="radar" viewBox="-180 -140 360 290" width="240" height="193" role="img" aria-label="Pentágono de los 5 filtros: ubicación 100, estructura 75, entorno 67, norma 50, historia 75. Potencial total 73 de 100.">
+          <g fill="none" stroke="var(--linea)">
+            <polygon points="0,-25 23.8,-7.7 14.7,20.2 -14.7,20.2 -23.8,-7.7"/>
+            <polygon points="0,-50 47.6,-15.5 29.4,40.5 -29.4,40.5 -47.6,-15.5"/>
+            <polygon points="0,-75 71.3,-23.2 44.1,60.7 -44.1,60.7 -71.3,-23.2"/>
+            <polygon points="0,-100 95.1,-30.9 58.8,80.9 -58.8,80.9 -95.1,-30.9" stroke-width="1.5"/>
+            <line x1="0" y1="0" x2="0" y2="-100"/><line x1="0" y1="0" x2="95.1" y2="-30.9"/><line x1="0" y1="0" x2="58.8" y2="80.9"/><line x1="0" y1="0" x2="-58.8" y2="80.9"/><line x1="0" y1="0" x2="-95.1" y2="-30.9"/>
+          </g>
+          <polygon points="0,-100 71.3,-23.2 39.4,54.2 -29.4,40.5 -71.3,-23.2" fill="var(--tinta)" fill-opacity=".16" stroke="var(--tinta)" stroke-width="2" stroke-linejoin="round"/>
+          <g fill="var(--tinta)"><circle cx="0" cy="-100" r="4"/><circle cx="71.3" cy="-23.2" r="4"/><circle cx="39.4" cy="54.2" r="4"/><circle cx="-29.4" cy="40.5" r="4"/><circle cx="-71.3" cy="-23.2" r="4"/></g>
+          <text x="0" y="-122" text-anchor="middle" font-size="12" font-weight="700">Ubicación <tspan class="valor" font-weight="400">100</tspan></text>
+          <text x="104" y="-30" font-size="12" font-weight="700">Estructura</text><text class="valor" x="104" y="-15" font-size="11">75</text>
+          <text x="66" y="96" font-size="12" font-weight="700">Entorno</text><text class="valor" x="66" y="111" font-size="11">67</text>
+          <text x="-66" y="96" text-anchor="end" font-size="12" font-weight="700">Norma</text><text class="valor" x="-66" y="111" text-anchor="end" font-size="11">50</text>
+          <text x="-104" y="-30" text-anchor="end" font-size="12" font-weight="700">Historia</text><text class="valor" x="-104" y="-15" text-anchor="end" font-size="11">75</text>
+        </svg>
+        <p class="cifra num">73<small>/100</small></p>
+        <p><span class="chip ok">Potencial alto</span></p>
+        <p class="suave" style="font-size: .85rem">Siete criterios quedan por verificar en las fuentes oficiales. Si la norma sale desfavorable, el potencial baja a unos 66 (medio).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" aria-labelledby="base">
+    <div class="encabezado">
+      <p class="etiqueta">2 · Con qué trabajamos</p>
+      <h2 id="base">Lo que revisamos y lo que falta consultar</h2>
+    </div>
+    <div class="dos">
+      <div class="caja">
+        <h3>Documentos del edificio</h3>
+        <ul class="fuentes-lista">
+          <li>Certificado de tradición y libertad, 26-oct-2026 (13 anotaciones)</li>
+          <li>Licencia de construcción LC 13-4-0066, Curaduría 4 (2013)</li>
+          <li>Resolución IDPC 492 de 2012 y presentación del IDU (2010)</li>
+          <li>Planos originales de 1936 y 1937</li>
+          <li>Informe de visita técnica de Torna, 18-oct-2026</li>
+          <li>Estudio histórico y documental de Torna, 27-oct-2026</li>
+        </ul>
+      </div>
+      <div class="caja">
+        <h3>Fuentes públicas consultadas</h3>
+        <ul class="fuentes-lista">
+          <li>Vacancia y precios de oficinas (Cushman &amp; Wakefield, citado por prensa, 2T-2026)</li>
+          <li>Avisos de arriendo en el Centro: apartaestudios, oficinas y locales</li>
+          <li>Rangos de costo de remodelación en Bogotá, 2026</li>
+          <li>PEMP del Centro Histórico (Res. 088 de 2021 y 0092 de 2023)</li>
+          <li>Programa Reúsa y Revitaliza de RenoBo y Acuerdo 1084 de 2026</li>
+        </ul>
+      </div>
+    </div>
+    <div class="caja alerta">
+      <h3>Pendiente: las cuatro consultas en línea con el CHIP</h3>
+      <p class="prosa">No pudimos abrir SINUPOT, Mapas Bogotá, el observatorio del DADEP ni el SIGAU desde nuestro entorno de trabajo, y no reemplazamos esos datos con supuestos. La plataforma ya tiene la pestaña <strong>Fuentes</strong> para anotarlos. Esto es lo que cada una puede confirmar o cambiar:</p>
+      <div class="tabla-scroll">
+        <table>
+          <thead><tr><th>Fuente</th><th>Qué confirmar</th><th>Qué cambiaría la decisión</th></tr></thead>
+          <tbody>
+            <tr><td><a href="https://sinupot.sdp.gov.co/" target="_blank" rel="noopener">SINUPOT</a></td><td>Tratamiento, área de actividad, usos permitidos y licencias registradas con el POT 555</td><td>Que comercio u oficinas no estén permitidos, o que solo se permita a una escala menor</td></tr>
+            <tr><td><a href="https://mapas.bogota.gov.co/?l=61568&amp;e=-74.14935460883873,4.620915254405697,-74.0190636237315,4.68028563650382,4686&amp;b=7256&amp;show_menu=true&amp;m=41900" target="_blank" rel="noopener">Mapas Bogotá (BIC)</a></td><td>Que siga siendo BIC con nivel 2 (conservación tipológica) y su relación con el PEMP</td><td>Un nivel 1 (conservación integral) limitaría la adecuación interior</td></tr>
+            <tr><td><a href="https://geo.dadep.gov.co/observatorio/" target="_blank" rel="noopener">Observatorio DADEP</a></td><td>Espacio público colindante y la franja de 36,60 m² que adquirió el IDU</td><td>Una afectación nueva sobre el frente o el acceso del local</td></tr>
+            <tr><td><a href="https://geoportal.jbb.gov.co/SigauJBB/VisorPublico/VisorPublico" target="_blank" rel="noopener">SIGAU (Jardín Botánico)</a></td><td>Árboles en el andén de la esquina</td><td>Muy poco: a lo sumo un permiso ambiental si la obra los afecta</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" aria-labelledby="filtros">
+    <div class="encabezado">
+      <p class="etiqueta">3 · Tamizaje</p>
+      <h2 id="filtros">Los 5 filtros de Torna, criterio por criterio</h2>
+      <p class="prosa suave">Cada filtro tiene un veto que descarta de una y criterios de 0 (desfavorable) a 2 (favorable). Ningún veto falla. Los criterios marcados «por verificar» dependen de las consultas pendientes.</p>
+    </div>
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>Criterio</th><th>Lectura del Rolher</th><th class="n">Puntaje</th></tr></thead>
+        <tbody>
+          <tr><td colspan="3"><strong>Ubicación · 100 · peso 20 %</strong></td></tr>
+          <tr><td><span class="codigo">U1</span>Acceso y afectación vial (veto)</td><td>Acceso por la Av. Jiménez y la Carrera 10. La afectación del IDU ya se ejecutó en 2012 y fue parcial</td><td class="n"><span class="chip ok">Cumple</span></td></tr>
+          <tr><td><span class="codigo">U2</span>Transporte masivo</td><td>Sobre la troncal de TransMilenio de la Carrera 10</td><td class="n">2</td></tr>
+          <tr><td><span class="codigo">U3</span>Generadores de demanda</td><td>Universidades, oficinas públicas y comercio del Centro a menos de 1 km</td><td class="n">2</td></tr>
+          <tr><td><span class="codigo">U4</span>Frente y visibilidad</td><td>Esquina, con frente de 18,25 m sobre la Av. Jiménez peatonal</td><td class="n">2</td></tr>
+          <tr><td colspan="3"><strong>Estructura · 75 · peso 25 %</strong></td></tr>
+          <tr><td><span class="codigo">E1</span>Daño severo (veto)</td><td>No. Columnas y vigas recalzadas, vistas en la visita de 2026</td><td class="n"><span class="chip ok">Cumple</span></td></tr>
+          <tr><td><span class="codigo">E2</span>Sistema y NSR-10</td><td>Pórticos de concreto reforzado a la NSR-10 con licencia de 2013</td><td class="n">2</td></tr>
+          <tr><td><span class="codigo">E3</span>Altura libre</td><td>20,55 m en 6 pisos: unos 3,4 m de piso a piso. La altura libre ronda los 3 m <span class="chip ver">por verificar</span></td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">E4</span>Luz y fondo de planta</td><td>Dos fachadas y plantas de unos 163 m²</td><td class="n">2</td></tr>
+          <tr><td><span class="codigo">E5</span>Puntos fijos y redes</td><td>Redes nuevas y escalera de concreto. No hay dato de ascensor <span class="chip ver">por verificar</span></td><td class="n">1</td></tr>
+          <tr><td colspan="3"><strong>Entorno · 67 · peso 15 %</strong></td></tr>
+          <tr><td><span class="codigo">N1</span>Amenaza alta (veto)</td><td>Sin remoción ni inundación, según la licencia de 2013 <span class="chip ver">confirmar en SINUPOT</span></td><td class="n"><span class="chip ok">Cumple</span></td></tr>
+          <tr><td><span class="codigo">N2</span>Seguridad y actividad</td><td>Mucho movimiento de día. De noche, el frente cerrado con grafiti y afiches</td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">N3</span>Vacancia y mercado</td><td>Oficinas del Centro con 29 % de vacancia. La demanda de vivienda en el Centro crece</td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">N4</span>Inversión pública cercana</td><td>Reúsa y Revitaliza prioriza la Av. Jiménez y la Carrera 10. La Línea 1 del Metro avanza por la Caracas</td><td class="n">2</td></tr>
+          <tr><td colspan="3"><strong>Norma · 50 · peso 25 %</strong></td></tr>
+          <tr><td><span class="codigo">R1</span>Algún uso permitido (veto)</td><td>Comercio y oficinas licenciados en 2013 <span class="chip ver">confirmar con el POT 555</span></td><td class="n"><span class="chip ok">Cumple</span></td></tr>
+          <tr><td><span class="codigo">R2</span>Tratamiento</td><td>Centro Histórico, regido por el PEMP <span class="chip ver">por verificar</span></td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">R3</span>Nivel BIC</td><td>Categoría B, conservación tipológica, que equivale al nivel 2: permite adecuar el interior</td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">R4</span>Incentivos</td><td>Exención de delineación para obras en el PEMP (Acuerdo 1084 de 2026) <span class="chip ver">confirmar sanción</span></td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">R5</span>Trámite</td><td>Licencia y concepto del IDPC vencidos. Para los mismos usos, adecuación; para vivienda, cambio de uso y Ministerio de Cultura</td><td class="n">1</td></tr>
+          <tr><td colspan="3"><strong>Historia · 75 · peso 15 %</strong></td></tr>
+          <tr><td><span class="codigo">H1</span>Embargos o demandas (veto)</td><td>Ninguno en las 13 anotaciones</td><td class="n"><span class="chip ok">Cumple</span></td></tr>
+          <tr><td><span class="codigo">H2</span>Propiedad y disposición</td><td>Un solo propietario, Rolher Ltda., que quiere arrendar</td><td class="n">2</td></tr>
+          <tr><td><span class="codigo">H3</span>Coherencia documental</td><td>El área del lote no coincide (183,33 · 173,33 · 146,73 m²) y falta el permiso de ocupación de 2013</td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">H4</span>Información disponible</td><td>Licencia, resoluciones y planos de 1936. Faltan los planos aprobados de 2013</td><td class="n">1</td></tr>
+          <tr><td><span class="codigo">H5</span>Valor aprovechable</td><td>Diseño art déco de A. Manrique Martín (1936), fachada en piedra y escalera curva</td><td class="n">2</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="suave" style="font-size: .9rem">Potencial = 100 × 20 % + 75 × 25 % + 67 × 15 % + 50 × 25 % + 75 × 15 % ≈ 73. Lectura: 70 o más es potencial alto. Es una propuesta de método que Torna aún debe validar.</p>
+  </section>
+
+  <section class="bloque" aria-labelledby="legal">
+    <div class="encabezado">
+      <p class="etiqueta">4 · Pruebas legal y física</p>
+      <h2 id="legal">La propiedad está limpia y el edificio está listo por dentro</h2>
+    </div>
+    <div class="dos">
+      <div class="caja">
+        <h3>Lo que juega a favor</h3>
+        <ul class="lista">
+          <li>Sin hipotecas, embargos ni demandas. Un solo propietario desde 1983.</li>
+          <li>Comercio (489 m²) y oficinas (651 m²) ya licenciados.</li>
+          <li>Categoría B: se puede adecuar por dentro. El IDPC ya aprobó en 2012 una intervención más grande que la que se necesita ahora.</li>
+          <li>Estructura reforzada, redes nuevas y cubierta impermeabilizada. Lo que falta son acabados, baños y limpieza de fachada.</li>
+        </ul>
+      </div>
+      <div class="caja">
+        <h3>Lo que hay que resolver</h3>
+        <ul class="lista">
+          <li><strong>Oferta de compra del IDU</strong> (anotación 7) sin cancelación expresa en el certificado.</li>
+          <li><strong>23 folios</strong> de la propiedad horizontal cancelada en 2011, sin constancia de cierre.</li>
+          <li><strong>Licencia y concepto del IDPC vencidos</strong>: la obra nueva se tramita con la norma de hoy y con doble control patrimonial (IDPC y Ministerio de Cultura).</li>
+          <li><strong>Área del lote</strong> distinta en cada documento, y sin permiso de ocupación de la obra de 2013.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" aria-labelledby="mercado">
+    <div class="encabezado">
+      <p class="etiqueta">5 · Zona y mercado</p>
+      <h2 id="mercado">El local es lo más seguro. Las oficinas dependen del precio que se confirme</h2>
+    </div>
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>Dato</th><th>Valor</th><th>Fuente y fecha</th></tr></thead>
+        <tbody>
+          <tr><td>Vacancia de oficinas en el Centro</td><td class="n">29 %</td><td>Cushman &amp; Wakefield, citado por Valora Analitik, 2T-2026</td></tr>
+          <tr><td>Vacancia de oficinas clase A en Bogotá</td><td class="n">5,4 %</td><td>Cushman &amp; Wakefield, 2T-2026</td></tr>
+          <tr><td>Oficinas en el Centro, avisos de edificios antiguos</td><td class="n">≈ $16.000 – $34.000 /m²</td><td>Metrocuadrado, Fincaraíz y Puntopropiedad, 2026 (precios de oferta)</td></tr>
+          <tr><td>Apartaestudios de 25 a 35 m² en La Candelaria y Las Nieves</td><td class="n">$1,4 – $1,95 M /mes</td><td>Fincaraíz, Properati y Mitula, 2026 (precios de oferta)</td></tr>
+          <tr><td>Locales comerciales, promedio de Bogotá</td><td class="n">≈ $61.600 /m²</td><td>Properati, sep-2026</td></tr>
+          <tr><td>Local grande sobre la Carrera 10 (400 m²)</td><td class="n">≈ $17.500 /m²</td><td>Puntopropiedad, 2026 (un aviso, sin verificar)</td></tr>
+          <tr><td>Remodelación con acabados en Bogotá</td><td class="n">$0,7 – $2,2 M /m²</td><td>Guías de costos de 2026 (referencia, no cotización)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="suave" style="font-size: .9rem">Son precios de oferta publicados, no contratos cerrados. Por eso el modelo trabaja con dos escenarios y con el canon de equilibrio de cada uso.</p>
+  </section>
+
+  <section class="bloque" aria-labelledby="numeros">
+    <div class="encabezado">
+      <p class="etiqueta">6 · Números por uso</p>
+      <h2 id="numeros">Qué deja cada uso con la inversión de adecuación</h2>
+      <p class="prosa suave">El propietario conserva el edificio, así que la inversión es solo la adecuación. Se compara contra una tasa mínima del 12 % anual en 10 años, con el valor del inmueble al final (ingreso neto ÷ 12 %).</p>
+    </div>
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>Uso</th><th class="n">Inversión</th><th class="n">Ingreso neto/año</th><th class="n">TIR</th><th class="n">VPN</th><th class="n">Canon de equilibrio</th><th>Escenario base</th><th>Conservador</th></tr></thead>
+        <tbody>
+          <tr><td>Local comercial (sótano, pisos 1 y 2 · 489 m²)</td><td class="n">$489 M</td><td class="n">$134 M</td><td class="n">28,2 %</td><td class="n">$569 M</td><td class="n">$16.200 /m²</td><td><span class="chip ok">Viable</span></td><td><span class="chip ok">Viable</span></td></tr>
+          <tr><td>Oficinas flexibles con operador (pisos 3 a 6 · 651 m²)</td><td class="n">$895 M</td><td class="n">$135 M</td><td class="n">14,6 %</td><td class="n">$144 M</td><td class="n">$25.800 /m²</td><td><span class="chip ok">Viable</span></td><td><span class="chip no">No</span></td></tr>
+          <tr><td>Oficinas tradicionales (pisos 3 a 6)</td><td class="n">$732 M</td><td class="n">$98 M</td><td class="n">12,6 %</td><td class="n">$25 M</td><td class="n">$24.200 /m²</td><td><span class="chip ver">Al límite</span></td><td><span class="chip no">No</span></td></tr>
+          <tr><td>Apartaestudios o coliving (pisos 3 a 6)</td><td class="n">$1.628 M</td><td class="n">$232 M</td><td class="n">11,6 %</td><td class="n">−$39 M</td><td class="n">$56.400 /m²</td><td><span class="chip no">No</span></td><td><span class="chip no">No</span></td></tr>
+          <tr class="destacada"><td><strong>Mixto: local + oficinas flexibles</strong></td><td class="n"><strong>$1.384 M</strong></td><td class="n"><strong>$269 M</strong></td><td class="n"><strong>19,8 %</strong></td><td class="n"><strong>$713 M</strong></td><td class="n">—</td><td><span class="chip ok">Viable</span></td><td><span class="chip no">TIR 9 %</span></td></tr>
+          <tr><td>Mixto: local + oficinas tradicionales</td><td class="n">$1.221 M</td><td class="n">$232 M</td><td class="n">19,4 %</td><td class="n">$594 M</td><td class="n">—</td><td><span class="chip ok">Viable</span></td><td><span class="chip no">TIR 8 %</span></td></tr>
+          <tr><td>Mixto: local + apartaestudios</td><td class="n">$2.116 M</td><td class="n">$365 M</td><td class="n">15,8 %</td><td class="n">$530 M</td><td class="n">—</td><td><span class="chip ok">Viable</span></td><td><span class="chip no">TIR 7 %</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="dos">
+      <div class="caja nota">
+        <h3>Cómo leer el canon de equilibrio</h3>
+        <p>Es el arriendo mínimo por m² al mes con el que cada uso paga su adecuación a la tasa mínima. Para el local basta con unos $16.200, por debajo de casi todos los avisos. Las oficinas necesitan entre $24.000 y $26.000, justo en la mitad del rango del Centro. Por eso confirmar ese precio es la condición 3.</p>
+      </div>
+      <div class="caja nota">
+        <h3>Supuestos del escenario base</h3>
+        <ul class="lista" style="font-size: .92rem">
+          <li>Local: $35.000/m², ocupación del 85 %, adecuación de $0,8 M/m², 9 meses hasta arrendar.</li>
+          <li>Oficinas: $25.000/m² (tradicionales) y $30.000/m² (operador), ocupación del 70 % y 80 %, de $0,9 a $1,1 M/m², 12 meses.</li>
+          <li>Vivienda: $55.000/m² (≈ $1,5 M por apartaestudio de 27 m²), 90 %, $2,0 M/m², 24 meses por el cambio de uso.</li>
+          <li>Áreas netas del 80 % al 90 % de las licenciadas. Gastos del 15 % al 25 % del ingreso. +25 % de diseños, licencias, honorarios e imprevistos.</li>
+          <li>El escenario conservador baja el canon del 15 % al 30 %, sube la obra del 10 % al 25 % y alarga los plazos de 3 a 6 meses.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" aria-labelledby="uso">
+    <div class="encabezado">
+      <p class="etiqueta">7 · Matriz de decisión</p>
+      <h2 id="uso">Uso recomendado: local comercial abajo y oficinas arriba, en dos fases</h2>
+    </div>
+    <div class="dos">
+      <div class="caja">
+        <h3>Fase 1 · El local</h3>
+        <p>Es viable incluso en el escenario conservador (TIR del 13 %) y aprovecha lo más valioso del edificio: la esquina, la escalera curva y la fachada en piedra. Se puede arrendar en unos 9 meses y empieza a pagar los costos de tenencia.</p>
+      </div>
+      <div class="caja">
+        <h3>Fase 2 · Los pisos 3 a 6</h3>
+        <p>Oficinas flexibles con un operador si los comparables confirman $25.000/m² o más. Si salen por debajo, conviene esperar o revisar la vivienda. La vivienda deja más ingreso, pero exige cambio de uso, autorización del Ministerio de Cultura y un canon de unos $56.000/m², y no cabe en la meta de 18 meses.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" aria-labelledby="riesgos">
+    <div class="encabezado">
+      <p class="etiqueta">8 · Riesgos</p>
+      <h2 id="riesgos">Riesgos y cómo bajarlos</h2>
+    </div>
+    <div class="tabla-scroll">
+      <table>
+        <thead><tr><th>Riesgo</th><th>Efecto si pasa</th><th>Cómo bajarlo</th></tr></thead>
+        <tbody>
+          <tr><td>La norma vigente no permite comercio u oficinas a esta escala</td><td>Bloquea el proyecto tal como está planteado</td><td>Consultar SINUPOT y, si hay dudas, pedir un concepto de norma antes de diseñar</td></tr>
+          <tr><td>La oferta de compra del IDU figura como vigente</td><td>Un banco o un arrendatario grande lo verían como una medida cautelar</td><td>Estudio de títulos y, si aplica, corrección ante la ORIP o el IDU</td></tr>
+          <tr><td>Canon de oficinas por debajo de $24.000/m²</td><td>Los pisos 3 a 6 no pagan su adecuación</td><td>Hacer la fase 1 primero y negociar con operadores antes de invertir arriba</td></tr>
+          <tr><td>La obra cuesta un 20 % más</td><td>La TIR del mixto baja de 19,8 % a 16,2 %, todavía por encima del 12 %</td><td>Tres cotizaciones y confirmar si caben como reparaciones locativas</td></tr>
+          <tr><td>Patrimonio pide más de lo previsto en la fachada</td><td>Más plazo y más costo en el primer piso</td><td>Consulta temprana al IDPC con el alcance definido</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="bloque" aria-labelledby="pasos">
+    <div class="encabezado">
+      <p class="etiqueta">9 · Próximos pasos</p>
+      <h2 id="pasos">Lo que proponemos hacer antes de comprometer la obra</h2>
+      <p class="prosa suave">Ninguno de estos pasos exige invertir en construcción. Con ellos se confirma o se descarta la recomendación.</p>
+    </div>
+    <ol class="pasos">
+      <li><div><strong>Consultar las cuatro fuentes con el CHIP AAA0257KADM</strong><span class="suave">Torna, en la pestaña Fuentes de la plataforma. Un día de trabajo. Si algún dato cambia un criterio de los 5 filtros, se actualiza el tamizaje.</span></div></li>
+      <li><div><strong>Estudio de títulos</strong><span class="suave">Un abogado, con el certificado y las escrituras 6882 de 1982, 01 de 1991 y 2320 de 2011. Cierra las alertas del IDU y de los 23 folios.</span></div></li>
+      <li><div><strong>Comparables de mercado</strong><span class="suave">De 5 a 10 por uso: locales en esquina sobre la Av. Jiménez y oficinas en edificios antiguos del Centro. Y una conversación con uno o dos operadores de oficinas flexibles.</span></div></li>
+      <li><div><strong>Boletín catastral y consulta al IDPC y a la curaduría</strong><span class="suave">Para aclarar el área del lote y saber si la adecuación cabe como reparaciones locativas o necesita una licencia nueva.</span></div></li>
+      <li><div><strong>Tres cotizaciones de adecuación</strong><span class="suave">Para el local y para un piso tipo de oficinas, con los planos aprobados de 2013 como base.</span></div></li>
+    </ol>
+    <div class="caja nota">
+      <h3>Cuándo volver a decidir</h3>
+      <p>Si las fuentes no muestran un bloqueo, el estudio de títulos sale limpio y los comparables confirman los cánones, se pasa al diseño y a los permisos de la fase 1. Si la norma o los títulos muestran un bloqueo, este informe se vuelve a correr con esos datos antes de cualquier inversión.</p>
+    </div>
+  </section>
+
+  <p class="pie">Este informe usa los documentos del edificio, la visita técnica de Torna y fuentes públicas consultadas hasta el 3 de noviembre de 2026. Los precios de mercado son de oferta y deben confirmarse con comparables. Los cálculos aplican la misma fórmula que usa la plataforma de Torna sobre supuestos declarados. No reemplazan el concepto del IDPC, la autorización del Ministerio de Cultura, el estudio de títulos, la certificación de riesgo del IDIGER ni la licencia ante curaduría.</p>
+</main>
+</div>

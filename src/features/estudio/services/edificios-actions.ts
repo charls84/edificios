@@ -18,7 +18,7 @@ const coordenada = (min: number, max: number) =>
 const edificioSchema = z.object({
   nombre: texto(120).min(2, 'escribeNombre'),
   direccion: texto(200).min(5, 'escribeDireccion'),
-  chip: opcional(20).transform((v) => v?.toUpperCase() ?? null),
+  chip: texto(20).min(5, 'escribeChip').transform((v) => v.toUpperCase()),
   matricula: opcional(30),
   zona: opcional(80),
   origen: opcional(120),

@@ -59,6 +59,13 @@ Dos proyectos Vercel (team carlos-1645s-projects), ambos publican producción de
   Supabase Site URL / Redirect URLs deben apuntar a torna-edificios.vercel.app.
 - Ojo: las variables sensitive de Vercel no se pueden renombrar ni borrar desde el conector; se hace en el panel.
 
+**Ajuste del 3-nov-2026 (pedido de Torna)** — para el tamizaje solo se necesitan el CHIP (obligatorio al matricular) y
+el certificado de tradición. Pestaña nueva **Fuentes** con SINUPOT, Mapas Bogotá (BIC), DADEP y SIGAU; datos en data_points
+categoría 'fuentes'. Esos dominios están BLOQUEADOS por la red del entorno en la nube (no se pueden consultar desde la sesión).
+Informe de viabilidad del Rolher publicado como artefacto privado: https://claude.ai/artifact/6t4agXquJNXXXMuiUwsNmz
+(continuar con condiciones; mixto local + oficinas flexibles; potencial 73/100; cálculos en scratchpad, misma fórmula de finanzas.ts).
+El Rolher real ya está en la base (id 2096b559-…) con 18 archivos cargados por el equipo, incluido el estudio histórico de Torna.
+
 Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizonte, costos de referencia, destinatario y firma del informe.
 
 **Pendiente**

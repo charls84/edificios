@@ -34,7 +34,7 @@ export function FormularioEdificio({ action, inicial }: Props) {
           <input id="nombre" name="nombre" required defaultValue={v('nombre')} className="campo" />
         </Campo>
         <Campo id="chip" label={t('chip')} ayuda={t('chipAyuda')}>
-          <input id="chip" name="chip" defaultValue={v('chip')} className="campo uppercase" placeholder="AAA0000XXXX" />
+          <input id="chip" name="chip" required defaultValue={v('chip')} className="campo uppercase" placeholder="AAA0000XXXX" />
         </Campo>
         <div className="md:col-span-2">
           <Campo id="direccion" label={t('direccion')} ayuda={t('direccionAyuda')}>
