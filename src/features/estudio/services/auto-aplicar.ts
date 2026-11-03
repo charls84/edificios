@@ -2,6 +2,7 @@ import 'server-only'
 import type { createClient } from '@/lib/supabase/server'
 import { PREFIJO_AUTO, sugerenciasDeConsulta, type SugerenciaFiltro, type SugerenciaItem } from '../lib/auto'
 import type { ConsultaPredio } from '../types'
+import { leerYAplicarCertificado } from './certificado'
 import { consultarPredio } from './gis/consulta-predio'
 
 // Escribe lo que la plataforma encontró sola sin pisar el trabajo del equipo:
@@ -24,7 +25,7 @@ export async function aplicarFiltrosAuto(supabase: SupabaseClient, buildingId: s
   return filas.length
 }
 
-async function aplicarFuentes(supabase: SupabaseClient, buildingId: string, textos: Record<string, string>) {
+export async function aplicarFuentes(supabase: SupabaseClient, buildingId: string, textos: Record<string, string>) {
   const manuales = await clavesManuales(supabase, buildingId, 'fuentes')
   const filas = Object.entries(textos)
     .filter(([clave]) => !manuales.has(clave))
@@ -33,7 +34,7 @@ async function aplicarFuentes(supabase: SupabaseClient, buildingId: string, text
   return filas.length
 }
 
-async function aplicarChecklist(supabase: SupabaseClient, buildingId: string, sugerencias: SugerenciaItem[]) {
+export async function aplicarChecklist(supabase: SupabaseClient, buildingId: string, sugerencias: SugerenciaItem[]) {
   const { data } = await supabase.from('checklist_items').select('codigo, estado, nota').eq('building_id', buildingId)
   const actuales = new Map(((data ?? []) as { codigo: string; estado: string; nota: string | null }[]).map((d) => [d.codigo, d]))
   const filas = sugerencias
@@ -57,12 +58,14 @@ export async function consultarYAplicar(supabase: SupabaseClient, buildingId: st
   const b = data as { direccion: string; lat: number | null; lng: number | null; zona: string | null } | null
   if (!b) return null
 
+  // El certificado de tradición se lee aparte: no depende de encontrar el lote
+  const certificado = await leerYAplicarCertificado(supabase, buildingId).catch(() => 0)
   const consulta = await consultarPredio(b.direccion, codigoLote)
   await supabase.from('data_points').upsert(
     { building_id: buildingId, categoria: 'auto', clave: 'consulta', valor: consulta, estado: 'automatico', fecha_consulta: consulta.fecha },
     { onConflict: 'building_id,categoria,clave' }
   )
-  if (!consulta.lote) return { consulta, aplicados: 0 }
+  if (!consulta.lote) return { consulta, aplicados: certificado }
 
   const s = sugerenciasDeConsulta(consulta)
   const conteos = await Promise.all([
@@ -79,5 +82,5 @@ export async function consultarYAplicar(supabase: SupabaseClient, buildingId: st
       updated_at: ahora(),
     })
     .eq('id', buildingId)
-  return { consulta, aplicados: conteos.reduce((a, b) => a + b, 0) }
+  return { consulta, aplicados: conteos.reduce((a, b) => a + b, certificado) }
 }

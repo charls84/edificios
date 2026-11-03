@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { IS_DEMO } from '@/shared/lib/demo'
@@ -10,6 +11,7 @@ import { CRITERIOS_FILTROS } from '../catalogo/filtros'
 import { CAMPOS_FUENTES } from '../catalogo/fuentes'
 import { ITEMS_GUIA } from '../catalogo/guia'
 import { CATEGORIAS_USO } from '../catalogo/usos'
+import { leerYAplicarCertificado } from './certificado'
 
 // Acciones del estudio: estado de documentos, archivos, checklist de la guia y usos.
 // Todas devuelven { error } en vez de lanzar, para mostrar el aviso en la pantalla.
@@ -84,6 +86,17 @@ export async function registrarArchivo(entrada: z.infer<typeof archivoSchema>): 
       { building_id: buildingId, codigo, estado: 'cargado', updated_by: profile.id, updated_at: ahora() },
       { onConflict: 'building_id,codigo' }
     )
+  }
+  // El certificado de tradición se lee solo: lavado de activos (SAE), H1 y A1
+  if (codigo === 'F01') {
+    after(async () => {
+      try {
+        await leerYAplicarCertificado(supabase, buildingId)
+        refrescar(buildingId)
+      } catch {
+        // Si no se puede leer (PDF escaneado), el equipo llena la fuente SAE a mano
+      }
+    })
   }
   refrescar(buildingId)
   return {}
