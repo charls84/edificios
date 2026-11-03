@@ -310,7 +310,7 @@
       "queSigueTitulo": "Qué sigue después de matricular",
       "queSigue": [
         "Sacar el certificado de tradición y libertad (en línea, con la matrícula) y cargarlo en Documentos.",
-        "Con el CHIP, consultar SINUPOT, Mapas Bogotá (BIC), el observatorio del DADEP y el SIGAU, y anotar lo encontrado en Fuentes.",
+        "Con el CHIP, consultar SINUPOT, Mapas Bogotá (BIC), el observatorio del DADEP, el SIGAU y la SAE (lavado de activos), y anotar lo encontrado en Fuentes.",
         "Puntuar los 5 filtros, armar los usos candidatos y correr el tamizaje.",
         "Si pasa, completar el estudio detallado (checklist A–F) y correr el análisis de mayor y mejor uso."
       ]
@@ -558,7 +558,7 @@
       "siguiente": "Siguiente paso",
       "ayuda": {
         "1": "Revisa los datos básicos del edificio.",
-        "2": "Carga el certificado de tradición y consulta con el CHIP las cuatro fuentes en línea (SINUPOT, BIC, DADEP, SIGAU).",
+        "2": "Carga el certificado de tradición y revisa las cinco fuentes en línea (SINUPOT, BIC, DADEP, SIGAU y SAE).",
         "3": "Puntúa los 5 filtros con el certificado, las consultas en línea y la visita.",
         "4": "Agrega los usos que tendría sentido probar en este edificio.",
         "5": "Corre el tamizaje para saber si el inmueble merece el estudio detallado.",
@@ -631,7 +631,7 @@
       "porVerificar": "Ítems por verificar ({n})",
       "documentosPendientes": "Documentos pendientes ({n})",
       "pie": "Informe generado por la plataforma de Torna con los datos validados por el equipo. Los cálculos financieros son fórmulas sobre los datos ingresados; no reemplazan el concepto del IDPC, la certificación del IDIGER, la visita estructural (NSR-10) ni la licencia ante curaduría.",
-      "consultasEnLinea": "Consultas en línea (SINUPOT, Mapas Bogotá, DADEP, SIGAU)",
+      "consultasEnLinea": "Consultas en línea (SINUPOT, Mapas Bogotá, DADEP, SIGAU, SAE)",
       "sinConsultar": "Sin consultar"
     },
     "filtros": {

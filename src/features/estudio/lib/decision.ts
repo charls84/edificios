@@ -7,6 +7,8 @@ import type { ResultadoFiltros } from './filtros'
 // análisis financiero en una recomendación con sus razones. Son reglas, no IA: cada
 // razón dice de dónde sale. La decisión final es del comité.
 
+const t = (es: string, en: string): Texto => ({ es, en })
+
 export type Decision = 'continuar' | 'continuar_condiciones' | 'descartar' | 'falta_informacion'
 
 export interface SugerenciaDecision {
@@ -25,9 +27,18 @@ export interface EntradaDecision {
   mmu: ResultadoMayorMejorUso | null
   /** Hay algo escrito en "Usos permitidos" de SINUPOT */
   usosConsultados: boolean
+  /** Respuestas de la verificación de lavado de activos (fuente SAE), por campo */
+  sae: Partial<Record<'inventario' | 'medidas' | 'listas', string>>
 }
 
-const t = (es: string, en: string): Texto => ({ es, en })
+// Un "Sí" al inicio de la respuesta es una alerta de lavado de activos
+const afirma = (texto?: string) => Boolean(texto && /^\s*(s[ií]|yes)(?![a-záéíóúñ])/i.test(texto))
+const PREGUNTA_SAE: Record<'inventario' | 'medidas' | 'listas', Texto> = {
+  inventario: t('el inmueble lo administra la SAE o está en extinción de dominio', 'the property is managed by SAE or under asset forfeiture'),
+  medidas: t('el certificado tiene medidas de Fiscalía, extinción de dominio o embargos', 'the certificate shows prosecutor, forfeiture or attachment measures'),
+  listas: t('un propietario aparece en listas restrictivas', 'an owner is on restrictive lists'),
+}
+const alertasSae = (e: EntradaDecision) => (Object.keys(PREGUNTA_SAE) as (keyof typeof PREGUNTA_SAE)[]).filter((k) => afirma(e.sae[k]))
 
 const NOMBRE_SECCION: Record<ClaveVisita, Texto> = {
   electricas: t('instalaciones eléctricas', 'electrical installations'),
@@ -46,6 +57,7 @@ function faltantes(e: EntradaDecision): Texto[] {
   if (!cargado(e.docs, 'F01')) f.push(t('Certificado de tradición y libertad (revela embargos, demandas y propietarios)', 'Certificate of title (shows liens, lawsuits and owners)'))
   if (!e.consulta?.lote) f.push(t('Consulta automática del predio en Catastro (revisar la dirección o el código de lote)', 'Automatic cadastre lookup (check the address or lot code)'))
   if (!e.visita || e.visita.calificadas < CLAVES_VISITA.length) f.push(t('Visita técnica con las seis secciones calificadas', 'Site visit with all six sections scored'))
+  if (!e.sae.inventario) f.push(t('Verificación en la SAE de lavado de activos y extinción de dominio', 'SAE check for money laundering and asset forfeiture'))
   if (!e.usosConsultados) f.push(t('Usos permitidos y tratamiento en SINUPOT o concepto de norma', 'Permitted uses and treatment in SINUPOT or a planning opinion'))
   for (const r of e.filtros.filtros.filter((x) => x.vetoPendiente)) {
     const filtro = FILTROS.find((x) => x.codigo === r.codigo)!
@@ -94,6 +106,7 @@ function razones(e: EntradaDecision): Texto[] {
     r.push(t(`Lo más fuerte: ${mejor.es.toLowerCase()} (${conPuntaje[0].puntaje}). Lo más débil: ${peor.es.toLowerCase()} (${conPuntaje[conPuntaje.length - 1].puntaje})`,
       `Strongest: ${mejor.en.toLowerCase()} (${conPuntaje[0].puntaje}). Weakest: ${peor.en.toLowerCase()} (${conPuntaje[conPuntaje.length - 1].puntaje})`))
   }
+  for (const k of alertasSae(e)) r.push(t(`Riesgo de lavado de activos: ${PREGUNTA_SAE[k].es}`, `Money laundering risk: ${PREGUNTA_SAE[k].en}`))
   for (const v of f.vetos) r.push(t(`No pasa el criterio de veto ${v}`, `Fails veto criterion ${v}`))
   if (e.visita?.promedio != null) r.push(t(`Visita técnica: ${e.visita.promedio.toLocaleString('es-CO')}/10 en promedio (${e.visita.calificadas} de 6 secciones)`, `Site visit: ${e.visita.promedio}/10 on average (${e.visita.calificadas} of 6 sections)`))
   const tr = e.consulta?.transporte
@@ -108,7 +121,7 @@ export function sugerirDecision(e: EntradaDecision): SugerenciaDecision {
   const f = e.filtros
   const estructuraCritica = e.visita?.porClave.estructurales != null && e.visita.porClave.estructurales <= 2
   let decision: Decision
-  if (f.vetos.length || estructuraCritica) decision = 'descartar'
+  if (f.vetos.length || estructuraCritica || alertasSae(e).length) decision = 'descartar'
   else if (f.lectura === 'incompleto') decision = 'falta_informacion'
   else if (f.lectura === 'bajo' || (e.mmu && !e.mmu.recomendado && f.lectura !== 'alto')) decision = 'descartar'
   else if (f.lectura === 'alto' && base.condiciones.length === 0 && base.faltantes.length === 0 && (!e.mmu || e.mmu.recomendado)) decision = 'continuar'

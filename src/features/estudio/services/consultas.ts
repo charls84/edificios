@@ -213,7 +213,7 @@ export async function getFiltros(buildingId: string): Promise<EvaluacionCriterio
   }))
 }
 
-// Consultas en línea (SINUPOT, BIC, DADEP, SIGAU): también en data_points, categoria 'fuentes'
+// Consultas en línea (SINUPOT, BIC, DADEP, SIGAU, SAE): también en data_points, categoria 'fuentes'
 export async function getFuentes(buildingId: string): Promise<Record<string, { texto: string; fecha: string; auto?: boolean }>> {
   const supabase = await createClient()
   const { data } = await supabase.from('data_points').select('clave, valor, fecha_consulta, estado').eq('building_id', buildingId).eq('categoria', 'fuentes')

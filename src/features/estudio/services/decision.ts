@@ -22,5 +22,6 @@ export async function getDecision(buildingId: string): Promise<SugerenciaDecisio
     consulta,
     mmu: mmu?.resultado ?? null,
     usosConsultados: Boolean(fuentes['sinupot.usos']?.texto),
+    sae: { inventario: fuentes['sae.inventario']?.texto, medidas: fuentes['sae.medidas']?.texto, listas: fuentes['sae.listas']?.texto },
   })
 }
