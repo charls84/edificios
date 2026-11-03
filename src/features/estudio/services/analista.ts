@@ -80,7 +80,9 @@ export async function correrAnalista(buildingId: string): Promise<ResultadoAnali
       { onConflict: 'building_id,categoria,clave' }
     )
     return { ok: true, analisis }
-  } catch {
+  } catch (e) {
+    // Solo el mensaje del error (sin el expediente ni la llave), para revisarlo en los logs de Vercel
+    console.error('[analista-ia]', MODELO_ANALISTA, e instanceof Error ? e.message : 'error desconocido')
     return { ok: false, error: 'fallo' }
   }
 }
