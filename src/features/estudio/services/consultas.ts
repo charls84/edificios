@@ -210,3 +210,14 @@ export async function getFiltros(buildingId: string): Promise<EvaluacionCriterio
     nota: d.valor?.nota ?? null,
   }))
 }
+
+// Consultas en línea (SINUPOT, BIC, DADEP, SIGAU): también en data_points, categoria 'fuentes'
+export async function getFuentes(buildingId: string): Promise<Record<string, { texto: string; fecha: string }>> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('data_points').select('clave, valor, fecha_consulta').eq('building_id', buildingId).eq('categoria', 'fuentes')
+  const salida: Record<string, { texto: string; fecha: string }> = {}
+  for (const d of (data ?? []) as { clave: string; valor: { texto?: string }; fecha_consulta: string }[]) {
+    if (d.valor?.texto) salida[d.clave] = { texto: d.valor.texto, fecha: d.fecha_consulta }
+  }
+  return salida
+}

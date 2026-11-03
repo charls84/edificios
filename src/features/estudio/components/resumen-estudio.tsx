@@ -8,6 +8,7 @@ import { progresoDocumentos, progresoPrueba, resumenUsos } from '../lib/progreso
 import { fecha, tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
 import { FILTROS, UMBRALES } from '../catalogo/filtros'
+import { FUENTES } from '../catalogo/fuentes'
 import { calcularFiltros, COLOR_LECTURA, type EvaluacionCriterio } from '../lib/filtros'
 import { Progreso } from './progreso'
 import { RadarFiltros } from './radar-filtros'
@@ -23,6 +24,7 @@ interface Props {
   tamizaje: AnalisisGuardado<ResultadoTamizaje> | null
   mmu: AnalisisGuardado<ResultadoMayorMejorUso> | null
   filtros: EvaluacionCriterio[]
+  fuentes: Record<string, { texto: string; fecha: string }>
 }
 
 type Paso = { n: number; titulo: string; estado: 'hecho' | 'en_curso' | 'pendiente'; detalle: string; href: string }
@@ -32,7 +34,7 @@ function siguientePaso(pasos: Paso[]) {
 }
 
 // Pestaña Resumen: donde va el estudio y cual es el siguiente paso
-export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros }: Props) {
+export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros, fuentes }: Props) {
   const [t, locale] = await Promise.all([getTranslations('estudio.resumen'), getLocale()])
   const base = `/edificios/${edificio.id}`
   const pd = progresoDocumentos(docs)
@@ -43,12 +45,13 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
   const detalladoTotal = legal.total + fisica.total + financiera.total
   const detalladoHecho = legal.resueltos + fisica.resueltos + financiera.resueltos
   const rf = calcularFiltros(filtros)
+  const fuentesConDatos = FUENTES.filter((f) => f.campos.some((c) => fuentes[`${f.codigo}.${c.codigo}`])).length
   const tf = await getTranslations('estudio.filtros')
   const recomendado = mmu ? mmu.resultado.usos.find((u) => u.id === mmu.resultado.recomendado) : null
 
   const pasos: Paso[] = [
     { n: 1, titulo: t('pasos.matricula'), estado: 'hecho', detalle: fecha(locale, edificio.createdAt), href: `${base}/editar` },
-    { n: 2, titulo: t('pasos.minimo'), estado: pd.minimoListos === pd.minimo ? 'hecho' : pd.minimoListos > 0 ? 'en_curso' : 'pendiente', detalle: t('deN', { a: pd.minimoListos, b: pd.minimo }), href: `${base}/documentos` },
+    { n: 2, titulo: t('pasos.minimo'), estado: pd.minimoListos === pd.minimo && fuentesConDatos === FUENTES.length ? 'hecho' : pd.minimoListos + fuentesConDatos > 0 ? 'en_curso' : 'pendiente', detalle: t('certificadoYFuentes', { cert: pd.minimoListos === pd.minimo ? t('certificadoListo') : t('certificadoFalta'), a: fuentesConDatos, b: FUENTES.length }), href: pd.minimoListos === pd.minimo ? `${base}/fuentes` : `${base}/documentos` },
     { n: 3, titulo: t('pasos.filtros'), estado: rf.lectura !== 'incompleto' ? 'hecho' : rf.cobertura > 0 ? 'en_curso' : 'pendiente', detalle: rf.potencial == null ? t('sinEvaluar') : t('potencialDe', { n: rf.potencial, lectura: tf(`lectura.${rf.lectura}`) }), href: `${base}/filtros` },
     { n: 4, titulo: t('pasos.usos'), estado: ru.total > 0 ? 'hecho' : 'pendiente', detalle: t('usosDetalle', { total: ru.total, pasan: ru.pasanEdificio }), href: `${base}/usos` },
     { n: 5, titulo: t('pasos.tamizaje'), estado: tamizaje ? 'hecho' : 'pendiente', detalle: tamizaje ? t(`semaforo.${tamizaje.resultado.semaforo}`) : t('sinCorrer'), href: `${base}/analisis` },

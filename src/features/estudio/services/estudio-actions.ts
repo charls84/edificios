@@ -7,6 +7,7 @@ import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
 import { documentoPorCodigo } from '../catalogo/documentos'
 import { CRITERIOS_FILTROS } from '../catalogo/filtros'
+import { CAMPOS_FUENTES } from '../catalogo/fuentes'
 import { ITEMS_GUIA } from '../catalogo/guia'
 import { CATEGORIAS_USO } from '../catalogo/usos'
 
@@ -223,6 +224,33 @@ export async function setCriterioFiltro(entrada: z.infer<typeof filtroSchema>): 
   )
   if (error) return { error: error.message }
   // Toca el edificio para que los analisis corridos antes queden "desactualizados"
+  await supabase.from('buildings').update({ updated_at: ahora() }).eq('id', buildingId)
+  refrescar(buildingId)
+  return {}
+}
+
+// ---------- Consultas en línea (data_points, categoria 'fuentes') ----------
+
+const fuenteSchema = z.object({
+  buildingId: uuid,
+  clave: z.string().refine((c) => CAMPOS_FUENTES.some((x) => x.clave === c)),
+  texto: z.string().trim().max(2000),
+})
+
+export async function setCampoFuente(entrada: z.infer<typeof fuenteSchema>): Promise<Resultado> {
+  if (IS_DEMO) return { error: 'demo' }
+  const parsed = fuenteSchema.safeParse(entrada)
+  if (!parsed.success) return { error: 'invalido' }
+  const { buildingId, clave, texto } = parsed.data
+  const { profile, supabase } = await contexto()
+  const { error } = await supabase.from('data_points').upsert(
+    {
+      building_id: buildingId, categoria: 'fuentes', clave, valor: { texto },
+      estado: 'validado', validado_por: profile.id, fecha_consulta: ahora(),
+    },
+    { onConflict: 'building_id,categoria,clave' }
+  )
+  if (error) return { error: error.message }
   await supabase.from('buildings').update({ updated_at: ahora() }).eq('id', buildingId)
   refrescar(buildingId)
   return {}

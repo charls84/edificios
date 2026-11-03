@@ -3,7 +3,9 @@ import type { DocumentoCatalogo, GrupoDocumentos } from '../types'
 // Lista de documentos para el analisis de un inmueble (Torna, 27 de octubre de 2026),
 // mas dos adiciones de la plataforma marcadas con (+): la autorizacion de datos
 // (Ley 1581) y las fotos de la visita.
-// "minimo": los cinco con los que ya se puede hacer el tamizaje.
+// "minimo": lo que se necesita para el tamizaje. Desde el 3-nov-2026 Torna pide solo el
+// certificado de tradición; el CHIP se exige al matricular y con él se hacen las consultas en línea
+// (pestaña Fuentes). El resto de la lista queda como apoyo para el estudio detallado.
 
 export const GRUPOS_DOCUMENTOS: GrupoDocumentos[] = [
   {
@@ -62,7 +64,6 @@ export const DOCUMENTOS: DocumentoCatalogo[] = [
   }),
   // Licencias y obra
   d('P07', 'propietario', 'licencias', 'parcial', 'Licencias de construcción anteriores con sus planos sellados', 'Previous building permits with their stamped drawings', {
-    minimo: true,
     detalle: { es: 'Arquitectónicos, estructurales y de elementos no estructurales. Las copias se piden en el archivo de la curaduría; las muy antiguas, en archivos distritales.', en: 'Architectural, structural and non-structural. Copies are requested from the curaduría archive; very old ones from district archives.' },
   }),
   d('P08', 'propietario', 'licencias', 'no_en_linea', 'Estudio de suelos y memorias de cálculo estructural', 'Soil study and structural calculation reports'),
@@ -110,11 +111,9 @@ export const DOCUMENTOS: DocumentoCatalogo[] = [
     detalle: { es: 'Si hubo propiedad horizontal o segregaciones.', en: 'If there was a condominium regime or subdivisions.' },
   }),
   d('F03', 'publicas', 'publicas', 'en_linea', 'Certificado catastral: área de terreno, área construida, uso, CHIP y avalúo', 'Cadastral certificate: lot area, built area, use, CHIP and assessed value', {
-    minimo: true,
     detalle: { es: 'Catastro Bogotá en línea, con registro.', en: 'Bogotá Cadastre online, with registration.' },
   }),
   d('F04', 'publicas', 'publicas', 'en_linea', 'Consulta de norma urbana en Mapas Bogotá', 'Urban planning lookup in Mapas Bogotá', {
-    minimo: true,
     detalle: { es: 'Tratamiento, área de actividad, UPL, usos, edificabilidad, BIC, afectaciones y plusvalía. Es gratis.', en: 'Treatment, activity area, UPL, uses, buildable area, heritage, easements and land value capture. Free.' },
   }),
   d('F05', 'publicas', 'publicas', 'parcial', 'Concepto de norma o consulta formal ante Planeación o una curaduría', 'Formal planning opinion from the Planning Secretariat or a curaduría', {
@@ -132,7 +131,6 @@ export const DOCUMENTOS: DocumentoCatalogo[] = [
 
   // 3. Lo que se genera o se contrata
   d('G01', 'generados', 'generados', 'no_en_linea', 'Visita técnica con registro fotográfico', 'Technical site visit with photo record', {
-    minimo: true,
     detalle: { es: 'Se llena en la pestaña Visita técnica de esta ficha.', en: 'Filled in on the Site visit tab of this profile.' },
   }),
   d('G02', 'generados', 'generados', 'no_en_linea', 'Levantamiento arquitectónico y topográfico', 'Architectural and topographic survey', {

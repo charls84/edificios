@@ -72,7 +72,8 @@
     "soloModoReal": "This action is not available in demo mode.",
     "escribeDireccion": "Enter the address",
     "noSeGuardo": "Could not save. Try again.",
-    "chipRepetido": "A building with that CHIP already exists."
+    "chipRepetido": "A building with that CHIP already exists.",
+    "escribeChip": "Enter the lot's CHIP: it is used to look it up in SINUPOT."
   },
   "equipo": {
     "titulo": "Team",
@@ -257,7 +258,8 @@
       "visita": "Site visit",
       "analisis": "Analysis",
       "informe": "Report",
-      "filtros": "5 filters"
+      "filtros": "5 filters",
+      "fuentes": "Sources"
     },
     "formulario": {
       "titulo": "Register a building",
@@ -266,7 +268,7 @@
       "nombre": "Building name",
       "nombreAyuda": "What the team calls it. E.g.: Rolher Building",
       "chip": "CHIP",
-      "chipAyuda": "Cadastral code of the lot. If it is already registered, the existing profile opens.",
+      "chipAyuda": "Required. The CHIP is used to look up the lot in SINUPOT and the District viewers. If it is already registered, the existing profile opens.",
       "direccion": "Address",
       "direccionAyuda": "Cadastral address if you have it; otherwise the one on the plate.",
       "matricula": "Registration number",
@@ -286,21 +288,21 @@
       "matricular": "Register building",
       "queSigueTitulo": "What comes next",
       "queSigue": [
-        "Get the certificate of title, the cadastral certificate and the planning lookup in Mapas Bogotá online.",
-        "Meet the owner with the document list and do the site visit.",
-        "Build the list of candidate uses and run the screening.",
+        "Get the certificate of title (online, with the registration number) and upload it in Documents.",
+        "With the CHIP, check SINUPOT, Mapas Bogotá (heritage), the DADEP observatory and SIGAU, and record the findings in Sources.",
+        "Score the 5 filters, build the candidate uses and run the screening.",
         "If it passes, complete the detailed study (checklist A–F) and run the highest and best use analysis."
       ]
     },
     "documentos": {
       "titulo": "Documents for the analysis",
-      "texto": "Full list to start the study (Torna, October 27, 2026). Change each document's status and upload the file when you have it. With the five marked as minimum you can already run the screening.",
-      "filtroMinimo": "Only the minimum to start",
+      "texto": "The screening only needs the certificate of title (the CHIP is already in the profile). The rest of Torna's list supports the detailed study: upload it when you have it.",
+      "filtroMinimo": "Only what the screening needs",
       "filtroNoAplica": "Hide those that do not apply",
-      "progresoMinimo": "Minimum for screening",
+      "progresoMinimo": "Needed for screening",
       "progresoTotal": "All documents",
       "leyenda": "Online: downloaded or looked up on the internet · Partial: looked up online, but the full document is requested separately · Offline: held by the owner or must be produced.",
-      "minimo": "Minimum",
+      "minimo": "Needed",
       "siAplica": "If applicable",
       "disponibilidad": {
         "en_linea": "Online",
@@ -425,14 +427,14 @@
       "desactualizado": "Changes since then: run again",
       "verInforme": "View the feasibility report →",
       "errores": {
-        "faltaMinimo": "The minimum documents are missing or there are no candidate uses.",
+        "faltaMinimo": "The certificate of title is missing or there are no candidate uses.",
         "faltanNumeros": "The numbers for the surviving uses are incomplete.",
         "generico": "The analysis could not run. Try again."
       },
       "tamizaje": {
         "titulo": "Screening",
-        "texto": "With the minimum documents and the list of uses, the platform checks for blockers in papers, rules and building and says whether the property deserves the detailed study.",
-        "reqMinimo": "Minimum documents uploaded",
+        "texto": "With the certificate of title, the online lookups and the list of uses, the platform checks for blockers in papers, rules and building and says whether the property deserves the detailed study.",
+        "reqMinimo": "Certificate of title uploaded",
         "faltan": "{n} missing",
         "reqUsos": "At least one candidate use",
         "agregarUsos": "Add uses",
@@ -442,7 +444,7 @@
           "rojo": "There is at least one blocker. Resolve it or discard the property with the written reason."
         },
         "bloqueos": "Blockers",
-        "minimoFaltante": "Missing from the minimum",
+        "minimoFaltante": "Missing for the screening",
         "pendientes": "Items to resolve (A, B and quick test)",
         "uso": "Use",
         "norma": "Rules",
@@ -511,7 +513,7 @@
     "resumen": {
       "pasos": {
         "matricula": "Registered",
-        "minimo": "Minimum documents",
+        "minimo": "Certificate and lookups",
         "usos": "Candidate uses",
         "tamizaje": "Screening",
         "detallado": "Detailed study",
@@ -535,8 +537,8 @@
       "siguiente": "Next step",
       "ayuda": {
         "1": "Review the building's basic details.",
-        "2": "Get the certificate of title, the cadastral certificate and the planning lookup online; upload permits and the site visit.",
-        "3": "Score Torna's 5 filters with what you already have: the minimum documents and the visit.",
+        "2": "Upload the certificate of title and use the CHIP to check the four online sources (SINUPOT, heritage, DADEP, SIGAU).",
+        "3": "Score the 5 filters with the certificate, the online lookups and the site visit.",
         "4": "Add the uses worth testing in this building.",
         "5": "Run the screening to know whether the property deserves the detailed study.",
         "6": "Resolve the A–F checklist items with the documents and studies.",
@@ -547,7 +549,7 @@
       "bloqueos": "Blockers found",
       "lectura": "Study reading",
       "documentos": "Documents",
-      "minimo": "Minimum for screening",
+      "minimo": "Needed for screening",
       "todos": "All",
       "verDocumentos": "View the document checklist →",
       "pruebas": "Guide checklist",
@@ -562,7 +564,10 @@
       "ubicacion": "Coordinates",
       "sinEvaluar": "Not evaluated",
       "potencialDe": "{n}/100 · {lectura}",
-      "verFiltros": "Score the 5 filters →"
+      "verFiltros": "Score the 5 filters →",
+      "certificadoYFuentes": "{cert} · {a} of {b} sources",
+      "certificadoListo": "Certificate uploaded",
+      "certificadoFalta": "Certificate missing"
     },
     "informe": {
       "etiqueta": "Feasibility report · Highest and best use",
@@ -604,11 +609,13 @@
       "sinRiesgos": "No risks recorded yet.",
       "porVerificar": "Items to verify ({n})",
       "documentosPendientes": "Pending documents ({n})",
-      "pie": "Report generated by Torna's platform with the data validated by the team. Financial calculations are formulas on the entered data; they do not replace the IDPC opinion, the IDIGER certification, the structural visit (NSR-10) or the permit from the curaduría."
+      "pie": "Report generated by Torna's platform with the data validated by the team. Financial calculations are formulas on the entered data; they do not replace the IDPC opinion, the IDIGER certification, the structural visit (NSR-10) or the permit from the curaduría.",
+      "consultasEnLinea": "Online lookups (SINUPOT, Mapas Bogotá, DADEP, SIGAU)",
+      "sinConsultar": "Not checked"
     },
     "filtros": {
       "titulo": "Torna's 5 filters",
-      "texto": "Quick screening to decide whether the property deserves the detailed study. Each filter has a veto criterion that rules out at once and criteria scored 0 to 2. It can be filled with the minimum documents and the site visit.",
+      "texto": "Quick screening to decide whether the property deserves the detailed study. Each filter has a veto criterion that rules out at once and criteria scored 0 to 2. It is filled with the certificate of title, the online lookups and the site visit.",
       "propuesta": "Proposal to validate with Torna",
       "radar": "Chart of the 5 filters. Total potential {potencial} out of 100.",
       "potencial": "Rehabilitation potential",
@@ -653,6 +660,19 @@
         "Reading: 70 or more, high · 50 to 69, medium · below 50, low. A veto marked «does not meet» rules out.",
         "The screening uses this result together with the checklist: the most severe color wins."
       ]
+    },
+    "fuentes": {
+      "titulo": "Online lookups",
+      "texto": "With the CHIP, check these four official sources and record what you find. Each field shows which criterion of the 5 filters or the A–F checklist it helps resolve. It saves when you leave each field.",
+      "copiarChip": "Copy CHIP {chip}",
+      "chipCopiado": "CHIP copied",
+      "progreso": "Sources checked",
+      "abrir": "Open viewer ↗",
+      "alimenta": "Feeds: {codigos}",
+      "guardando": "Saving…",
+      "guardado": "Saved.",
+      "consultado": "Recorded on {fecha}",
+      "ejemplo": "E.g.: {texto}"
     }
   }
 }
