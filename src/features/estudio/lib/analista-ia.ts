@@ -3,6 +3,10 @@ import { z } from 'zod'
 // Contrato del analista de IA: qué recibe (el expediente del predio, sin datos personales)
 // y qué devuelve (puntaje por dimensión, puntaje global y sugerencia con razones).
 
+const ESTADOS_ITEM = ['cumple', 'no_cumple', 'por_verificar', 'no_aplica'] as const
+const CATEGORIAS = ['vivienda', 'trabajo', 'comercio', 'otros', 'mixto'] as const
+const VEREDICTOS = ['si', 'no', 'por_verificar'] as const
+
 export const DIMENSIONES = ['ubicacion', 'estado_fisico', 'entorno', 'norma', 'juridico', 'cumplimiento', 'mercado', 'financiero'] as const
 export type Dimension = (typeof DIMENSIONES)[number]
 
@@ -32,12 +36,17 @@ export const esquemaAnalisisIA = z.object({
     puntaje: z.number().describe('0, 1 o 2, según los niveles del criterio'),
     nota: z.string().describe('Por qué, con la fuente entre paréntesis'),
   })).optional().describe('Solo criterios de criteriosPendientes que los datos permitan puntuar. Si no hay base, no lo incluyas'),
+  checklist: z.array(z.object({
+    codigo: z.string().describe('Código del ítem, tal como viene en checklistPendiente (ej. A3, C2, D4)'),
+    estado: z.string().describe('Uno de: cumple, no_cumple, por_verificar, no_aplica'),
+    nota: z.string().describe('Por qué, con la fuente entre paréntesis'),
+  })).optional().describe('Solo ítems de checklistPendiente que los datos permitan resolver. Si no hay base, no lo incluyas'),
   usos: z.array(z.object({
     nombre: z.string().describe('Ej.: "Oficinas flexibles en pisos 3 a 6"'),
-    categoria: z.enum(['vivienda', 'trabajo', 'comercio', 'otros', 'mixto']),
-    legal: z.enum(['si', 'no', 'por_verificar']),
-    fisico: z.enum(['si', 'no', 'por_verificar']),
-    demanda: z.enum(['si', 'no', 'por_verificar']),
+    categoria: z.string().describe('Uno de: vivienda, trabajo, comercio, otros, mixto'),
+    legal: z.string().describe('Uno de: si, no, por_verificar'),
+    fisico: z.string().describe('Uno de: si, no, por_verificar'),
+    demanda: z.string().describe('Uno de: si, no, por_verificar'),
     nota: z.string().describe('Una frase: por qué este uso y qué hay que confirmar'),
   })).optional().describe('De 2 a 4 usos candidatos que tengan sentido con la norma, el edificio y la zona'),
 })
@@ -90,7 +99,8 @@ Reglas:
 7. Si tu decisión difiere de la sugerencia por reglas, explica por qué en el resumen ejecutivo.
 8. Escribe en español de Colombia, claro y directo, sin jerga. Cifras con separador de miles con punto.
 9. criterios: el expediente trae "criteriosPendientes", los criterios de los 5 filtros que nadie ha puntuado, con sus niveles (0, 1, 2). Puntúa solo los que los datos sostengan; deja fuera los demás. Nunca pongas un veto en 0 sin una evidencia clara.
-10. usos: si el expediente no trae usos candidatos, propone de 2 a 4. Marca legal, fisico y demanda como "por_verificar" cuando no haya un dato que lo confirme.`
+10. checklist: el expediente trae "checklistPendiente", los ítems de la checklist A–F sin resolver. Marca solo los que los datos sostengan: "cumple", "no_cumple", "por_verificar" (hay un indicio pero falta confirmar) o "no_aplica". En los ítems bloqueantes, "no_cumple" solo con evidencia clara.
+11. usos: si el expediente no trae usos candidatos, propone de 2 a 4. Marca legal, fisico y demanda como "por_verificar" cuando no haya un dato que lo confirme.`
 
 /**
  * Saca el JSON de la respuesta de un modelo (puede venir entre ```json o con texto alrededor)
@@ -118,7 +128,15 @@ export function leerRespuestaIA(texto: string): AnalisisIA | null {
       datosFaltantes: a.datosFaltantes.slice(0, 8),
       // Solo puntajes válidos (0, 1 o 2) y como máximo 4 usos
       criterios: (a.criterios ?? []).filter((c) => [0, 1, 2].includes(c.puntaje)),
-      usos: (a.usos ?? []).slice(0, 4),
+      // Lo que venga con un valor fuera de la lista se descarta o se corrige, sin perder el resto del análisis
+      checklist: (a.checklist ?? []).filter((c) => (ESTADOS_ITEM as readonly string[]).includes(c.estado)),
+      usos: (a.usos ?? []).slice(0, 4).map((u) => ({
+        ...u,
+        categoria: (CATEGORIAS as readonly string[]).includes(u.categoria) ? u.categoria : 'otros',
+        legal: (VEREDICTOS as readonly string[]).includes(u.legal) ? u.legal : 'por_verificar',
+        fisico: (VEREDICTOS as readonly string[]).includes(u.fisico) ? u.fisico : 'por_verificar',
+        demanda: (VEREDICTOS as readonly string[]).includes(u.demanda) ? u.demanda : 'por_verificar',
+      })),
     }
   } catch {
     return null

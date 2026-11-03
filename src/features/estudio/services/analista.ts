@@ -46,6 +46,9 @@ export async function armarExpediente(buildingId: string) {
     certificadoCatastral: lecturas.catastral,
     fuentes: Object.fromEntries(Object.entries(fuentes).map(([k, v]) => [textoFuente.get(k) ?? k, v.texto])),
     filtros: { evaluaciones: filtros.map((f) => ({ criterio: f.codigo, puntaje: f.puntaje, nota: f.nota })), resultado: calcularFiltros(filtros) },
+    checklistPendiente: ITEMS_GUIA.filter((i) => (items.find((x) => x.codigo === i.codigo)?.estado ?? 'pendiente') === 'pendiente').map((i) => ({
+      codigo: i.codigo, bloque: i.bloque, item: i.texto.es, dondeSeConsigue: i.nota.es, bloqueante: Boolean(i.bloqueante),
+    })),
     criteriosPendientes: CRITERIOS_FILTROS.filter((c) => !puntuados.has(c.codigo)).map((c) => ({
       codigo: c.codigo, filtro: c.filtro, criterio: c.texto.es, veto: Boolean(c.veto), niveles: c.niveles.map((n, i) => `${i}: ${n.es}`),
     })),
@@ -65,7 +68,8 @@ export async function armarExpediente(buildingId: string) {
 
 /**
  * Lo que el analista propone se escribe solo donde no hay nada: criterios de los 5 filtros
- * sin puntaje (quedan como "Automático · IA") y usos candidatos si el edificio no tiene.
+ * sin puntaje, ítems pendientes de la checklist A–F (quedan como "Automático · IA") y usos
+ * candidatos si el edificio no tiene.
  * Las fuentes y las reglas mandan sobre la IA, y el equipo manda sobre todo.
  */
 async function completarHuecos(supabase: Supabase, buildingId: string, a: AnalisisIA, areaConstruida: number | null) {
@@ -76,6 +80,15 @@ async function completarHuecos(supabase: Supabase, buildingId: string, a: Analis
     .filter((c) => validos.has(c.codigo) && !existentes.has(c.codigo))
     .map((c) => ({ building_id: buildingId, categoria: 'filtros', clave: c.codigo, valor: { puntaje: c.puntaje, nota: `${PREFIJO_AUTO}IA · ${c.nota}` }, estado: 'automatico', fecha_consulta: new Date().toISOString() }))
   if (filas.length) await supabase.from('data_points').upsert(filas, { onConflict: 'building_id,categoria,clave', ignoreDuplicates: true })
+
+  // Checklist A–F: solo ítems sin fila o pendientes sin nota
+  const { data: actuales } = await supabase.from('checklist_items').select('codigo, estado, nota').eq('building_id', buildingId)
+  const ocupados = new Set(((actuales ?? []) as { codigo: string; estado: string; nota: string | null }[]).filter((x) => x.estado !== 'pendiente' || x.nota).map((x) => x.codigo))
+  const itemsValidos = new Set(ITEMS_GUIA.map((i) => i.codigo))
+  const items = (a.checklist ?? [])
+    .filter((c) => itemsValidos.has(c.codigo) && !ocupados.has(c.codigo))
+    .map((c) => ({ building_id: buildingId, codigo: c.codigo, estado: c.estado, nota: `${PREFIJO_AUTO}IA · ${c.nota}`, updated_at: new Date().toISOString() }))
+  if (items.length) await supabase.from('checklist_items').upsert(items, { onConflict: 'building_id,codigo' })
 
   const { count } = await supabase.from('candidate_uses').select('id', { count: 'exact', head: true }).eq('building_id', buildingId)
   if (!count && a.usos?.length) {
@@ -104,7 +117,7 @@ export async function correrAnalista(buildingId: string): Promise<ResultadoAnali
         system: `${INSTRUCCIONES_ANALISTA}\n\nResponde SOLO con un objeto JSON válido que cumpla este JSON Schema, sin texto antes ni después:\n${FORMATO_RESPUESTA}`,
         prompt: `Expediente del predio:\n${JSON.stringify(expediente)}`,
         temperature: 0.2,
-        maxOutputTokens: 6000,
+        maxOutputTokens: 8000,
         maxRetries: 0,
         abortSignal: AbortSignal.timeout(75_000),
       })
