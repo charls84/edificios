@@ -78,3 +78,12 @@ Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizont
 
 **Pendiente**
 - CHIP o direcciones de los edificios del segundo propietario (Fase 0).
+
+## 2026-11-03 · Flujo automático y analista IA (rama claude/lucid-goodall-edgtor, sin pasar a producción)
+- Documentos base: F01 certificado de tradición y F03 certificado catastral (los únicos `minimo`). Se leen con `unpdf`
+  (lib/certificado.ts, lib/catastral.ts) y se cruzan con Catastro: SAE, H1, H2, H3, A1, A2, A7. No se guardan nombres.
+- Consulta automática GIS (services/gis) al matricular, al cargar F01/F03 y con botón en Fuentes.
+- Visita: 6 secciones calificadas 0–10 (visita/lib/calificacion.ts) → E1, E5 y decisión.
+- Decisión por reglas (lib/decision.ts) + analista IA (services/analista.ts, data_points 'ia'/'analista').
+- Pendiente del usuario: OPENROUTER_API_KEY en Vercel (opcional TORNA_IA_MODELO). Dominios bloqueados en el sandbox:
+  openrouter.ai, services7.arcgis.com (POT 555: tratamiento), saesas.gov.co (corta conexiones de fuera de Colombia).
