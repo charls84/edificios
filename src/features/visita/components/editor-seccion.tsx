@@ -6,6 +6,7 @@ import type { FotoInforme as Foto, SeccionInforme } from '@/features/ficha/types
 import { subirFotoVisita } from '../lib/fotos'
 import { Campo } from './campos'
 import { FotoInforme } from './foto-informe'
+import { PuntajeControl } from './puntaje-control'
 
 interface Props {
   edificioId: string
@@ -53,17 +54,32 @@ export function EditorSeccion({ edificioId, seccion: s, numero, onChange, onQuit
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <Campo label={t('queSeReviso')} value={s.etiqueta} onChange={(v) => set({ etiqueta: v })} placeholder={t('queSeRevisoEj')} />
-        <div className="md:col-span-2">
+      {s.clave ? (
+        <>
+          <h3 className="text-lg font-bold">{s.etiqueta}</h3>
+          <PuntajeControl nombre={`puntaje-${numero}`} etiqueta={t('calificacion')} valor={s.puntaje} onChange={(v) => set({ puntaje: v })} />
           <Campo label={t('titular')} value={s.titulo} onChange={(v) => set({ titulo: v })} placeholder={t('titularEj')} />
+          <Campo label={t('descripcion')} multilinea value={s.texto ?? ''} onChange={(v) => set({ texto: v || undefined })} />
+          <Campo label={t('notas')} multilinea value={s.notas ?? ''} onChange={(v) => set({ notas: v || undefined })} placeholder={t('notasEj')} />
+        </>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+            <Campo label={t('queSeReviso')} value={s.etiqueta} onChange={(v) => set({ etiqueta: v })} placeholder={t('queSeRevisoEj')} />
+            <div className="md:col-span-2">
+              <Campo label={t('titular')} value={s.titulo} onChange={(v) => set({ titulo: v })} placeholder={t('titularEj')} />
+            </div>
+          </div>
+          <Campo label={t('descripcion')} multilinea value={s.texto ?? ''} onChange={(v) => set({ texto: v || undefined })} />
+          <Campo label={t('notas')} multilinea value={s.notas ?? ''} onChange={(v) => set({ notas: v || undefined })} placeholder={t('notasEj')} />
+        </>
+      )}
+      {(!s.clave || s.conclusion) && (
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <Campo label={t('conclusionTitulo')} value={s.conclusion?.titulo ?? ''} onChange={(v) => set({ conclusion: { titulo: v, texto: s.conclusion?.texto ?? '' } })} />
+          <Campo label={t('conclusionDetalle')} multilinea value={s.conclusion?.texto ?? ''} onChange={(v) => set({ conclusion: { titulo: s.conclusion?.titulo ?? '', texto: v } })} />
         </div>
-      </div>
-      <Campo label={t('descripcion')} multilinea value={s.texto ?? ''} onChange={(v) => set({ texto: v || undefined })} />
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <Campo label={t('conclusionTitulo')} value={s.conclusion?.titulo ?? ''} onChange={(v) => set({ conclusion: { titulo: v, texto: s.conclusion?.texto ?? '' } })} />
-        <Campo label={t('conclusionDetalle')} multilinea value={s.conclusion?.texto ?? ''} onChange={(v) => set({ conclusion: { titulo: s.conclusion?.titulo ?? '', texto: v } })} />
-      </div>
+      )}
 
       <div>
         <p className="etiqueta">{t('fotos')}</p>

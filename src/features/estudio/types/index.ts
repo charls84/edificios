@@ -24,6 +24,8 @@ export interface DocumentoCatalogo {
   disponibilidad: Disponibilidad
   /** Forma parte del minimo para arrancar el tamizaje */
   minimo?: boolean
+  /** Se muestra junto a los obligatorios porque suma datos, pero no bloquea */
+  recomendado?: boolean
   /** Solo se pide en ciertos casos (sociedad, BIC, propiedad horizontal...) */
   siAplica?: boolean
 }
@@ -180,4 +182,42 @@ export interface EdificioReal {
   notas: string | null
   createdAt: string
   updatedAt: string
+}
+
+// ---------- Consulta automática de fuentes oficiales (Catastro, DADEP, Jardín Botánico) ----------
+
+export type EstadoFuenteAuto = 'ok' | 'sin_datos' | 'error'
+
+export interface ConsultaPredio {
+  fecha: string
+  /** Por fuente: ok, sin datos o error (con mensaje) */
+  estado: Record<string, { estado: EstadoFuenteAuto; mensaje?: string }>
+  lote: {
+    codigo: string
+    areaM2: number
+    lat: number
+    lng: number
+    unidadesPrediales: number | null
+    manzana: string | null
+    anillo: number[][]
+  } | null
+  bic: { ambito: string | null; nivel: string | null; localizacion: string | null; acto: string | null } | null
+  pemp: 'afectada' | 'influencia' | null
+  sectorInteresCultural: string | null
+  licencias: { acto: string; tipo: string; decision: string; fecha: string | null }[]
+  reservaVial: { nombre: string; areaM2: number } | null
+  plusvalia: boolean | null
+  /** areaConstruidaM2: suma de huella × pisos de cada construcción del lote (estimado de Catastro) */
+  construccion: { pisos: number; sotanos: number; areaConstruidaM2?: number | null } | null
+  manzana: { uso: string | null; valorReferencia: number | null; anioValor: number | null; estrato: number | null } | null
+  upl: string | null
+  arqueologia: string | null
+  amenazaRemocion: string | null
+  transporte: { troncalCercana: string | null; estacion: string | null; distanciaEstacion: number | null; metro: string | null; distanciaMetro: number | null }
+  universidades: { nombre: string; distancia: number }[]
+  espacioPublico: { alameda: string | null; andenMaxM: number | null; vias: number; prediosPublicos: number }
+  arboles: { a10m: number; masCercano: { especie: string; distancia: number } | null; protegidos: { especie: string; distancia: number }[] }
+  renobo: string | null
+  /** POT 555: tratamiento urbanístico y área de actividad */
+  pot?: { tratamiento: string | null; areaActividad: string | null; detalle: Record<string, Record<string, string>> } | null
 }

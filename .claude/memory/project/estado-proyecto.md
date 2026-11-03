@@ -66,7 +66,24 @@ Informe de viabilidad del Rolher publicado como artefacto privado: https://claud
 (continuar con condiciones; mixto local + oficinas flexibles; potencial 73/100; cálculos en scratchpad, misma fórmula de finanzas.ts).
 El Rolher real ya está en la base (id 2096b559-…) con 18 archivos cargados por el equipo, incluido el estudio histórico de Torna.
 
+**Fuentes GIS (3-nov-2026)** — con los dominios permitidos SÍ responden: serviciosgis.catastrobogota.gov.co (lote, BIC con
+NIVEL_INTE, PEMP, licencias, reserva vial, plusvalía, construcción, valor referencia, UPL), gisvector/gisraster.dadep.gov.co
+(SIGDEP, observatorio, Capas_POT sin tratamiento) y geoportal.jbb.gov.co (CensoArbol_v0). NO responden sinupot.sdp.gov.co ni
+sinu.sdp.gov.co (502/timeout). Búsqueda: placa domiciliaria (PDOTEXTO + PDONVIAL) → PDOCLOTE = LOTCODIGO; con la geometría
+del lote se cruzan las capas. Rolher = lote 003109005017, 145,3 m², 23 unidades prediales en Catastro, PEMP CHB Nivel 2,
+LC 13-4-0066 sin prórroga, reserva vial < 1 m², ZPA 1, sin árboles a < 10 m. Anotado en Fuentes del Rolher (data_points).
+Scripts de consulta en el scratchpad de la sesión (no versionados).
+
 Preguntas abiertas para Torna: criterios de los 5 filtros, tasa mínima/horizonte, costos de referencia, destinatario y firma del informe.
 
 **Pendiente**
 - CHIP o direcciones de los edificios del segundo propietario (Fase 0).
+
+## 2026-11-03 · Flujo automático y analista IA (rama claude/lucid-goodall-edgtor, sin pasar a producción)
+- Documentos base: F01 certificado de tradición y F03 certificado catastral (los únicos `minimo`). Se leen con `unpdf`
+  (lib/certificado.ts, lib/catastral.ts) y se cruzan con Catastro: SAE, H1, H2, H3, A1, A2, A7. No se guardan nombres.
+- Consulta automática GIS (services/gis) al matricular, al cargar F01/F03 y con botón en Fuentes.
+- Visita: 6 secciones calificadas 0–10 (visita/lib/calificacion.ts) → E1, E5 y decisión.
+- Decisión por reglas (lib/decision.ts) + analista IA (services/analista.ts, data_points 'ia'/'analista').
+- Pendiente del usuario: OPENROUTER_API_KEY en Vercel (opcional TORNA_IA_MODELO). Dominios bloqueados en el sandbox:
+  openrouter.ai, services7.arcgis.com (POT 555: tratamiento), saesas.gov.co (corta conexiones de fuera de Colombia).

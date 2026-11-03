@@ -7,7 +7,11 @@ import { COP, fecha, numero, porcentaje, tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
 import { FILTROS } from '../catalogo/filtros'
 import { FUENTES } from '../catalogo/fuentes'
+import { CalificacionVisita } from '@/features/visita/components/calificacion-visita'
+import { resumirVisita } from '@/features/visita/lib/calificacion'
+import type { SugerenciaDecision } from '../lib/decision'
 import { BotonImprimir } from './boton-imprimir'
+import { DecisionSugerida } from './decision-sugerida'
 import { RadarFiltros } from './radar-filtros'
 
 const TITULOS_FILTROS = Object.fromEntries(FILTROS.map((f) => [f.codigo, f.titulo]))
@@ -22,6 +26,8 @@ interface Props {
   tamizaje: AnalisisGuardado<ResultadoTamizaje> | null
   mmu: AnalisisGuardado<ResultadoMayorMejorUso> | null
   fuentes: Record<string, { texto: string; fecha: string }>
+  decision: SugerenciaDecision
+  ia: React.ReactNode
 }
 
 const ESTADO_COLOR: Record<EstadoItemEdificio['estado'], string> = {
@@ -62,17 +68,19 @@ async function Bloque({ codigo, estados }: { codigo: string; estados: Map<string
 }
 
 // Informe de viabilidad: los 10 capitulos de la guia (seccion 07), armados con lo que hay en la ficha
-export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu, fuentes }: Props) {
+export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu, fuentes, decision, ia }: Props) {
   const [t, tf, locale] = await Promise.all([getTranslations('estudio.informe'), getTranslations('estudio.filtros'), getLocale()])
   const estados = new Map(items.map((i) => [i.codigo, i]))
   const estadoDoc = new Map(docs.map((d) => [d.codigo, d]))
   const r = mmu?.resultado ?? null
   const recomendado = r ? r.usos.find((u) => u.id === r.recomendado) ?? null : null
   const cargados = DOCUMENTOS.filter((d) => ['cargado', 'validado'].includes(estadoDoc.get(d.codigo)?.estado ?? ''))
-  const faltantes = DOCUMENTOS.filter((d) => !d.siAplica && !['cargado', 'validado', 'no_aplica'].includes(estadoDoc.get(d.codigo)?.estado ?? ''))
+  // Solo cuentan como pendientes los documentos que hay que cargar (hoy, el certificado de tradición)
+  const faltantes = DOCUMENTOS.filter((d) => d.minimo && !['cargado', 'validado'].includes(estadoDoc.get(d.codigo)?.estado ?? ''))
   const porVerificar = ITEMS_GUIA.filter((i) => estados.get(i.codigo)?.estado === 'por_verificar')
   const fragiles = r ? r.usos.filter((u) => u.viable && u.sensibilidad.canonMenos10 != null && u.sensibilidad.canonMenos10 < r.parametros.tasaMinima) : []
   const hoy = fecha(locale, new Date().toISOString())
+  const visita = resumirVisita(informe)
 
   return (
     <article className="space-y-4">
@@ -89,6 +97,8 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
       {!mmu && <p className="rounded-xl bg-ambar-claro px-4 py-3 text-sm">{t('borrador')}</p>}
 
       <Capitulo n={1} titulo={t('cap.1')}>
+        {ia}
+        <DecisionSugerida sugerencia={decision} className="border-0 p-0 shadow-none" />
         {recomendado ? (
           <>
             <p className="text-lg font-semibold">{t('usoRecomendado', { uso: recomendado.nombre })}</p>
@@ -146,6 +156,19 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
               <ul className="mt-2 list-disc space-y-1 pl-5">{informe.hallazgos.map((h) => <li key={h.titulo}><strong>{h.titulo}.</strong> {h.texto}</li>)}</ul>
             )}
           </div>
+        )}
+        {visita && visita.calificadas > 0 && (
+          <>
+            <CalificacionVisita resumen={visita} />
+            <dl className="divide-y divide-borde">
+              {informe!.secciones.filter((s) => s.clave && (s.titulo || s.notas)).map((s) => (
+                <div key={s.clave} className="grid grid-cols-1 gap-1 py-1.5 sm:grid-cols-[1fr_2fr]">
+                  <dt className="text-medio-texto">{s.etiqueta}{s.puntaje != null ? ` · ${s.puntaje}/10` : ''}</dt>
+                  <dd>{[s.titulo, s.notas].filter(Boolean).join('. ')}</dd>
+                </div>
+              ))}
+            </dl>
+          </>
         )}
         <Bloque codigo="C" estados={estados} />
         <h3 className="font-semibold">{t('pruebaRapida')}</h3>

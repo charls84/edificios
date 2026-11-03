@@ -4,7 +4,8 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const PESTANAS = ['resumen', 'documentos', 'fuentes', 'visita', 'filtros', 'usos', 'checklist', 'analisis', 'informe'] as const
+// En el orden del flujo: documentos → consulta en línea → visita → análisis; luego el detalle
+const PESTANAS = ['resumen', 'documentos', 'fuentes', 'visita', 'analisis', 'filtros', 'checklist', 'usos', 'informe'] as const
 
 // Navegacion de la ficha: cada pestaña es una ruta, asi el enlace se puede compartir
 export function Pestanas({ edificioId }: { edificioId: string }) {

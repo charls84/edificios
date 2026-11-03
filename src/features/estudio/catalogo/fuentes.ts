@@ -1,7 +1,7 @@
 import type { Texto } from '../types'
 
 // Consultas en línea que pidió Torna (3-nov-2026): con el CHIP y el certificado de tradición
-// se consultan estas cuatro fuentes oficiales. Cada hallazgo se anota en la ficha y alimenta
+// se consultan estas cinco fuentes oficiales. Cada hallazgo se anota en la ficha y alimenta
 // los 5 filtros y la checklist A–F (campo `alimenta`).
 
 export interface CampoFuente {
@@ -14,7 +14,7 @@ export interface CampoFuente {
 }
 
 export interface Fuente {
-  codigo: 'sinupot' | 'bic' | 'espacio_publico' | 'arbolado'
+  codigo: 'sinupot' | 'bic' | 'espacio_publico' | 'arbolado' | 'sae'
   nombre: Texto
   entidad: string
   url: string
@@ -27,10 +27,10 @@ const t = (es: string, en: string): Texto => ({ es, en })
 export const FUENTES: Fuente[] = [
   {
     codigo: 'sinupot',
-    nombre: t('SINUPOT · norma urbana y licencias', 'SINUPOT · planning rules and permits'),
+    nombre: t('Norma urbana · POT 555 y licencias', 'Planning rules · POT 555 and permits'),
     entidad: 'Secretaría Distrital de Planeación',
-    url: 'https://sinupot.sdp.gov.co/',
-    comoBuscar: t('Buscar por CHIP en "Consulta de predios" y abrir la ficha normativa.', 'Search by CHIP in "Consulta de predios" and open the planning sheet.'),
+    url: 'https://mapas.bogota.gov.co/',
+    comoBuscar: t('La plataforma consulta sola el tratamiento y el área de actividad del POT 555 y las licencias de Catastro. Para revisar a mano, Mapas Bogotá tiene las capas del POT; SINUPOT a veces no responde.', 'The platform looks up the POT 555 treatment and activity area and the Cadastre permits on its own. To check by hand, Mapas Bogotá has the POT layers; SINUPOT sometimes does not respond.'),
     campos: [
       { codigo: 'upl', texto: t('UPL y área de actividad', 'UPL and activity area'), ejemplo: t('UPL Centro Histórico · Área de actividad grandes servicios metropolitanos', 'UPL Centro Histórico · metropolitan services area'), alimenta: ['B1', 'B2'] },
       { codigo: 'tratamiento', texto: t('Tratamiento urbanístico', 'Urban treatment'), ejemplo: t('Conservación (PEMP Centro Histórico)', 'Conservation (Historic Center PEMP)'), alimenta: ['R2', 'B2'] },
@@ -75,6 +75,20 @@ export const FUENTES: Fuente[] = [
       { codigo: 'arboles', texto: t('Árboles en el frente o el andén', 'Trees on the frontage or sidewalk'), ejemplo: t('2 árboles en el andén de la Carrera 10', '2 trees on the Carrera 10 sidewalk'), alimenta: ['C13', 'N2'] },
       { codigo: 'impacto', texto: t('Impacto en accesos, carga u obra', 'Impact on access, loading or works'), ejemplo: t('No interfieren con el acceso; obra sin tala', 'No access conflict; works without felling'), alimenta: ['C13', 'U4'] },
       { codigo: 'permiso', texto: t('Permiso ambiental requerido', 'Environmental permit required'), ejemplo: t('No · si se interviene, permiso de la Secretaría de Ambiente', 'No · if affected, Environment Secretariat permit'), alimenta: ['B9'] },
+    ],
+  },
+  {
+    // Pedido de Torna (3-nov-2026): descartar riesgo de lavado de activos antes de negociar.
+    // Un "sí" en cualquiera de estos campos lleva la sugerencia de decisión a "no continuar".
+    codigo: 'sae',
+    nombre: t('SAE · lavado de activos y extinción de dominio', 'SAE · money laundering and asset forfeiture'),
+    entidad: 'Sociedad de Activos Especiales',
+    url: 'https://www.saesas.gov.co/',
+    comoBuscar: t('Las dos primeras se llenan solas al cargar el certificado de tradición: la plataforma lee cada anotación y busca extinción de dominio, medidas de la SAE o la Fiscalía, embargos y demandas vigentes. La de listas restrictivas se responde a mano. Empieza cada respuesta con "Sí" o "No".', 'The first two fill in automatically when the certificate of title is uploaded: the platform reads each entry looking for asset forfeiture, SAE or prosecutor measures, attachments and lawsuits in force. The restrictive lists one is answered by hand. Start each answer with "Yes" or "No".'),
+    campos: [
+      { codigo: 'inventario', texto: t('¿Lo administra la SAE o está en extinción de dominio?', 'Is it managed by SAE or under asset forfeiture?'), ejemplo: t('No · no figura en los bienes de la SAE (consulta del 3-nov-2026)', 'No · not among SAE assets (checked 3-Nov-2026)'), alimenta: ['H1', 'A1'] },
+      { codigo: 'medidas', texto: t('¿El certificado tiene medidas de Fiscalía, extinción de dominio o embargos?', 'Does the certificate show prosecutor, forfeiture or attachment measures?'), ejemplo: t('No · sin anotaciones de Fiscalía ni de la SAE', 'No · no prosecutor or SAE entries'), alimenta: ['H1', 'A1'] },
+      { codigo: 'listas', texto: t('¿Algún propietario aparece en listas restrictivas (ONU, OFAC, Procuraduría, Policía)?', 'Is any owner on restrictive lists (UN, OFAC, Inspector General, Police)?'), ejemplo: t('No · revisados los 2 propietarios del certificado', 'No · both owners on the certificate checked'), alimenta: ['H1', 'H2'] },
     ],
   },
 ]

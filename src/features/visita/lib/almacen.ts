@@ -2,6 +2,7 @@
 
 import { useMemo, useSyncExternalStore } from 'react'
 import type { InformeVisita } from '@/features/ficha/types'
+import { CLAVES_VISITA, type ClaveVisita } from './calificacion'
 
 // Informe editado en el navegador (modo demo). En la Fase 1 pasa a Supabase.
 const clave = (edificioId: string) => `torna:informe:${edificioId}`
@@ -55,8 +56,8 @@ export function borrarInforme(edificioId: string) {
   }
 }
 
-// Formato de informe de Torna: las 7 secciones que se revisan en cada visita
-export function informeVacio(titulo: string, etiquetas: string[]): InformeVisita {
+// Formato de informe de Torna (3-nov-2026): seis secciones calificables de 0 a 10
+export function informeVacio(titulo: string, etiquetas: Record<ClaveVisita, string>): InformeVisita {
   return {
     titulo,
     fecha: '',
@@ -66,10 +67,12 @@ export function informeVacio(titulo: string, etiquetas: string[]): InformeVisita
     hallazgos: [],
     observaciones: [],
     documentosPorSolicitar: [],
-    secciones: etiquetas.map((etiqueta, i) => ({
+    secciones: CLAVES_VISITA.map((clave, i) => ({
       numero: String(i + 1).padStart(2, '0'),
-      etiqueta,
+      clave,
+      etiqueta: etiquetas[clave],
       titulo: '',
+      puntaje: null,
       fotos: [],
     })),
   }

@@ -1,16 +1,33 @@
 import { useTranslations } from 'next-intl'
 import type { InformeVisita, SeccionInforme } from '@/features/ficha/types'
+import { COLOR_NIVEL, nivelPuntaje, resumirVisita } from '../lib/calificacion'
+import { CalificacionVisita } from './calificacion-visita'
 import { FotoInforme } from './foto-informe'
 
 function Seccion({ s, numero }: { s: SeccionInforme; numero: string }) {
   const t = useTranslations('visita')
   return (
     <section className="bento">
-      <p className="text-xs font-semibold uppercase tracking-widest text-rojo">
-        {numero} · {s.etiqueta}
-      </p>
-      {s.titulo && <h3 className="mt-1 text-xl font-bold">{s.titulo}</h3>}
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-rojo">
+            {numero} · {s.etiqueta}
+          </p>
+          {s.titulo && <h3 className="mt-1 text-xl font-bold">{s.titulo}</h3>}
+        </div>
+        {s.puntaje != null && (
+          <span className={`shrink-0 rounded-xl px-3 py-1.5 text-lg font-bold tabular-nums ${COLOR_NIVEL[nivelPuntaje(s.puntaje)].solido}`} aria-label={t('puntaje.aria', { n: s.puntaje })}>
+            {s.puntaje}<span className="text-xs opacity-80">/10</span>
+          </span>
+        )}
+      </div>
       {s.texto && <p className="mt-1 text-sm text-medio-texto">{s.texto}</p>}
+      {s.notas && (
+        <div className="mt-3 rounded-xl border border-borde bg-fondo p-3 text-sm">
+          <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">{t('editor.notas')}</p>
+          <p className="mt-1 whitespace-pre-line">{s.notas}</p>
+        </div>
+      )}
       {s.fotos.length === 0 && !s.conclusion && (
         <p className="mt-3 text-sm text-medio-texto">{t('sinFotos')}</p>
       )}
@@ -44,6 +61,7 @@ function Seccion({ s, numero }: { s: SeccionInforme; numero: string }) {
 
 export function InformeVista({ informe }: { informe: InformeVisita }) {
   const t = useTranslations('visita')
+  const calificacion = resumirVisita(informe)
   const meta = [informe.fecha, informe.hora, informe.autor && t('visitaYFotos', { autor: informe.autor })].filter(Boolean)
   return (
     <div className="space-y-4">
@@ -65,6 +83,12 @@ export function InformeVista({ informe }: { informe: InformeVisita }) {
             </a>
           )}
         </div>
+
+        {calificacion && calificacion.calificadas > 0 && (
+          <div className="mt-5">
+            <CalificacionVisita resumen={calificacion} />
+          </div>
+        )}
 
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-5">
           <ol className="space-y-3 lg:col-span-3">

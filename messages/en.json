@@ -73,7 +73,7 @@
     "escribeDireccion": "Enter the address",
     "noSeGuardo": "Could not save. Try again.",
     "chipRepetido": "A building with that CHIP already exists.",
-    "escribeChip": "Enter the lot's CHIP: it is used to look it up in SINUPOT."
+    "escribeChip": "Enter the property's CHIP: it's matched against the documents and the Cadastre."
   },
   "equipo": {
     "titulo": "Team",
@@ -179,15 +179,6 @@
     "sinFotos": "No photos yet.",
     "loQueSeVio": "What we found",
     "cargandoFoto": "Loading photo",
-    "seccionesPlantilla": [
-      "Façade and entrance",
-      "Structure",
-      "Electrical systems",
-      "Plumbing",
-      "Condition of upper floors",
-      "Roof",
-      "Surroundings"
-    ],
     "editor": {
       "datos": "Visit details",
       "fecha": "Date",
@@ -227,12 +218,42 @@
       "agregarFotos": "Add photos",
       "subiendo": "Uploading {n}…",
       "errorFoto": "\"{nombre}\" could not be loaded. Try a JPG or PNG photo.",
-      "agregarSeccion": "+ Add inspected area"
+      "agregarSeccion": "+ Add inspected area",
+      "calificacion": "Inspector's score (0 to 10)",
+      "notas": "Additional notes",
+      "notasEj": "Measurements, marks, things to check again…",
+      "faltanCalificables": "This report is missing {n} of the 6 scored sections. Without them, the visit doesn't fully count in the analysis.",
+      "agregarCalificables": "Add sections"
     },
     "errorServidor": "The report could not be saved. Check your connection and try again.",
     "guardadoServidor": "Report saved. The whole team sees this version.",
     "subtituloServidor": "Sections reviewed on site, with photos. Saved to the database and visible to the whole team.",
-    "guardando": "Saving…"
+    "guardando": "Saving…",
+    "claves": {
+      "electricas": "Electrical installations",
+      "hidraulicas": "Plumbing",
+      "estructurales": "Structural elements",
+      "no_estructurales": "Non-structural elements",
+      "acabados": "Building finishes",
+      "general": "Overall visible condition of the building"
+    },
+    "puntaje": {
+      "quitar": "Clear score",
+      "sinCalificar": "Not scored. Pick 0 to 10.",
+      "promedio": "Average",
+      "deSeis": "{n} of 6 sections scored",
+      "aria": "Score {n} out of 10",
+      "nivel": {
+        "critico": "Critical",
+        "regular": "Fair",
+        "bueno": "Good"
+      },
+      "ayuda": {
+        "critico": "Needs major work or puts the project in doubt.",
+        "regular": "Works, but repairs must be budgeted.",
+        "bueno": "Usable with minor maintenance."
+      }
+    }
   },
   "nav": {
     "navegacion": "Main navigation",
@@ -259,7 +280,7 @@
       "analisis": "Analysis",
       "informe": "Report",
       "filtros": "5 filters",
-      "fuentes": "Sources"
+      "fuentes": "Online lookup"
     },
     "formulario": {
       "titulo": "Register a building",
@@ -268,7 +289,7 @@
       "nombre": "Building name",
       "nombreAyuda": "What the team calls it. E.g.: Rolher Building",
       "chip": "CHIP",
-      "chipAyuda": "Required. The CHIP is used to look up the lot in SINUPOT and the District viewers. If it is already registered, the existing profile opens.",
+      "chipAyuda": "Required. It is matched against the CHIP on the certificate of title and the Cadastre. If already registered, the existing record opens.",
       "direccion": "Address",
       "direccionAyuda": "Cadastral address if you have it; otherwise the one on the plate.",
       "matricula": "Registration number",
@@ -289,17 +310,17 @@
       "queSigueTitulo": "What comes next",
       "queSigue": [
         "Get the certificate of title (online, with the registration number) and upload it in Documents.",
-        "With the CHIP, check SINUPOT, Mapas Bogotá (heritage), the DADEP observatory and SIGAU, and record the findings in Sources.",
+        "With the CHIP, check SINUPOT, Mapas Bogotá (heritage), the DADEP observatory, SIGAU and SAE (money laundering), and record the findings in Sources.",
         "Score the 5 filters, build the candidate uses and run the screening.",
         "If it passes, complete the detailed study (checklist A–F) and run the highest and best use analysis."
       ]
     },
     "documentos": {
-      "titulo": "Documents for the analysis",
-      "texto": "The screening only needs the certificate of title (the CHIP is already in the profile). The rest of Torna's list supports the detailed study: upload it when you have it.",
+      "titulo": "Documents to upload",
+      "texto": "Only the certificate of title is required: it gives the cadastral code, registration number, owners and measures. The cadastral certificate is optional: it adds the assessed value. The platform looks up the rest.",
       "filtroMinimo": "Only what the screening needs",
       "filtroNoAplica": "Hide those that do not apply",
-      "progresoMinimo": "Needed for screening",
+      "progresoMinimo": "Required document",
       "progresoTotal": "All documents",
       "leyenda": "Online: downloaded or looked up on the internet · Partial: looked up online, but the full document is requested separately · Offline: held by the owner or must be produced.",
       "minimo": "Needed",
@@ -328,7 +349,25 @@
       "errorGuardar": "Could not save. Try again.",
       "errorTamano": "The file is larger than {max} MB.",
       "errorSubir": "Could not upload \"{nombre}\". Try again.",
-      "confirmarQuitar": "Remove \"{nombre}\"? The file is deleted from storage."
+      "confirmarQuitar": "Remove \"{nombre}\"? The file is deleted from storage.",
+      "automaticoTitulo": "What the platform looks up on its own",
+      "automatico": [
+        "POT 555 rules (treatment and activity area), heritage, permits, road reserve, land value capture and hazard · POT and Cadastre",
+        "Transit, universities and block use · Cadastre",
+        "Public space · DADEP",
+        "Trees and protected species · Botanical Garden",
+        "Asset forfeiture, attachments, lawsuits and number of owners · read from the certificate of title",
+        "Building condition · scored site visit",
+        "Areas, assessed value and use, cross-checked between registry and Cadastre · read from the cadastral certificate"
+      ],
+      "verFuentes": "See what it found →",
+      "opcionalesTitulo": "Other documents (optional)",
+      "opcionalesTexto": "Support for the detailed study. {n} of {total} uploaded.",
+      "verOpcionales": "Show list",
+      "ocultarOpcionales": "Hide list",
+      "siguientePaso": "Next step: analyze the property",
+      "siguientePasoTexto": "With the documents uploaded, the platform reads them, gets the cadastral code, queries official sources and runs the AI analyst.",
+      "recomendado": "Recommended"
     },
     "checklist": {
       "titulo": "Highest and best use guide checklist",
@@ -513,7 +552,7 @@
     "resumen": {
       "pasos": {
         "matricula": "Registered",
-        "minimo": "Certificate and lookups",
+        "minimo": "Documents and lookups",
         "usos": "Candidate uses",
         "tamizaje": "Screening",
         "detallado": "Detailed study",
@@ -537,7 +576,7 @@
       "siguiente": "Next step",
       "ayuda": {
         "1": "Review the building's basic details.",
-        "2": "Upload the certificate of title and use the CHIP to check the four online sources (SINUPOT, heritage, DADEP, SIGAU).",
+        "2": "Upload the certificate of title and review the five online sources (SINUPOT, heritage, DADEP, SIGAU and SAE).",
         "3": "Score the 5 filters with the certificate, the online lookups and the site visit.",
         "4": "Add the uses worth testing in this building.",
         "5": "Run the screening to know whether the property deserves the detailed study.",
@@ -566,8 +605,9 @@
       "potencialDe": "{n}/100 · {lectura}",
       "verFiltros": "Score the 5 filters →",
       "certificadoYFuentes": "{cert} · {a} of {b} sources",
-      "certificadoListo": "Certificate uploaded",
-      "certificadoFalta": "Certificate missing"
+      "certificadoListo": "Base documents uploaded",
+      "certificadoFalta": "Base documents missing",
+      "soloCertificado": "Only the certificate of title and the cadastral certificate are uploaded. The platform looks up the rest."
     },
     "informe": {
       "etiqueta": "Feasibility report · Highest and best use",
@@ -608,9 +648,9 @@
       "loteVacio": "The vacant lot is worth more than the building's best use.",
       "sinRiesgos": "No risks recorded yet.",
       "porVerificar": "Items to verify ({n})",
-      "documentosPendientes": "Pending documents ({n})",
+      "documentosPendientes": "Documents to upload ({n})",
       "pie": "Report generated by Torna's platform with the data validated by the team. Financial calculations are formulas on the entered data; they do not replace the IDPC opinion, the IDIGER certification, the structural visit (NSR-10) or the permit from the curaduría.",
-      "consultasEnLinea": "Online lookups (SINUPOT, Mapas Bogotá, DADEP, SIGAU)",
+      "consultasEnLinea": "Online lookups (Cadastre, POT 555, Mapas Bogotá, DADEP, SIGAU, SAE)",
       "sinConsultar": "Not checked"
     },
     "filtros": {
@@ -659,11 +699,13 @@
         "Total potential = weighted average: rules 25%, structure 25%, location 20%, surroundings 15%, history 15%.",
         "Reading: 70 or more, high · 50 to 69, medium · below 50, low. A veto marked «does not meet» rules out.",
         "The screening uses this result together with the checklist: the most severe color wins."
-      ]
+      ],
+      "auto": "Automatic",
+      "autoAyuda": "Suggested by the platform from official data or the site visit. If you pick another score, yours wins."
     },
     "fuentes": {
       "titulo": "Online lookups",
-      "texto": "With the CHIP, check these four official sources and record what you find. Each field shows which criterion of the 5 filters or the A–F checklist it helps resolve. It saves when you leave each field.",
+      "texto": "The platform looks up Cadastre, DADEP and the Botanical Garden with the property address and fills in what it finds. Review each item, complete what's missing and fix anything that doesn't match: what you write wins. Saves when you leave each field.",
       "copiarChip": "Copy CHIP {chip}",
       "chipCopiado": "CHIP copied",
       "progreso": "Sources checked",
@@ -672,7 +714,162 @@
       "guardando": "Saving…",
       "guardado": "Saved.",
       "consultado": "Recorded on {fecha}",
-      "ejemplo": "E.g.: {texto}"
+      "ejemplo": "E.g.: {texto}",
+      "auto": "Automatic",
+      "autoTitulo": "Automatic lookup"
+    },
+    "auto": {
+      "titulo": "Automatic lookup",
+      "texto": "Using the certificate's cadastral code (or the address) it finds the lot and crosses it with the POT 555 and Cadastre, DADEP and Botanical Garden layers. Fills the sources, suggests 5-filter scores and advances the checklist. Doesn't change what the team already wrote.",
+      "boton": "Look up now",
+      "repetir": "Look up again",
+      "consultando": "Querying official layers…",
+      "ultima": "Last lookup: {fecha}",
+      "nunca": "This property hasn't been looked up yet.",
+      "codigoLote": "Cadastre lot code (optional)",
+      "codigoLoteAyuda": "Not needed: it's taken from the cadastral code on the certificate of title or from the address. Use it only if the lookup says the lot wasn't found. 12 digits, for example 003109005017.",
+      "listo": "Lookup done. {n} items filled.",
+      "listoSinCambios": "Lookup done. There were no empty items to fill.",
+      "error": {
+        "sinLote": "We couldn't find the lot with that address. Enter the Cadastre lot code and try again.",
+        "sinRespuesta": "Cadastre didn't respond. Try again in a few minutes.",
+        "invalido": "The lot code must contain only numbers.",
+        "demo": "The automatic lookup isn't available in the demo."
+      },
+      "estado": {
+        "ok": "Data found",
+        "sin_datos": "Nothing found",
+        "error": "No response"
+      },
+      "fuentes": {
+        "ubicacion": "Address → lot",
+        "lote": "Lot",
+        "construccion": "Construction",
+        "patrimonio": "Heritage (BIC and PEMP)",
+        "transporte": "Transit",
+        "upl": "UPL",
+        "reserva_vial": "Road reserve",
+        "universidades": "Universities",
+        "plusvalia": "Land value capture",
+        "manzana": "Block use and value",
+        "licencias": "Permits",
+        "espacio_publico": "Public space",
+        "renobo": "RenoBo",
+        "arqueologia": "Archaeology",
+        "amenaza": "Hazard",
+        "arbolado": "Trees",
+        "pot": "POT 555 rules"
+      },
+      "datos": {
+        "lote": "Lot",
+        "area": "{n} m²",
+        "pisos": "{p} floors · {s, plural, =0 {no basement} one {# basement} other {# basements}}",
+        "valor": "Reference value {anio}",
+        "estrato": "Stratum {n}",
+        "estacion": "{nombre}, {m} m away",
+        "unidades": "{n} cadastral units",
+        "construida": "Built area (estimated)"
+      },
+      "noEncuentra": "Lot not found? Enter the code by hand"
+    },
+    "decision": {
+      "titulo": "Rule-based suggestion",
+      "subtitulo": "Based on the 5 filters, the automatic lookup, the site visit and the financial analysis. The committee makes the final call.",
+      "opcion": {
+        "continuar": "Continue",
+        "continuar_condiciones": "Continue with conditions",
+        "descartar": "Don't continue",
+        "falta_informacion": "Missing information"
+      },
+      "explica": {
+        "continuar": "The property passes every filter and no conditions are open.",
+        "continuar_condiciones": "The property has potential, with conditions to resolve before committing resources.",
+        "descartar": "There is a veto or the potential is low. Review the reasons before closing.",
+        "falta_informacion": "There isn't enough data yet to suggest a decision."
+      },
+      "razones": "Why",
+      "condiciones": "Conditions to move forward",
+      "alertas": "Alerts",
+      "faltantes": "What's missing"
+    },
+    "visitaAnalisis": {
+      "titulo": "Site visit",
+      "sinVisita": "No scored visit yet.",
+      "ir": "Go to the visit"
+    },
+    "analista": {
+      "titulo": "AI analyst",
+      "global": "Overall score",
+      "uso": "Best-fitting use",
+      "meta": "Analysis from {fecha} · model {modelo}. Updates when the property is analyzed and when the visit is saved.",
+      "sinAnalisis": "No analysis yet. It runs in step 3, \"Analyze the property\", or request it now.",
+      "sinLlave": "The AI analyst is off: the OpenRouter key isn't set in Vercel. The rule-based suggestion keeps working meanwhile.",
+      "pedir": "Request analysis",
+      "actualizar": "Update analysis",
+      "analizando": "Analyzing the file…",
+      "peso": "weight {n}%",
+      "evidencias": "{n, plural, one {# piece of evidence} other {# pieces of evidence}}",
+      "condiciones": "Conditions to move forward",
+      "pasos": "Next steps",
+      "faltantes": "Data that would change the score",
+      "aviso": "Computed by an AI model using only the record's data, with no names or ID numbers. Check the evidence: the committee makes the final call.",
+      "confianza": {
+        "alta": "high confidence",
+        "media": "medium confidence",
+        "baja": "low confidence"
+      },
+      "dimension": {
+        "ubicacion": "Location",
+        "estado_fisico": "Physical condition",
+        "entorno": "Surroundings",
+        "norma": "Planning and heritage",
+        "juridico": "Legal status",
+        "cumplimiento": "Money laundering",
+        "mercado": "Market",
+        "financiero": "Financial"
+      },
+      "error": {
+        "sinLlave": "The OpenRouter key isn't set in Vercel.",
+        "fallo": "The analyst didn't respond. Try again in a minute.",
+        "demo": "Not available in the demo."
+      }
+    },
+    "flujo": {
+      "titulo": "Study workflow",
+      "texto": "Five steps in order. Step 3 reads the documents, queries official sources and runs the AI analyst.",
+      "p1": "Register the building",
+      "p1d": "Done on {fecha}",
+      "p2": "Upload the certificate of title",
+      "p2d": "{n, plural, =0 {Certificate of title missing} other {Certificate uploaded}}. The cadastral one is optional.",
+      "p3": "Analyze the property",
+      "p3d": "Last run: {fecha} · {ok} of {total} sources responded",
+      "p3pendiente": "Reads the documents and queries Cadastre, POT 555, DADEP and the Botanical Garden.",
+      "p4": "Site visit",
+      "p4d": "{n} of 6 sections scored. Saving it makes the analyst score again.",
+      "p5": "AI analyst",
+      "p5d": "{fecha} · score {puntaje}/100",
+      "p5pendiente": "Runs after step 3 and every time the visit is saved.",
+      "p5sinLlave": "Off: the OpenRouter key is missing.",
+      "analizar": "Analyze the property",
+      "repetir": "Analyze again",
+      "paso1": "1 of 2 · Reading documents and querying sources…",
+      "paso2": "2 of 2 · The AI analyst is scoring…",
+      "espera": "It can take up to 3 minutes. Keep this page open.",
+      "listo": "Done: documents read, sources queried and analyst score updated.",
+      "listoSinIa": "Done: documents read and sources queried.",
+      "ver": "View →",
+      "estado": {
+        "hecho": "done",
+        "en_curso": "in progress",
+        "pendiente": "pending"
+      },
+      "error": {
+        "sinLote": "The lot wasn't found: upload the certificate of title (it has the cadastral code) or enter the lot code in Sources.",
+        "sinRespuesta": "Cadastre didn't respond. Try again in a few minutes.",
+        "invalido": "Check the building's data.",
+        "demo": "Not available in the demo.",
+        "ia": "The AI analyst didn't respond (free models get saturated). Request it again in a few minutes from Analysis."
+      }
     }
   }
 }

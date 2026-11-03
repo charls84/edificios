@@ -41,6 +41,7 @@ function Criterio({ edificioId, c, ev }: { edificioId: string; c: CriterioFiltro
         <span className="mr-1.5 font-mono text-xs text-medio-texto">{c.codigo}</span>
         {tx(c.texto, locale)}
         {c.veto && <span className="ml-1.5 rounded-full bg-rojo-claro px-2 py-0.5 text-xs font-semibold text-rojo-oscuro">{t('veto')}</span>}
+        {ev?.auto && <span className="ml-1.5 rounded-full bg-torna/10 px-2 py-0.5 text-xs font-semibold text-torna" title={t('autoAyuda')}>{t('auto')}</span>}
       </p>
       <p className="mt-0.5 text-xs text-medio-texto">{t('fuente', { fuente: tx(c.fuente, locale) })}</p>
       <div role="group" aria-label={t('puntajeDe', { criterio: c.codigo })} className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-3">
@@ -138,7 +139,7 @@ export function FiltrosTorna({ edificioId, evaluaciones }: { edificioId: string;
             <span className="text-xs text-medio-texto">{t('peso', { peso: f.peso })}</span>
           </div>
           <ul className="mt-2 divide-y divide-borde">
-            {f.criterios.map((c) => <Criterio key={c.codigo} edificioId={edificioId} c={c} ev={por.get(c.codigo)} />)}
+            {f.criterios.map((c) => <Criterio key={`${c.codigo}-${por.get(c.codigo)?.nota ?? ''}`} edificioId={edificioId} c={c} ev={por.get(c.codigo)} />)}
           </ul>
         </section>
       ))}

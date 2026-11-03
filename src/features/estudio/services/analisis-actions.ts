@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 import { z } from 'zod'
 import type { InformeVisita } from '@/features/ficha/types'
 import { createClient } from '@/lib/supabase/server'
@@ -9,6 +10,10 @@ import { requireProfile } from '@/shared/lib/session'
 import { correrMayorMejorUso, faltantesMayorMejorUso, PARAMETROS_DEFAULT } from '../lib/finanzas'
 import { correrTamizaje, puedeCorrerTamizaje } from '../lib/tamizaje'
 import { calcularFiltros } from '../lib/filtros'
+import { esPuntaje, resumirVisita, sugerenciasDeVisita } from '@/features/visita/lib/calificacion'
+import { PREFIJO_AUTO } from '../lib/auto'
+import { correrAnalista } from './analista'
+import { aplicarFiltrosAuto } from './auto-aplicar'
 import { getDocumentos, getFiltros, getItemsGuia, getUsos } from './consultas'
 
 // Los dos activadores del estudio. Cada corrida se guarda en `analyses`;
@@ -72,6 +77,8 @@ export async function correrMayorMejorUsoAction(buildingId: string, parametros: 
 export async function guardarInformeVisita(buildingId: string, informe: InformeVisita): Promise<Resultado> {
   if (IS_DEMO) return { error: 'demo' }
   if (!uuid.safeParse(buildingId).success) return { error: 'invalido' }
+  // Las calificaciones deben ser enteros de 0 a 10
+  if (!Array.isArray(informe?.secciones) || informe.secciones.some((s) => s.puntaje != null && !esPuntaje(s.puntaje))) return { error: 'invalido' }
   const profile = await requireProfile()
   const supabase = await createClient()
   const { data } = await supabase.from('visit_notes').select('id').eq('building_id', buildingId).limit(1).maybeSingle()
@@ -87,6 +94,13 @@ export async function guardarInformeVisita(buildingId: string, informe: InformeV
     { building_id: buildingId, codigo: 'G01', estado: 'cargado', updated_by: profile.id, updated_at: new Date().toISOString() },
     { onConflict: 'building_id,codigo', ignoreDuplicates: true }
   )
+  // Las calificaciones de estructura y redes alimentan los filtros E1 y E5 (si el equipo no los puntuó)
+  await aplicarFiltrosAuto(supabase, buildingId, sugerenciasDeVisita(resumirVisita(informe)).map((x) => ({ ...x, nota: PREFIJO_AUTO + x.nota })))
+  // Con la visita nueva, el analista IA vuelve a puntuar (después de responder)
+  after(async () => {
+    await correrAnalista(buildingId).catch(() => null)
+    revalidatePath(`/edificios/${buildingId}`, 'layout')
+  })
   revalidatePath(`/edificios/${buildingId}`, 'layout')
   return {}
 }

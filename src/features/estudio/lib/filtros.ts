@@ -11,6 +11,8 @@ export interface EvaluacionCriterio {
   codigo: string
   puntaje: Puntaje | null
   nota: string | null
+  /** Lo puso la plataforma (consulta automática o visita); el equipo puede cambiarlo */
+  auto?: boolean
 }
 
 export type Lectura = 'alto' | 'medio' | 'bajo' | 'descartar' | 'incompleto'
