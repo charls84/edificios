@@ -30,6 +30,8 @@ interface Props {
   filtros: EvaluacionCriterio[]
   fuentes: Record<string, { texto: string; fecha: string }>
   decision: SugerenciaDecision
+  /** Tarjeta del analista de IA (se arma en la página) */
+  ia: React.ReactNode
 }
 
 type Paso = { n: number; titulo: string; estado: 'hecho' | 'en_curso' | 'pendiente'; detalle: string; href: string }
@@ -39,7 +41,7 @@ function siguientePaso(pasos: Paso[]) {
 }
 
 // Pestaña Resumen: donde va el estudio y cual es el siguiente paso
-export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros, fuentes, decision }: Props) {
+export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros, fuentes, decision, ia }: Props) {
   const [t, locale] = await Promise.all([getTranslations('estudio.resumen'), getLocale()])
   const base = `/edificios/${edificio.id}`
   const pd = progresoDocumentos(docs)
@@ -74,6 +76,7 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
       {fotos.length > 0 && <div className="md:col-span-4"><Galeria fotos={fotos} titulo={edificio.nombre} /></div>}
 
+      {ia}
       <DecisionSugerida sugerencia={decision} className="md:col-span-4" />
       {visita && visita.calificadas > 0 && (
         <section className="bento md:col-span-4" aria-labelledby="visita-resumen">

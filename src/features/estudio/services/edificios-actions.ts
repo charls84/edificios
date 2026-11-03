@@ -9,6 +9,7 @@ import type { ActionState } from '@/features/auth/types'
 import { createClient } from '@/lib/supabase/server'
 import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
+import { correrAnalista } from './analista'
 import { consultarYAplicar } from './auto-aplicar'
 
 const texto = (max: number) => z.string().trim().max(max)
@@ -75,6 +76,7 @@ export async function crearEdificio(_prev: ActionState, formData: FormData): Pro
   after(async () => {
     try {
       await consultarYAplicar(supabase, id)
+      await correrAnalista(id)
       revalidatePath(`/edificios/${id}`, 'layout')
     } catch {
       // Si falla, el equipo la lanza desde la pestaña Fuentes

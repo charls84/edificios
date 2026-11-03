@@ -12,8 +12,10 @@
     "demo": "cross-env NEXT_PUBLIC_DEMO_MODE=1 next dev --port 3000"
   },
   "dependencies": {
+    "@openrouter/ai-sdk-provider": "^1.5.4",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.49.0",
+    "ai": "^5.0.285",
     "maplibre-gl": "^5.24.0",
     "next": "^16.0.0",
     "next-intl": "^4.14.9",

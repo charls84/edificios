@@ -11,7 +11,8 @@ import { CRITERIOS_FILTROS } from '../catalogo/filtros'
 import { CAMPOS_FUENTES } from '../catalogo/fuentes'
 import { ITEMS_GUIA } from '../catalogo/guia'
 import { CATEGORIAS_USO } from '../catalogo/usos'
-import { leerYAplicarCertificado } from './certificado'
+import { correrAnalista } from './analista'
+import { consultarYAplicar } from './auto-aplicar'
 
 // Acciones del estudio: estado de documentos, archivos, checklist de la guia y usos.
 // Todas devuelven { error } en vez de lanzar, para mostrar el aviso en la pantalla.
@@ -87,11 +88,12 @@ export async function registrarArchivo(entrada: z.infer<typeof archivoSchema>): 
       { onConflict: 'building_id,codigo' }
     )
   }
-  // El certificado de tradición se lee solo: lavado de activos (SAE), H1 y A1
-  if (codigo === 'F01') {
+  // Los dos documentos base se leen solos y se cruzan con Catastro (SAE, H1, H2, H3, A1, A2, A7)
+  if (codigo === 'F01' || codigo === 'F03') {
     after(async () => {
       try {
-        await leerYAplicarCertificado(supabase, buildingId)
+        await consultarYAplicar(supabase, buildingId)
+        await correrAnalista(buildingId)
         refrescar(buildingId)
       } catch {
         // Si no se puede leer (PDF escaneado), el equipo llena la fuente SAE a mano

@@ -27,6 +27,7 @@ interface Props {
   mmu: AnalisisGuardado<ResultadoMayorMejorUso> | null
   fuentes: Record<string, { texto: string; fecha: string }>
   decision: SugerenciaDecision
+  ia: React.ReactNode
 }
 
 const ESTADO_COLOR: Record<EstadoItemEdificio['estado'], string> = {
@@ -67,7 +68,7 @@ async function Bloque({ codigo, estados }: { codigo: string; estados: Map<string
 }
 
 // Informe de viabilidad: los 10 capitulos de la guia (seccion 07), armados con lo que hay en la ficha
-export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu, fuentes, decision }: Props) {
+export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu, fuentes, decision, ia }: Props) {
   const [t, tf, locale] = await Promise.all([getTranslations('estudio.informe'), getTranslations('estudio.filtros'), getLocale()])
   const estados = new Map(items.map((i) => [i.codigo, i]))
   const estadoDoc = new Map(docs.map((d) => [d.codigo, d]))
@@ -96,6 +97,7 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
       {!mmu && <p className="rounded-xl bg-ambar-claro px-4 py-3 text-sm">{t('borrador')}</p>}
 
       <Capitulo n={1} titulo={t('cap.1')}>
+        {ia}
         <DecisionSugerida sugerencia={decision} className="border-0 p-0 shadow-none" />
         {recomendado ? (
           <>

@@ -111,6 +111,7 @@ export const DOCUMENTOS: DocumentoCatalogo[] = [
     detalle: { es: 'Si hubo propiedad horizontal o segregaciones.', en: 'If there was a condominium regime or subdivisions.' },
   }),
   d('F03', 'publicas', 'publicas', 'en_linea', 'Certificado catastral: área de terreno, área construida, uso, CHIP y avalúo', 'Cadastral certificate: lot area, built area, use, CHIP and assessed value', {
+    minimo: true,
     detalle: { es: 'Catastro Bogotá en línea, con registro.', en: 'Bogotá Cadastre online, with registration.' },
   }),
   d('F04', 'publicas', 'publicas', 'en_linea', 'Consulta de norma urbana en Mapas Bogotá', 'Urban planning lookup in Mapas Bogotá', {

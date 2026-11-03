@@ -2,7 +2,7 @@ import 'server-only'
 import type { createClient } from '@/lib/supabase/server'
 import { PREFIJO_AUTO, sugerenciasDeConsulta, type SugerenciaFiltro, type SugerenciaItem } from '../lib/auto'
 import type { ConsultaPredio } from '../types'
-import { leerYAplicarCertificado } from './certificado'
+import { aplicarCruces, leerCatastralGuardado, leerYAplicarCertificado } from './certificado'
 import { consultarPredio } from './gis/consulta-predio'
 
 // Escribe lo que la plataforma encontró sola sin pisar el trabajo del equipo:
@@ -54,13 +54,18 @@ export interface ResultadoAuto {
 
 /** Consulta las capas oficiales, guarda el resultado y llena lo que falte en la ficha */
 export async function consultarYAplicar(supabase: SupabaseClient, buildingId: string, codigoLote?: string | null): Promise<ResultadoAuto | null> {
-  const { data } = await supabase.from('buildings').select('direccion, lat, lng, zona').eq('id', buildingId).maybeSingle()
-  const b = data as { direccion: string; lat: number | null; lng: number | null; zona: string | null } | null
+  const { data } = await supabase.from('buildings').select('direccion, chip, lat, lng, zona').eq('id', buildingId).maybeSingle()
+  const b = data as { direccion: string; chip: string | null; lat: number | null; lng: number | null; zona: string | null } | null
   if (!b) return null
 
-  // El certificado de tradición se lee aparte: no depende de encontrar el lote
-  const certificado = await leerYAplicarCertificado(supabase, buildingId).catch(() => 0)
-  const consulta = await consultarPredio(b.direccion, codigoLote)
+  // Los documentos base se leen aparte: no dependen de encontrar el lote
+  const [cert, catastral, consulta] = await Promise.all([
+    leerYAplicarCertificado(supabase, buildingId).catch(() => ({ lectura: null, aplicados: 0 })),
+    leerCatastralGuardado(supabase, buildingId).catch(() => null),
+    consultarPredio(b.direccion, codigoLote),
+  ])
+  const cruces = await aplicarCruces(supabase, buildingId, cert.lectura, catastral, consulta.lote ? consulta : null, b.chip).catch(() => 0)
+  const certificado = cert.aplicados + cruces
   await supabase.from('data_points').upsert(
     { building_id: buildingId, categoria: 'auto', clave: 'consulta', valor: consulta, estado: 'automatico', fecha_consulta: consulta.fecha },
     { onConflict: 'building_id,categoria,clave' }

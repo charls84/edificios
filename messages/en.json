@@ -317,7 +317,7 @@
     },
     "documentos": {
       "titulo": "Documents to upload",
-      "texto": "Only the certificate of title is needed. The CHIP is already on the record and the platform looks up the rest on its own.",
+      "texto": "Only two documents are uploaded: the certificate of title and the cadastral certificate. The platform reads them and looks up the rest in official sources.",
       "filtroMinimo": "Only what the screening needs",
       "filtroNoAplica": "Hide those that do not apply",
       "progresoMinimo": "Documents uploaded",
@@ -356,8 +356,9 @@
         "Transit, universities and block use · Cadastre",
         "Public space · DADEP",
         "Trees and protected species · Botanical Garden",
-        "Asset forfeiture, attachments and lawsuits · read from the certificate",
-        "Building condition · scored site visit"
+        "Asset forfeiture, attachments, lawsuits and number of owners · read from the certificate of title",
+        "Building condition · scored site visit",
+        "Areas, assessed value and use, cross-checked between registry and Cadastre · read from the cadastral certificate"
       ],
       "verFuentes": "See what it found →",
       "opcionalesTitulo": "Other documents (optional)",
@@ -548,7 +549,7 @@
     "resumen": {
       "pasos": {
         "matricula": "Registered",
-        "minimo": "Certificate and lookups",
+        "minimo": "Documents and lookups",
         "usos": "Candidate uses",
         "tamizaje": "Screening",
         "detallado": "Detailed study",
@@ -601,9 +602,9 @@
       "potencialDe": "{n}/100 · {lectura}",
       "verFiltros": "Score the 5 filters →",
       "certificadoYFuentes": "{cert} · {a} of {b} sources",
-      "certificadoListo": "Certificate uploaded",
-      "certificadoFalta": "Certificate missing",
-      "soloCertificado": "Only the certificate of title is uploaded. The platform looks up the rest."
+      "certificadoListo": "Base documents uploaded",
+      "certificadoFalta": "Base documents missing",
+      "soloCertificado": "Only the certificate of title and the cadastral certificate are uploaded. The platform looks up the rest."
     },
     "informe": {
       "etiqueta": "Feasibility report · Highest and best use",
@@ -766,7 +767,7 @@
       }
     },
     "decision": {
-      "titulo": "Suggested decision",
+      "titulo": "Rule-based suggestion",
       "subtitulo": "Based on the 5 filters, the automatic lookup, the site visit and the financial analysis. The committee makes the final call.",
       "opcion": {
         "continuar": "Continue",
@@ -789,6 +790,43 @@
       "titulo": "Site visit",
       "sinVisita": "No scored visit yet.",
       "ir": "Go to the visit"
+    },
+    "analista": {
+      "titulo": "AI analyst",
+      "global": "Overall score",
+      "uso": "Best-fitting use",
+      "meta": "Analysis from {fecha} · model {modelo}. Updates on its own when documents are uploaded or the visit is saved.",
+      "sinAnalisis": "No analysis yet. It runs on its own when the base documents are uploaded, or request it now.",
+      "sinLlave": "The AI analyst is off: the OpenRouter key isn't set in Vercel. The rule-based suggestion keeps working meanwhile.",
+      "pedir": "Request analysis",
+      "actualizar": "Update analysis",
+      "analizando": "Analyzing the file…",
+      "peso": "weight {n}%",
+      "evidencias": "{n, plural, one {# piece of evidence} other {# pieces of evidence}}",
+      "condiciones": "Conditions to move forward",
+      "pasos": "Next steps",
+      "faltantes": "Data that would change the score",
+      "aviso": "Computed by an AI model using only the record's data, with no names or ID numbers. Check the evidence: the committee makes the final call.",
+      "confianza": {
+        "alta": "high confidence",
+        "media": "medium confidence",
+        "baja": "low confidence"
+      },
+      "dimension": {
+        "ubicacion": "Location",
+        "estado_fisico": "Physical condition",
+        "entorno": "Surroundings",
+        "norma": "Planning and heritage",
+        "juridico": "Legal status",
+        "cumplimiento": "Money laundering",
+        "mercado": "Market",
+        "financiero": "Financial"
+      },
+      "error": {
+        "sinLlave": "The OpenRouter key isn't set in Vercel.",
+        "fallo": "The analyst didn't respond. Try again in a minute.",
+        "demo": "Not available in the demo."
+      }
     }
   }
 }

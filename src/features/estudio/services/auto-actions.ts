@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { IS_DEMO } from '@/shared/lib/demo'
 import { requireProfile } from '@/shared/lib/session'
+import { correrAnalista } from './analista'
 import { consultarYAplicar } from './auto-aplicar'
 
 // Botón "Consultar automáticamente": vuelve a cruzar el predio con las capas oficiales.
@@ -26,4 +27,14 @@ export async function consultarAutomaticamente(datos: z.infer<typeof entrada>): 
   revalidatePath(`/edificios/${parsed.data.buildingId}`, 'layout')
   if (!r.consulta.lote) return { error: r.consulta.estado.ubicacion?.estado === 'error' || r.consulta.estado.lote?.estado === 'error' ? 'sinRespuesta' : 'sinLote' }
   return { aplicados: r.aplicados }
+}
+
+// Botón "Pedir análisis al analista IA"
+export async function pedirAnalisisIA(buildingId: string): Promise<{ error?: string }> {
+  if (IS_DEMO) return { error: 'demo' }
+  if (!z.uuid().safeParse(buildingId).success) return { error: 'invalido' }
+  await requireProfile()
+  const r = await correrAnalista(buildingId)
+  revalidatePath(`/edificios/${buildingId}`, 'layout')
+  return r.ok ? {} : { error: r.error }
 }

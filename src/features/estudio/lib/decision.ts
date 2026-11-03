@@ -55,6 +55,7 @@ const cargado = (docs: EstadoDocumentoEdificio[], codigo: string) =>
 function faltantes(e: EntradaDecision): Texto[] {
   const f: Texto[] = []
   if (!cargado(e.docs, 'F01')) f.push(t('Certificado de tradición y libertad (revela embargos, demandas y propietarios)', 'Certificate of title (shows liens, lawsuits and owners)'))
+  if (!cargado(e.docs, 'F03')) f.push(t('Certificado catastral (áreas, avalúo y destino para cruzar con el registro)', 'Cadastral certificate (areas, assessed value and use to cross-check the registry)'))
   if (!e.consulta?.lote) f.push(t('Consulta automática del predio en Catastro (revisar la dirección o el código de lote)', 'Automatic cadastre lookup (check the address or lot code)'))
   if (!e.visita || e.visita.calificadas < CLAVES_VISITA.length) f.push(t('Visita técnica con las seis secciones calificadas', 'Site visit with all six sections scored'))
   if (!e.sae.inventario) f.push(t('Verificación en la SAE de lavado de activos y extinción de dominio', 'SAE check for money laundering and asset forfeiture'))

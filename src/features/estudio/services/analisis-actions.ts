@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 import { z } from 'zod'
 import type { InformeVisita } from '@/features/ficha/types'
 import { createClient } from '@/lib/supabase/server'
@@ -11,6 +12,7 @@ import { correrTamizaje, puedeCorrerTamizaje } from '../lib/tamizaje'
 import { calcularFiltros } from '../lib/filtros'
 import { esPuntaje, resumirVisita, sugerenciasDeVisita } from '@/features/visita/lib/calificacion'
 import { PREFIJO_AUTO } from '../lib/auto'
+import { correrAnalista } from './analista'
 import { aplicarFiltrosAuto } from './auto-aplicar'
 import { getDocumentos, getFiltros, getItemsGuia, getUsos } from './consultas'
 
@@ -94,6 +96,11 @@ export async function guardarInformeVisita(buildingId: string, informe: InformeV
   )
   // Las calificaciones de estructura y redes alimentan los filtros E1 y E5 (si el equipo no los puntuó)
   await aplicarFiltrosAuto(supabase, buildingId, sugerenciasDeVisita(resumirVisita(informe)).map((x) => ({ ...x, nota: PREFIJO_AUTO + x.nota })))
+  // Con la visita nueva, el analista IA vuelve a puntuar (después de responder)
+  after(async () => {
+    await correrAnalista(buildingId).catch(() => null)
+    revalidatePath(`/edificios/${buildingId}`, 'layout')
+  })
   revalidatePath(`/edificios/${buildingId}`, 'layout')
   return {}
 }

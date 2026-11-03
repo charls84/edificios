@@ -317,7 +317,7 @@
     },
     "documentos": {
       "titulo": "Documentos que hay que cargar",
-      "texto": "Solo se necesita el certificado de tradición y libertad. El CHIP ya está en la ficha y lo demás lo busca la plataforma sola.",
+      "texto": "Solo se cargan dos documentos: el certificado de tradición y libertad y el certificado catastral. La plataforma los lee solos y busca el resto en las fuentes oficiales.",
       "filtroMinimo": "Solo lo necesario para el tamizaje",
       "filtroNoAplica": "Ocultar los que no aplican",
       "progresoMinimo": "Documentos cargados",
@@ -356,8 +356,9 @@
         "Transporte, universidades y uso de la manzana · Catastro",
         "Espacio público · DADEP",
         "Árboles y especies protegidas · Jardín Botánico",
-        "Extinción de dominio, embargos y demandas · se leen del certificado",
-        "Estado del edificio · visita técnica calificada"
+        "Extinción de dominio, embargos, demandas y número de dueños · se leen del certificado de tradición",
+        "Estado del edificio · visita técnica calificada",
+        "Áreas, avalúo y destino, cruzados entre registro y Catastro · se leen del certificado catastral"
       ],
       "verFuentes": "Ver lo que encontró →",
       "opcionalesTitulo": "Otros documentos (opcional)",
@@ -548,7 +549,7 @@
     "resumen": {
       "pasos": {
         "matricula": "Matriculado",
-        "minimo": "Certificado y consultas",
+        "minimo": "Documentos y consultas",
         "usos": "Usos candidatos",
         "tamizaje": "Tamizaje",
         "detallado": "Estudio detallado",
@@ -601,9 +602,9 @@
       "potencialDe": "{n}/100 · {lectura}",
       "verFiltros": "Evaluar los 5 filtros →",
       "certificadoYFuentes": "{cert} · {a} de {b} fuentes",
-      "certificadoListo": "Certificado cargado",
-      "certificadoFalta": "Falta el certificado",
-      "soloCertificado": "Solo se carga el certificado de tradición. Lo demás lo busca la plataforma."
+      "certificadoListo": "Documentos base cargados",
+      "certificadoFalta": "Faltan documentos base",
+      "soloCertificado": "Solo se cargan el certificado de tradición y el catastral. Lo demás lo busca la plataforma."
     },
     "informe": {
       "etiqueta": "Informe de viabilidad · Mayor y mejor uso",
@@ -766,7 +767,7 @@
       }
     },
     "decision": {
-      "titulo": "Sugerencia de decisión",
+      "titulo": "Sugerencia por reglas",
       "subtitulo": "Sale de los 5 filtros, la consulta automática, la visita y el análisis financiero. La decisión final es del comité.",
       "opcion": {
         "continuar": "Continuar",
@@ -789,6 +790,43 @@
       "titulo": "Visita técnica",
       "sinVisita": "Aún no hay visita calificada.",
       "ir": "Ir a la visita"
+    },
+    "analista": {
+      "titulo": "Analista de IA",
+      "global": "Puntaje global",
+      "uso": "Uso que mejor encaja",
+      "meta": "Análisis del {fecha} · modelo {modelo}. Se actualiza solo al cargar documentos o guardar la visita.",
+      "sinAnalisis": "Aún no hay análisis. Se hace solo al cargar los documentos base, o pídelo ahora.",
+      "sinLlave": "El analista de IA no está activo: falta configurar la llave de OpenRouter en Vercel. Mientras tanto, la sugerencia por reglas sigue funcionando.",
+      "pedir": "Pedir análisis",
+      "actualizar": "Actualizar análisis",
+      "analizando": "Analizando el expediente…",
+      "peso": "peso {n} %",
+      "evidencias": "{n, plural, one {# evidencia} other {# evidencias}}",
+      "condiciones": "Condiciones para avanzar",
+      "pasos": "Próximos pasos",
+      "faltantes": "Datos que cambiarían el puntaje",
+      "aviso": "Lo calcula un modelo de IA solo con los datos de la ficha, sin nombres ni cédulas. Revisa las evidencias: la decisión final es del comité.",
+      "confianza": {
+        "alta": "confianza alta",
+        "media": "confianza media",
+        "baja": "confianza baja"
+      },
+      "dimension": {
+        "ubicacion": "Ubicación",
+        "estado_fisico": "Estado físico",
+        "entorno": "Entorno",
+        "norma": "Norma y patrimonio",
+        "juridico": "Situación jurídica",
+        "cumplimiento": "Lavado de activos",
+        "mercado": "Mercado",
+        "financiero": "Financiero"
+      },
+      "error": {
+        "sinLlave": "Falta configurar la llave de OpenRouter en Vercel.",
+        "fallo": "El analista no respondió. Intenta de nuevo en un minuto.",
+        "demo": "No disponible en el demo."
+      }
     }
   }
 }

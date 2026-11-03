@@ -2,6 +2,9 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { DecisionSugerida } from '@/features/estudio/components/decision-sugerida'
+import { AnalistaIA } from '@/features/estudio/components/analista-ia'
+import { getAnalisisIA } from '@/features/estudio/services/analista'
+import { IA_DISPONIBLE } from '@/shared/lib/ai'
 import { getDecision } from '@/features/estudio/services/decision'
 import { CalificacionVisita } from '@/features/visita/components/calificacion-visita'
 import { resumirVisita } from '@/features/visita/lib/calificacion'
@@ -15,7 +18,7 @@ import { IS_DEMO } from '@/shared/lib/demo'
 export default async function AnalisisPage({ params }: { params: Promise<{ id: string }> }) {
   if (IS_DEMO) notFound()
   const { id } = await params
-  const [docs, items, usos, tamizaje, mmu, decision, informe, t] = await Promise.all([
+  const [docs, items, usos, tamizaje, mmu, decision, informe, t, ia] = await Promise.all([
     getDocumentos(id),
     getItemsGuia(id),
     getUsos(id),
@@ -24,11 +27,13 @@ export default async function AnalisisPage({ params }: { params: Promise<{ id: s
     getDecision(id),
     getInformeVisita(id),
     getTranslations('estudio.visitaAnalisis'),
+    getAnalisisIA(id),
   ])
   const visita = resumirVisita(informe)
 
   return (
     <div className="space-y-4">
+      <AnalistaIA edificioId={id} analisis={ia} disponible={IA_DISPONIBLE} />
       <DecisionSugerida sugerencia={decision} />
       <section className="bento" aria-labelledby="visita-analisis">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
