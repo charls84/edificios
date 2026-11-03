@@ -317,10 +317,10 @@
     },
     "documentos": {
       "titulo": "Documentos que hay que cargar",
-      "texto": "Solo se cargan dos documentos: el certificado de tradición y libertad y el certificado catastral. La plataforma los lee solos y busca el resto en las fuentes oficiales.",
+      "texto": "Solo es obligatorio el certificado de tradición y libertad: de él salen el código catastral, la matrícula, los dueños y las medidas. El certificado catastral es opcional: suma el avalúo. Lo demás lo busca la plataforma.",
       "filtroMinimo": "Solo lo necesario para el tamizaje",
       "filtroNoAplica": "Ocultar los que no aplican",
-      "progresoMinimo": "Documentos cargados",
+      "progresoMinimo": "Documento obligatorio",
       "progresoTotal": "Todos los documentos",
       "leyenda": "En línea: se descarga o consulta por internet · Parcial: se consulta en línea, pero el documento completo se pide aparte · No en línea: lo tiene el propietario o hay que generarlo.",
       "minimo": "Necesario",
@@ -366,7 +366,8 @@
       "verOpcionales": "Ver la lista",
       "ocultarOpcionales": "Ocultar la lista",
       "siguientePaso": "Siguiente paso: analizar el predio",
-      "siguientePasoTexto": "Con los documentos cargados, la plataforma los lee, saca el código catastral, consulta las fuentes oficiales y corre el analista de IA."
+      "siguientePasoTexto": "Con los documentos cargados, la plataforma los lee, saca el código catastral, consulta las fuentes oficiales y corre el analista de IA.",
+      "recomendado": "Recomendado"
     },
     "checklist": {
       "titulo": "Checklist de la guía de mayor y mejor uso",
@@ -726,7 +727,7 @@
       "ultima": "Última consulta: {fecha}",
       "nunca": "Aún no se ha consultado este predio.",
       "codigoLote": "Código de lote de Catastro (opcional)",
-      "codigoLoteAyuda": "Úsalo si la dirección no se reconoce. Son 12 dígitos, por ejemplo 003109005017.",
+      "codigoLoteAyuda": "No hace falta: se toma del código catastral del certificado de tradición o de la dirección. Úsalo solo si la consulta dice que no encontró el lote. Son 12 dígitos, por ejemplo 003109005017.",
       "listo": "Consulta lista. Se llenaron {n} datos.",
       "listoSinCambios": "Consulta lista. No había datos vacíos por llenar.",
       "error": {
@@ -766,8 +767,10 @@
         "valor": "Valor de referencia {anio}",
         "estrato": "Estrato {n}",
         "estacion": "{nombre} a {m} m",
-        "unidades": "{n} unidades prediales"
-      }
+        "unidades": "{n} unidades prediales",
+        "construida": "Área construida (estimada)"
+      },
+      "noEncuentra": "¿No encontró el lote? Escribe el código a mano"
     },
     "decision": {
       "titulo": "Sugerencia por reglas",
@@ -836,8 +839,8 @@
       "texto": "Cinco pasos en orden. El paso 3 lee los documentos, consulta las fuentes oficiales y corre el analista de IA.",
       "p1": "Matricular el edificio",
       "p1d": "Hecho el {fecha}",
-      "p2": "Cargar documentos base",
-      "p2d": "{n} de 2: certificado de tradición y certificado catastral",
+      "p2": "Cargar el certificado de tradición",
+      "p2d": "{n, plural, =0 {Falta el certificado de tradición} other {Certificado cargado}}. El catastral es opcional.",
       "p3": "Analizar el predio",
       "p3d": "Última vez: {fecha} · {ok} de {total} fuentes respondieron",
       "p3pendiente": "Lee los documentos y consulta Catastro, POT 555, DADEP y Jardín Botánico.",

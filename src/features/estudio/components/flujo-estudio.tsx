@@ -8,7 +8,7 @@ type Estado = 'hecho' | 'en_curso' | 'pendiente'
 export interface DatosFlujo {
   edificioId: string
   creado: string
-  /** Documentos base cargados (de 2) */
+  /** Certificado de tradición cargado (0 o 1) */
   documentosBase: number
   /** Fecha de la última consulta en línea y cuántas fuentes respondieron */
   consulta: { fecha: string; ok: number; total: number } | null
@@ -26,7 +26,7 @@ export async function FlujoEstudio({ d, className = '' }: { d: DatosFlujo; class
   const base = `/edificios/${d.edificioId}`
   const pasos: { estado: Estado; titulo: string; detalle: string; href?: string; accion?: React.ReactNode }[] = [
     { estado: 'hecho', titulo: t('p1'), detalle: t('p1d', { fecha: fecha(locale, d.creado) }), href: `${base}/editar` },
-    { estado: d.documentosBase === 2 ? 'hecho' : d.documentosBase > 0 ? 'en_curso' : 'pendiente', titulo: t('p2'), detalle: t('p2d', { n: d.documentosBase }), href: `${base}/documentos` },
+    { estado: d.documentosBase >= 1 ? 'hecho' : 'pendiente', titulo: t('p2'), detalle: t('p2d', { n: d.documentosBase }), href: `${base}/documentos` },
     {
       estado: d.consulta ? 'hecho' : 'pendiente',
       titulo: t('p3'),

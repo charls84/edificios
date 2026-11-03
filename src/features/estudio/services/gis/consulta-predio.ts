@@ -204,8 +204,19 @@ export async function consultarPredio(direccion: string, codigoManual?: string |
     paso(estado, 'reserva_vial', () => reservaVial(a), (v) => !v),
     paso(estado, 'plusvalia', async () => (await cruzar(C.plusvalia, [a])).length > 0, () => false),
     paso(estado, 'construccion', async () => {
-      const rs = await consultar(C.construccion, { where: `LOTECODIGO = '${codigo}'` })
-      return rs.length ? { pisos: Math.max(...rs.map((r) => Number(r.attributes.CONNPISOS) || 0)), sotanos: Math.max(...rs.map((r) => Number(r.attributes.CONNSOTANO) || 0)) } : null
+      const rs = await consultar(C.construccion, { where: `LOTECODIGO = '${codigo}'`, returnGeometry: 'true', outSR: '4326' })
+      if (!rs.length) return null
+      // Área construida estimada: huella de cada construcción × (pisos + sótanos)
+      const area = rs.reduce((acc, r) => {
+        const anillo = r.geometry?.rings?.[0]
+        const niveles = (Number(r.attributes.CONNPISOS) || 0) + (Number(r.attributes.CONNSOTANO) || 0)
+        return acc + (anillo ? areaM2(anillo) * niveles : 0)
+      }, 0)
+      return {
+        pisos: Math.max(...rs.map((r) => Number(r.attributes.CONNPISOS) || 0)),
+        sotanos: Math.max(...rs.map((r) => Number(r.attributes.CONNSOTANO) || 0)),
+        areaConstruidaM2: area > 0 ? Math.round(area) : null,
+      }
     }, (v) => !v),
     paso(estado, 'manzana', () => manzana(a, l.manzana), (v) => !v),
     paso(estado, 'upl', () => capaSimple(C.upl, a, 'NOMBRE'), (v) => !v),

@@ -317,10 +317,10 @@
     },
     "documentos": {
       "titulo": "Documents to upload",
-      "texto": "Only two documents are uploaded: the certificate of title and the cadastral certificate. The platform reads them and looks up the rest in official sources.",
+      "texto": "Only the certificate of title is required: it gives the cadastral code, registration number, owners and measures. The cadastral certificate is optional: it adds the assessed value. The platform looks up the rest.",
       "filtroMinimo": "Only what the screening needs",
       "filtroNoAplica": "Hide those that do not apply",
-      "progresoMinimo": "Documents uploaded",
+      "progresoMinimo": "Required document",
       "progresoTotal": "All documents",
       "leyenda": "Online: downloaded or looked up on the internet · Partial: looked up online, but the full document is requested separately · Offline: held by the owner or must be produced.",
       "minimo": "Needed",
@@ -366,7 +366,8 @@
       "verOpcionales": "Show list",
       "ocultarOpcionales": "Hide list",
       "siguientePaso": "Next step: analyze the property",
-      "siguientePasoTexto": "With the documents uploaded, the platform reads them, gets the cadastral code, queries official sources and runs the AI analyst."
+      "siguientePasoTexto": "With the documents uploaded, the platform reads them, gets the cadastral code, queries official sources and runs the AI analyst.",
+      "recomendado": "Recommended"
     },
     "checklist": {
       "titulo": "Highest and best use guide checklist",
@@ -726,7 +727,7 @@
       "ultima": "Last lookup: {fecha}",
       "nunca": "This property hasn't been looked up yet.",
       "codigoLote": "Cadastre lot code (optional)",
-      "codigoLoteAyuda": "Use it if the address isn't recognized. 12 digits, for example 003109005017.",
+      "codigoLoteAyuda": "Not needed: it's taken from the cadastral code on the certificate of title or from the address. Use it only if the lookup says the lot wasn't found. 12 digits, for example 003109005017.",
       "listo": "Lookup done. {n} items filled.",
       "listoSinCambios": "Lookup done. There were no empty items to fill.",
       "error": {
@@ -766,8 +767,10 @@
         "valor": "Reference value {anio}",
         "estrato": "Stratum {n}",
         "estacion": "{nombre}, {m} m away",
-        "unidades": "{n} cadastral units"
-      }
+        "unidades": "{n} cadastral units",
+        "construida": "Built area (estimated)"
+      },
+      "noEncuentra": "Lot not found? Enter the code by hand"
     },
     "decision": {
       "titulo": "Rule-based suggestion",
@@ -836,8 +839,8 @@
       "texto": "Five steps in order. Step 3 reads the documents, queries official sources and runs the AI analyst.",
       "p1": "Register the building",
       "p1d": "Done on {fecha}",
-      "p2": "Upload base documents",
-      "p2d": "{n} of 2: certificate of title and cadastral certificate",
+      "p2": "Upload the certificate of title",
+      "p2d": "{n, plural, =0 {Certificate of title missing} other {Certificate uploaded}}. The cadastral one is optional.",
       "p3": "Analyze the property",
       "p3d": "Last run: {fecha} · {ok} of {total} sources responded",
       "p3pendiente": "Reads the documents and queries Cadastre, POT 555, DADEP and the Botanical Garden.",

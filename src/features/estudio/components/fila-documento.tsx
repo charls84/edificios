@@ -93,6 +93,7 @@ export function FilaDocumento({ edificioId, doc, estado }: Props) {
             <span className="font-mono text-xs text-medio-texto">{doc.codigo}</span>
             {tx(doc.nombre, locale)}
             {doc.minimo && <span className="rounded-full bg-rojo-claro px-2 py-0.5 text-xs font-semibold text-rojo-oscuro">{t('minimo')}</span>}
+            {doc.recomendado && <span className="rounded-full bg-piedra px-2 py-0.5 text-xs font-semibold text-medio-texto">{t('recomendado')}</span>}
             {doc.siAplica && <span className="rounded-full bg-piedra px-2 py-0.5 text-xs text-medio-texto">{t('siAplica')}</span>}
           </p>
           {doc.detalle && <p className="mt-0.5 text-xs text-medio-texto">{tx(doc.detalle, locale)}</p>}

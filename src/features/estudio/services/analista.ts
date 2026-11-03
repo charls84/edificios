@@ -3,9 +3,11 @@ import { generateText } from 'ai'
 import { resumirVisita } from '@/features/visita/lib/calificacion'
 import { createClient } from '@/lib/supabase/server'
 import { IA_DISPONIBLE, modelosAnalista, openrouter } from '@/shared/lib/ai'
+import { CRITERIOS_FILTROS } from '../catalogo/filtros'
 import { CAMPOS_FUENTES } from '../catalogo/fuentes'
 import { ITEMS_GUIA } from '../catalogo/guia'
-import { FORMATO_RESPUESTA, INSTRUCCIONES_ANALISTA, leerRespuestaIA, puntajeGlobal, type AnalisisIAGuardado } from '../lib/analista-ia'
+import { PREFIJO_AUTO } from '../lib/auto'
+import { FORMATO_RESPUESTA, INSTRUCCIONES_ANALISTA, leerRespuestaIA, puntajeGlobal, type AnalisisIA, type AnalisisIAGuardado } from '../lib/analista-ia'
 import { calcularFiltros } from '../lib/filtros'
 import type { ResultadoMayorMejorUso } from '../types'
 import { getConsultaAuto, getDocumentos, getEdificio, getFiltros, getFuentes, getInformeVisita, getItemsGuia, getUltimoAnalisis, getUsos } from './consultas'
@@ -32,6 +34,7 @@ export async function armarExpediente(buildingId: string) {
   ])
   if (!edificio) return null
   const textoItem = new Map(ITEMS_GUIA.map((i) => [i.codigo, i.texto.es]))
+  const puntuados = new Set(filtros.filter((f) => f.puntaje != null).map((f) => f.codigo))
   const textoFuente = new Map(CAMPOS_FUENTES.map((c) => [c.clave, c.texto.es]))
   const visita = resumirVisita(informe)
   const sinAnillo = consulta?.lote ? { ...consulta, lote: { ...consulta.lote, anillo: undefined } } : consulta
@@ -43,6 +46,9 @@ export async function armarExpediente(buildingId: string) {
     certificadoCatastral: lecturas.catastral,
     fuentes: Object.fromEntries(Object.entries(fuentes).map(([k, v]) => [textoFuente.get(k) ?? k, v.texto])),
     filtros: { evaluaciones: filtros.map((f) => ({ criterio: f.codigo, puntaje: f.puntaje, nota: f.nota })), resultado: calcularFiltros(filtros) },
+    criteriosPendientes: CRITERIOS_FILTROS.filter((c) => !puntuados.has(c.codigo)).map((c) => ({
+      codigo: c.codigo, filtro: c.filtro, criterio: c.texto.es, veto: Boolean(c.veto), niveles: c.niveles.map((n, i) => `${i}: ${n.es}`),
+    })),
     checklist: items.filter((i) => i.estado !== 'pendiente').map((i) => ({ item: `${i.codigo} ${textoItem.get(i.codigo) ?? ''}`, estado: i.estado, nota: i.nota })),
     visita: visita && informe ? {
       promedio: visita.promedio,
@@ -54,6 +60,31 @@ export async function armarExpediente(buildingId: string) {
     usosCandidatos: usos.map((u) => ({ nombre: u.nombre, categoria: u.categoria, legal: u.legal, fisico: u.fisico, demanda: u.demanda, m2Netos: u.m2Netos, canonM2: u.canonM2, inversion: u.inversion, riesgo: u.riesgo })),
     analisisFinanciero: mmu?.resultado ?? null,
     sugerenciaPorReglas: { decision: decision.decision, razones: decision.razones.map((r) => r.es), condiciones: decision.condiciones.map((r) => r.es), faltantes: decision.faltantes.map((r) => r.es), alertas: decision.alertas.map((r) => r.es) },
+  }
+}
+
+/**
+ * Lo que el analista propone se escribe solo donde no hay nada: criterios de los 5 filtros
+ * sin puntaje (quedan como "Automático · IA") y usos candidatos si el edificio no tiene.
+ * Las fuentes y las reglas mandan sobre la IA, y el equipo manda sobre todo.
+ */
+async function completarHuecos(supabase: Supabase, buildingId: string, a: AnalisisIA, areaConstruida: number | null) {
+  const { data } = await supabase.from('data_points').select('clave').eq('building_id', buildingId).eq('categoria', 'filtros')
+  const existentes = new Set(((data ?? []) as { clave: string }[]).map((d) => d.clave))
+  const validos = new Set(CRITERIOS_FILTROS.map((c) => c.codigo))
+  const filas = (a.criterios ?? [])
+    .filter((c) => validos.has(c.codigo) && !existentes.has(c.codigo))
+    .map((c) => ({ building_id: buildingId, categoria: 'filtros', clave: c.codigo, valor: { puntaje: c.puntaje, nota: `${PREFIJO_AUTO}IA · ${c.nota}` }, estado: 'automatico', fecha_consulta: new Date().toISOString() }))
+  if (filas.length) await supabase.from('data_points').upsert(filas, { onConflict: 'building_id,categoria,clave', ignoreDuplicates: true })
+
+  const { count } = await supabase.from('candidate_uses').select('id', { count: 'exact', head: true }).eq('building_id', buildingId)
+  if (!count && a.usos?.length) {
+    // Área útil aproximada: 80 % del área construida estimada, repartida entre los usos propuestos
+    const m2 = areaConstruida ? Math.round((areaConstruida * 0.8) / a.usos.length) : null
+    await supabase.from('candidate_uses').insert(a.usos.map((u, i) => ({
+      building_id: buildingId, nombre: u.nombre, categoria: u.categoria, orden: i,
+      legal: u.legal, legal_nota: `IA · ${u.nota}`, fisico: u.fisico, demanda: u.demanda, m2_netos: m2,
+    })))
   }
 }
 
@@ -88,6 +119,7 @@ export async function correrAnalista(buildingId: string): Promise<ResultadoAnali
         { building_id: buildingId, categoria: 'ia', clave: 'analista', valor: analisis, estado: 'automatico', fecha_consulta: analisis.fecha },
         { onConflict: 'building_id,categoria,clave' }
       )
+      await completarHuecos(supabase, buildingId, resultado, expediente.consultaAutomatica?.construccion?.areaConstruidaM2 ?? null)
       return { ok: true, analisis }
     } catch (e) {
       // Mensaje y respuesta del proveedor (sin el expediente ni la llave), para revisarlo en los logs de Vercel

@@ -23,6 +23,7 @@ function Datos({ c }: { c: ConsultaPredio }) {
     [t('lote'), `${c.lote.codigo} · ${t('area', { n: numero(locale, c.lote.areaM2) })}`],
     c.lote.unidadesPrediales ? ['', t('unidades', { n: c.lote.unidadesPrediales })] : null,
     c.construccion ? ['', t('pisos', { p: c.construccion.pisos, s: c.construccion.sotanos })] : null,
+    c.construccion?.areaConstruidaM2 ? [t('construida'), t('area', { n: numero(locale, c.construccion.areaConstruidaM2, 0) })] : null,
     c.manzana?.valorReferencia ? [t('valor', { anio: c.manzana.anioValor ?? '' }), `${COP(locale, c.manzana.valorReferencia)}/m²${c.manzana.estrato ? ` · ${t('estrato', { n: c.manzana.estrato })}` : ''}`] : null,
     c.transporte.estacion && c.transporte.distanciaEstacion != null ? ['TransMilenio', t('estacion', { nombre: c.transporte.estacion, m: c.transporte.distanciaEstacion })] : null,
   ].filter((x): x is string[] => Boolean(x))
@@ -70,11 +71,12 @@ export function ConsultaAutomatica({ edificioId, consulta }: { edificioId: strin
         </button>
       </div>
 
-      <div className="mt-3 max-w-sm">
-        <label htmlFor="codigo-lote" className="etiqueta">{t('codigoLote')}</label>
+      <details className="mt-3 max-w-md text-sm">
+        <summary className="cursor-pointer text-medio-texto">{t('noEncuentra')}</summary>
+        <label htmlFor="codigo-lote" className="etiqueta mt-2 block">{t('codigoLote')}</label>
         <input id="codigo-lote" inputMode="numeric" value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="003109005017" className="campo" aria-describedby="codigo-lote-ayuda" />
         <p id="codigo-lote-ayuda" className="mt-1 text-xs text-medio-texto">{t('codigoLoteAyuda')}</p>
-      </div>
+      </details>
 
       {aviso && (
         <p role={aviso.tipo === 'error' ? 'alert' : 'status'} className={`mt-3 rounded-xl px-4 py-2 text-sm ${aviso.tipo === 'error' ? 'bg-rojo-claro text-rojo-oscuro' : 'bg-verde-claro text-verde'}`}>{aviso.texto}</p>

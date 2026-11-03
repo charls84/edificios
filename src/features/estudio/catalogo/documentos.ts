@@ -111,8 +111,8 @@ export const DOCUMENTOS: DocumentoCatalogo[] = [
     detalle: { es: 'Si hubo propiedad horizontal o segregaciones.', en: 'If there was a condominium regime or subdivisions.' },
   }),
   d('F03', 'publicas', 'publicas', 'en_linea', 'Certificado catastral: área de terreno, área construida, uso, CHIP y avalúo', 'Cadastral certificate: lot area, built area, use, CHIP and assessed value', {
-    minimo: true,
-    detalle: { es: 'Catastro Bogotá en línea, con registro.', en: 'Bogotá Cadastre online, with registration.' },
+    recomendado: true,
+    detalle: { es: 'Opcional. Áreas, pisos y valor de referencia ya los trae la consulta a Catastro; este certificado agrega el avalúo catastral y el destino. Se descarga en Catastro Bogotá en línea, con registro.', en: 'Optional. Areas, floors and reference value come from the Cadastre lookup; this certificate adds the assessed value and use. Downloaded from Bogotá Cadastre online, with registration.' },
   }),
   d('F04', 'publicas', 'publicas', 'en_linea', 'Consulta de norma urbana en Mapas Bogotá', 'Urban planning lookup in Mapas Bogotá', {
     detalle: { es: 'Tratamiento, área de actividad, UPL, usos, edificabilidad, BIC, afectaciones y plusvalía. Es gratis.', en: 'Treatment, activity area, UPL, uses, buildable area, heritage, easements and land value capture. Free.' },

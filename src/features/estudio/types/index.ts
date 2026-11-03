@@ -24,6 +24,8 @@ export interface DocumentoCatalogo {
   disponibilidad: Disponibilidad
   /** Forma parte del minimo para arrancar el tamizaje */
   minimo?: boolean
+  /** Se muestra junto a los obligatorios porque suma datos, pero no bloquea */
+  recomendado?: boolean
   /** Solo se pide en ciertos casos (sociedad, BIC, propiedad horizontal...) */
   siAplica?: boolean
 }
@@ -205,7 +207,8 @@ export interface ConsultaPredio {
   licencias: { acto: string; tipo: string; decision: string; fecha: string | null }[]
   reservaVial: { nombre: string; areaM2: number } | null
   plusvalia: boolean | null
-  construccion: { pisos: number; sotanos: number } | null
+  /** areaConstruidaM2: suma de huella × pisos de cada construcción del lote (estimado de Catastro) */
+  construccion: { pisos: number; sotanos: number; areaConstruidaM2?: number | null } | null
   manzana: { uso: string | null; valorReferencia: number | null; anioValor: number | null; estrato: number | null } | null
   upl: string | null
   arqueologia: string | null

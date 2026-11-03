@@ -49,7 +49,7 @@ export default async function EdificioPage({ params }: { params: Promise<{ id: s
   const flujo: DatosFlujo = {
     edificioId: id,
     creado: edificio.createdAt,
-    documentosBase: docs.filter((d) => ['F01', 'F03'].includes(d.codigo) && ['cargado', 'validado'].includes(d.estado)).length,
+    documentosBase: docs.filter((d) => d.codigo === 'F01' && ['cargado', 'validado'].includes(d.estado)).length,
     consulta: consulta ? { fecha: consulta.fecha, ok: estados.filter((e) => e.estado !== 'error').length, total: estados.length } : null,
     visitaCalificadas: resumirVisita(informe)?.calificadas ?? 0,
     ia: ia ? { fecha: ia.fecha, puntaje: ia.puntajeGlobal } : null,

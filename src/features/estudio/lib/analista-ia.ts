@@ -27,6 +27,19 @@ export const esquemaAnalisisIA = z.object({
   condiciones: z.array(z.string()).describe('Máximo 8. Lo que debe cumplirse para avanzar'),
   proximosPasos: z.array(z.string()).describe('Máximo 6. Acciones concretas, en orden, con responsable sugerido (abogado, arquitecto, ingeniero, comercial)'),
   datosFaltantes: z.array(z.string()).describe('Máximo 8. Datos que cambiarían el puntaje si se consiguieran'),
+  criterios: z.array(z.object({
+    codigo: z.string().describe('Código del criterio, tal como viene en criteriosPendientes (ej. E3, N2, R1)'),
+    puntaje: z.number().describe('0, 1 o 2, según los niveles del criterio'),
+    nota: z.string().describe('Por qué, con la fuente entre paréntesis'),
+  })).optional().describe('Solo criterios de criteriosPendientes que los datos permitan puntuar. Si no hay base, no lo incluyas'),
+  usos: z.array(z.object({
+    nombre: z.string().describe('Ej.: "Oficinas flexibles en pisos 3 a 6"'),
+    categoria: z.enum(['vivienda', 'trabajo', 'comercio', 'otros', 'mixto']),
+    legal: z.enum(['si', 'no', 'por_verificar']),
+    fisico: z.enum(['si', 'no', 'por_verificar']),
+    demanda: z.enum(['si', 'no', 'por_verificar']),
+    nota: z.string().describe('Una frase: por qué este uso y qué hay que confirmar'),
+  })).optional().describe('De 2 a 4 usos candidatos que tengan sentido con la norma, el edificio y la zona'),
 })
 
 export type AnalisisIA = z.infer<typeof esquemaAnalisisIA>
@@ -75,7 +88,9 @@ Reglas:
 5. Si faltan los dos documentos base o la visita y no hay vetos, la decisión es "falta_informacion".
 6. BIC nivel 2 o 3 no descarta: permite adecuar el interior con aprobación del IDPC. Nivel 1 limita mucho la intervención.
 7. Si tu decisión difiere de la sugerencia por reglas, explica por qué en el resumen ejecutivo.
-8. Escribe en español de Colombia, claro y directo, sin jerga. Cifras con separador de miles con punto.`
+8. Escribe en español de Colombia, claro y directo, sin jerga. Cifras con separador de miles con punto.
+9. criterios: el expediente trae "criteriosPendientes", los criterios de los 5 filtros que nadie ha puntuado, con sus niveles (0, 1, 2). Puntúa solo los que los datos sostengan; deja fuera los demás. Nunca pongas un veto en 0 sin una evidencia clara.
+10. usos: si el expediente no trae usos candidatos, propone de 2 a 4. Marca legal, fisico y demanda como "por_verificar" cuando no haya un dato que lo confirme.`
 
 /**
  * Saca el JSON de la respuesta de un modelo (puede venir entre ```json o con texto alrededor)
@@ -96,7 +111,15 @@ export function leerRespuestaIA(texto: string): AnalisisIA | null {
       x.evidencias = x.evidencias.slice(0, 5)
       x.riesgos = x.riesgos.slice(0, 4)
     }
-    return { ...a, condiciones: a.condiciones.slice(0, 8), proximosPasos: a.proximosPasos.slice(0, 6), datosFaltantes: a.datosFaltantes.slice(0, 8) }
+    return {
+      ...a,
+      condiciones: a.condiciones.slice(0, 8),
+      proximosPasos: a.proximosPasos.slice(0, 6),
+      datosFaltantes: a.datosFaltantes.slice(0, 8),
+      // Solo puntajes válidos (0, 1 o 2) y como máximo 4 usos
+      criterios: (a.criterios ?? []).filter((c) => [0, 1, 2].includes(c.puntaje)),
+      usos: (a.usos ?? []).slice(0, 4),
+    }
   } catch {
     return null
   }

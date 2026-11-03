@@ -23,8 +23,8 @@ export function ChecklistDocumentos({ edificioId, estados, yaAnalizado, iaDispon
   const estadoDe = (codigo: string) => porCodigo.get(codigo) ?? vacio(codigo)
   const p = progresoDocumentos(estados)
 
-  const necesarios = DOCUMENTOS.filter((d) => d.minimo)
-  const opcionales = DOCUMENTOS.filter((d) => !d.minimo)
+  const necesarios = DOCUMENTOS.filter((d) => d.minimo || d.recomendado)
+  const opcionales = DOCUMENTOS.filter((d) => !d.minimo && !d.recomendado)
   const opcionalesCargados = opcionales.filter((d) => ['cargado', 'validado'].includes(estadoDe(d.codigo).estado)).length
   const visibles = opcionales.filter((d) => !ocultarNoAplica || estadoDe(d.codigo).estado !== 'no_aplica')
 
