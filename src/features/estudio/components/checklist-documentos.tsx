@@ -7,6 +7,7 @@ import { DOCUMENTOS, GRUPOS_DOCUMENTOS } from '../catalogo/documentos'
 import { progresoDocumentos } from '../lib/progreso'
 import { tx } from '../lib/texto'
 import type { EstadoDocumentoEdificio } from '../types'
+import { BotonAnalizarPredio } from './boton-analizar-predio'
 import { FilaDocumento } from './fila-documento'
 import { Progreso } from './progreso'
 
@@ -14,7 +15,7 @@ const vacio = (codigo: string): EstadoDocumentoEdificio => ({ codigo, estado: 'p
 
 // Torna (3-nov-2026): solo se carga el certificado de tradición. Lo demás lo busca la
 // plataforma (Fuentes) o sale de la visita; la lista completa queda como apoyo opcional.
-export function ChecklistDocumentos({ edificioId, estados }: { edificioId: string; estados: EstadoDocumentoEdificio[] }) {
+export function ChecklistDocumentos({ edificioId, estados, yaAnalizado, iaDisponible }: { edificioId: string; estados: EstadoDocumentoEdificio[]; yaAnalizado: boolean; iaDisponible: boolean }) {
   const t = useTranslations('estudio.documentos')
   const locale = useLocale()
   const [ocultarNoAplica, setOcultarNoAplica] = useState(false)
@@ -38,6 +39,11 @@ export function ChecklistDocumentos({ edificioId, estados }: { edificioId: strin
         <ul className="mt-2 divide-y divide-borde">
           {necesarios.map((d) => <FilaDocumento key={d.codigo} edificioId={edificioId} doc={d} estado={estadoDe(d.codigo)} />)}
         </ul>
+        <div className="mt-4 rounded-xl bg-fondo p-4">
+          <p className="text-sm font-semibold">{t('siguientePaso')}</p>
+          <p className="mb-3 mt-0.5 text-sm text-medio-texto">{t('siguientePasoTexto')}</p>
+          <BotonAnalizarPredio edificioId={edificioId} yaAnalizado={yaAnalizado} iaDisponible={iaDisponible} />
+        </div>
       </section>
 
       <section className="bento">

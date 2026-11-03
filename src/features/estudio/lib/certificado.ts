@@ -38,6 +38,21 @@ export interface LecturaCertificado {
   areaRegistroM2: number | null
   /** Áreas expropiadas o cedidas (por ejemplo, franjas para vías) */
   areaExpropiadaM2: number
+  /** Identificación del predio según el registro */
+  matricula: string | null
+  chip: string | null
+  codigoCatastral: string | null
+  /** Código de lote de Catastro (12 dígitos) derivado del código catastral */
+  codigoLote: string | null
+}
+
+/**
+ * Código catastral de Bogotá (sector 6 + manzana 2 + predio 2 + …) → código de lote de las
+ * capas de Catastro (sector 6 + manzana 3 + predio 3). Ej.: 003109051700000000 → 003109005017.
+ */
+export function loteDesdeCodigoCatastral(codigo: string | null): string | null {
+  if (!codigo || !/^\d{10,}$/.test(codigo)) return null
+  return `${codigo.slice(0, 6)}0${codigo.slice(6, 8)}0${codigo.slice(8, 10)}`
 }
 
 /** "1.234,56" o "1234.56" → 1234.56 */
@@ -106,6 +121,7 @@ export function leerCertificado(texto: string): LecturaCertificado | null {
     const h = { numero: a.numero, fecha: a.fecha, tipo, descripcion: a.descripcion.toLowerCase() }
     ;(canceladas.has(a.numero) ? pasadas : vigentes).push(h)
   }
+  const codigoCatastral = /CODIGO CATASTRAL:? ?(\d{10,30})/.exec(t)?.[1] ?? null
   const vigente = (a: AnotacionCertificado) => !canceladas.has(a.numero)
   // Una expropiación parcial (franja vial) no cambia de dueño al resto del predio
   const adquisiciones = anotaciones.filter((a) => vigente(a) && a.naturaleza.includes('MODO DE ADQUISICION') && !/EXPROPIACION/.test(a.descripcion) && a.titulares > 0)
@@ -122,6 +138,10 @@ export function leerCertificado(texto: string): LecturaCertificado | null {
     propiedadHorizontal: anotaciones.some((a) => vigente(a) && /PROPIEDAD HORIZONTAL/.test(a.descripcion) && !a.naturaleza.includes('CANCELACION')),
     areaRegistroM2: cabida(t),
     areaExpropiadaM2: Math.round(areaExpropiadaM2 * 100) / 100,
+    matricula: /MATRICULA:? ?(\d{2,3}[A-Z]?-\d{3,9})/.exec(t)?.[1] ?? null,
+    chip: /NUPRE:? ?(AAA[0-9A-Z]{8})/.exec(t)?.[1] ?? /\b(AAA[0-9A-Z]{8})\b/.exec(t)?.[1] ?? null,
+    codigoCatastral,
+    codigoLote: loteDesdeCodigoCatastral(codigoCatastral),
   }
 }
 

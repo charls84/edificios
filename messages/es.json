@@ -73,7 +73,7 @@
     "escribeDireccion": "Escribe la dirección",
     "noSeGuardo": "No se pudo guardar. Intenta de nuevo.",
     "chipRepetido": "Ya existe un edificio con ese CHIP.",
-    "escribeChip": "Escribe el CHIP del predio: con él se consulta en SINUPOT."
+    "escribeChip": "Escribe el CHIP del predio: con él se cruzan los documentos con Catastro."
   },
   "equipo": {
     "titulo": "Equipo",
@@ -280,7 +280,7 @@
       "analisis": "Análisis",
       "informe": "Informe",
       "filtros": "5 filtros",
-      "fuentes": "Fuentes"
+      "fuentes": "Consulta en línea"
     },
     "formulario": {
       "titulo": "Matricular un edificio",
@@ -289,7 +289,7 @@
       "nombre": "Nombre del edificio",
       "nombreAyuda": "Cómo lo llama el equipo. Ej.: Edificio Rolher",
       "chip": "CHIP",
-      "chipAyuda": "Obligatorio. Con el CHIP se consulta el predio en SINUPOT y los visores del Distrito. Si ya está registrado, se abre la ficha existente.",
+      "chipAyuda": "Obligatorio. Se cruza con el CHIP del certificado de tradición y con Catastro. Si ya está registrado, se abre la ficha existente.",
       "direccion": "Dirección",
       "direccionAyuda": "Dirección catastral si la tienes; si no, la de la placa.",
       "matricula": "Matrícula inmobiliaria",
@@ -352,7 +352,7 @@
       "confirmarQuitar": "¿Quitar \"{nombre}\"? El archivo se borra del almacenamiento.",
       "automaticoTitulo": "Lo que la plataforma busca sola",
       "automatico": [
-        "Norma, patrimonio (BIC y PEMP), licencias, reserva vial, plusvalía y amenaza · Catastro",
+        "Norma POT 555 (tratamiento y área de actividad), patrimonio, licencias, reserva vial, plusvalía y amenaza · POT y Catastro",
         "Transporte, universidades y uso de la manzana · Catastro",
         "Espacio público · DADEP",
         "Árboles y especies protegidas · Jardín Botánico",
@@ -364,7 +364,9 @@
       "opcionalesTitulo": "Otros documentos (opcional)",
       "opcionalesTexto": "Apoyo para el estudio detallado. {n} de {total} cargados.",
       "verOpcionales": "Ver la lista",
-      "ocultarOpcionales": "Ocultar la lista"
+      "ocultarOpcionales": "Ocultar la lista",
+      "siguientePaso": "Siguiente paso: analizar el predio",
+      "siguientePasoTexto": "Con los documentos cargados, la plataforma los lee, saca el código catastral, consulta las fuentes oficiales y corre el analista de IA."
     },
     "checklist": {
       "titulo": "Checklist de la guía de mayor y mejor uso",
@@ -647,7 +649,7 @@
       "porVerificar": "Ítems por verificar ({n})",
       "documentosPendientes": "Documentos por cargar ({n})",
       "pie": "Informe generado por la plataforma de Torna con los datos validados por el equipo. Los cálculos financieros son fórmulas sobre los datos ingresados; no reemplazan el concepto del IDPC, la certificación del IDIGER, la visita estructural (NSR-10) ni la licencia ante curaduría.",
-      "consultasEnLinea": "Consultas en línea (SINUPOT, Mapas Bogotá, DADEP, SIGAU, SAE)",
+      "consultasEnLinea": "Consultas en línea (Catastro, POT 555, Mapas Bogotá, DADEP, SIGAU, SAE)",
       "sinConsultar": "Sin consultar"
     },
     "filtros": {
@@ -717,7 +719,7 @@
     },
     "auto": {
       "titulo": "Consulta automática",
-      "texto": "Cruza el lote con las capas oficiales de Catastro, DADEP y Jardín Botánico. Llena las fuentes, sugiere puntajes de los 5 filtros y avanza la checklist. No cambia lo que el equipo ya escribió.",
+      "texto": "Con el código catastral del certificado (o la dirección) ubica el lote y lo cruza con el POT 555 y las capas de Catastro, DADEP y Jardín Botánico. Llena las fuentes, sugiere puntajes de los 5 filtros y avanza la checklist. No cambia lo que el equipo ya escribió.",
       "boton": "Consultar ahora",
       "repetir": "Volver a consultar",
       "consultando": "Consultando capas oficiales…",
@@ -754,7 +756,8 @@
         "renobo": "RenoBo",
         "arqueologia": "Arqueología",
         "amenaza": "Amenaza",
-        "arbolado": "Arbolado"
+        "arbolado": "Arbolado",
+        "pot": "Norma POT 555"
       },
       "datos": {
         "lote": "Lote",
@@ -795,8 +798,8 @@
       "titulo": "Analista de IA",
       "global": "Puntaje global",
       "uso": "Uso que mejor encaja",
-      "meta": "Análisis del {fecha} · modelo {modelo}. Se actualiza solo al cargar documentos o guardar la visita.",
-      "sinAnalisis": "Aún no hay análisis. Se hace solo al cargar los documentos base, o pídelo ahora.",
+      "meta": "Análisis del {fecha} · modelo {modelo}. Se actualiza al analizar el predio y al guardar la visita.",
+      "sinAnalisis": "Aún no hay análisis. Se hace en el paso 3, \"Analizar el predio\", o pídelo ahora.",
       "sinLlave": "El analista de IA no está activo: falta configurar la llave de OpenRouter en Vercel. Mientras tanto, la sugerencia por reglas sigue funcionando.",
       "pedir": "Pedir análisis",
       "actualizar": "Actualizar análisis",
@@ -826,6 +829,43 @@
         "sinLlave": "Falta configurar la llave de OpenRouter en Vercel.",
         "fallo": "El analista no respondió. Intenta de nuevo en un minuto.",
         "demo": "No disponible en el demo."
+      }
+    },
+    "flujo": {
+      "titulo": "Flujo del estudio",
+      "texto": "Cinco pasos en orden. El paso 3 lee los documentos, consulta las fuentes oficiales y corre el analista de IA.",
+      "p1": "Matricular el edificio",
+      "p1d": "Hecho el {fecha}",
+      "p2": "Cargar documentos base",
+      "p2d": "{n} de 2: certificado de tradición y certificado catastral",
+      "p3": "Analizar el predio",
+      "p3d": "Última vez: {fecha} · {ok} de {total} fuentes respondieron",
+      "p3pendiente": "Lee los documentos y consulta Catastro, POT 555, DADEP y Jardín Botánico.",
+      "p4": "Visita técnica",
+      "p4d": "{n} de 6 secciones calificadas. Al guardarla, el analista vuelve a puntuar.",
+      "p5": "Analista de IA",
+      "p5d": "{fecha} · puntaje {puntaje}/100",
+      "p5pendiente": "Corre al terminar el paso 3 y cada vez que se guarda la visita.",
+      "p5sinLlave": "Inactivo: falta la llave de OpenRouter.",
+      "analizar": "Analizar el predio",
+      "repetir": "Volver a analizar",
+      "paso1": "1 de 2 · Leyendo documentos y consultando fuentes…",
+      "paso2": "2 de 2 · El analista de IA está puntuando…",
+      "espera": "Puede tardar hasta 3 minutos. No cierres la página.",
+      "listo": "Listo: documentos leídos, fuentes consultadas y puntaje del analista actualizado.",
+      "listoSinIa": "Listo: documentos leídos y fuentes consultadas.",
+      "ver": "Ver →",
+      "estado": {
+        "hecho": "hecho",
+        "en_curso": "en curso",
+        "pendiente": "pendiente"
+      },
+      "error": {
+        "sinLote": "No se ubicó el lote: carga el certificado de tradición (trae el código catastral) o escribe el código de lote en Fuentes.",
+        "sinRespuesta": "Catastro no respondió. Intenta de nuevo en unos minutos.",
+        "invalido": "Revisa los datos del edificio.",
+        "demo": "No disponible en el demo.",
+        "ia": "El analista de IA no respondió (los modelos gratuitos se saturan). Pídelo de nuevo en unos minutos desde Análisis."
       }
     }
   }

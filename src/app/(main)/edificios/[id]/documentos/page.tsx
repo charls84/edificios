@@ -1,10 +1,12 @@
 import { notFound } from 'next/navigation'
 import { ChecklistDocumentos } from '@/features/estudio/components/checklist-documentos'
-import { getDocumentos } from '@/features/estudio/services/consultas'
+import { getConsultaAuto, getDocumentos } from '@/features/estudio/services/consultas'
+import { IA_DISPONIBLE } from '@/shared/lib/ai'
 import { IS_DEMO } from '@/shared/lib/demo'
 
 export default async function DocumentosPage({ params }: { params: Promise<{ id: string }> }) {
   if (IS_DEMO) notFound()
   const { id } = await params
-  return <ChecklistDocumentos edificioId={id} estados={await getDocumentos(id)} />
+  const [estados, consulta] = await Promise.all([getDocumentos(id), getConsultaAuto(id)])
+  return <ChecklistDocumentos edificioId={id} estados={estados} yaAnalizado={Boolean(consulta)} iaDisponible={IA_DISPONIBLE} />
 }

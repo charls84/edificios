@@ -5,6 +5,7 @@ import {
   areaM2, areaSuperpuestaM2, CATASTRO, centro, cerca, consultar, cruzar, DADEP_RASTER, DADEP_VECTOR,
   distanciaAlBorde, distanciaM, JBB, type Rasgo,
 } from './arcgis'
+import { normaPot } from './pot'
 
 // Consulta automática del predio: con la dirección (o el código de lote) ubica el lote en
 // Catastro y cruza su forma con las capas oficiales. Cada fuente falla por separado: si una no
@@ -190,14 +191,14 @@ export async function consultarPredio(direccion: string, codigoManual?: string |
     reservaVial: null, plusvalia: null, construccion: null, manzana: null, upl: null, arqueologia: null, amenazaRemocion: null,
     transporte: { troncalCercana: null, estacion: null, distanciaEstacion: null, metro: null, distanciaMetro: null },
     universidades: [], espacioPublico: { alameda: null, andenMaxM: null, vias: 0, prediosPublicos: 0 },
-    arboles: { a10m: 0, masCercano: null, protegidos: [] }, renobo: null,
+    arboles: { a10m: 0, masCercano: null, protegidos: [] }, renobo: null, pot: null,
   }
   const codigo = codigoManual || (await paso(estado, 'ubicacion', () => codigoDeLote(direccion), (v) => !v))
   if (!codigo) return vacio
   const l = await paso(estado, 'lote', () => lote(codigo), (v) => !v)
   if (!l) return vacio
   const a = l.anillo
-  const [pat, lic, res, plus, cons, man, upl, arq, rem, trans, univ, ep, arb, reno] = await Promise.all([
+  const [pat, lic, res, plus, cons, man, upl, arq, rem, trans, univ, ep, arb, reno, pot] = await Promise.all([
     paso(estado, 'patrimonio', () => patrimonio(a, codigo), (v) => !v.bic && !v.pemp),
     paso(estado, 'licencias', () => licencias(a), (v) => !v.length),
     paso(estado, 'reserva_vial', () => reservaVial(a), (v) => !v),
@@ -216,11 +217,12 @@ export async function consultarPredio(direccion: string, codigoManual?: string |
     paso(estado, 'espacio_publico', () => espacioPublico(a), (v) => !v.alameda && !v.andenMaxM),
     paso(estado, 'arbolado', () => arboles(a), () => false),
     paso(estado, 'renobo', () => renobo(a), () => false),
+    paso(estado, 'pot', () => normaPot(a), (v) => !v.tratamiento && !v.areaActividad),
   ])
   return {
     ...vacio, lote: l, bic: pat?.bic ?? null, pemp: pat?.pemp ?? null, sectorInteresCultural: pat?.sectorInteresCultural ?? null,
     licencias: lic ?? [], reservaVial: res, plusvalia: plus, construccion: cons, manzana: man, upl, arqueologia: arq,
     amenazaRemocion: rem, transporte: trans ?? vacio.transporte, universidades: univ ?? [], espacioPublico: ep ?? vacio.espacioPublico,
-    arboles: arb ?? vacio.arboles, renobo: reno,
+    arboles: arb ?? vacio.arboles, renobo: reno, pot,
   }
 }

@@ -58,12 +58,13 @@ export function cruzarAreas(cert: LecturaCertificado | null, catastral: LecturaC
   if (cert?.areaRegistroM2) fuentes.push({ nombre: 'registro (descontando lo expropiado)', valor: cert.areaRegistroM2 - cert.areaExpropiadaM2 })
   if (catastral?.areaTerrenoM2) fuentes.push({ nombre: 'certificado catastral', valor: catastral.areaTerrenoM2 })
   if (consulta?.lote) fuentes.push({ nombre: 'polígono de Catastro', valor: consulta.lote.areaM2 })
-  const chipDistinto = Boolean(catastral?.chip && chipFicha && catastral.chip !== chipFicha.toUpperCase())
+  const chipDoc = catastral?.chip ?? cert?.chip ?? null
+  const chipDistinto = Boolean(chipDoc && chipFicha && chipDoc !== chipFicha.toUpperCase())
   if (fuentes.length < 2 && !chipDistinto) return null
   const valores = fuentes.map((f) => f.valor)
   const dif = valores.length >= 2 ? (Math.max(...valores) - Math.min(...valores)) / Math.max(...valores) : 0
   const detalle = fuentes.map((f) => `${f.nombre} ${m2(f.valor)}`).join(' · ')
-  if (chipDistinto) return { puntaje: 0, nota: `El CHIP del certificado catastral (${catastral!.chip}) no coincide con el de la ficha. ${detalle}` }
+  if (chipDistinto) return { puntaje: 0, nota: `El CHIP de los documentos (${chipDoc}) no coincide con el de la ficha (${chipFicha}). ${detalle}` }
   const pct = Math.round(dif * 100)
   return {
     puntaje: dif <= 0.05 ? 2 : dif <= 0.15 ? 1 : 0,

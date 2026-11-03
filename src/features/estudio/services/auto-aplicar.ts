@@ -54,16 +54,18 @@ export interface ResultadoAuto {
 
 /** Consulta las capas oficiales, guarda el resultado y llena lo que falte en la ficha */
 export async function consultarYAplicar(supabase: SupabaseClient, buildingId: string, codigoLote?: string | null): Promise<ResultadoAuto | null> {
-  const { data } = await supabase.from('buildings').select('direccion, chip, lat, lng, zona').eq('id', buildingId).maybeSingle()
-  const b = data as { direccion: string; chip: string | null; lat: number | null; lng: number | null; zona: string | null } | null
+  const { data } = await supabase.from('buildings').select('direccion, chip, matricula_inmobiliaria, lat, lng, zona').eq('id', buildingId).maybeSingle()
+  const b = data as { direccion: string; chip: string | null; matricula_inmobiliaria: string | null; lat: number | null; lng: number | null; zona: string | null } | null
   if (!b) return null
 
-  // Los documentos base se leen aparte: no dependen de encontrar el lote
-  const [cert, catastral, consulta] = await Promise.all([
+  // 1. Primero los documentos base: el código catastral del certificado ubica el lote
+  //    con más precisión que la dirección (que puede estar escrita de muchas formas)
+  const [cert, catastral] = await Promise.all([
     leerYAplicarCertificado(supabase, buildingId).catch(() => ({ lectura: null, aplicados: 0 })),
     leerCatastralGuardado(supabase, buildingId).catch(() => null),
-    consultarPredio(b.direccion, codigoLote),
   ])
+  // 2. Con el lote, todas las fuentes en línea
+  const consulta = await consultarPredio(b.direccion, codigoLote || cert.lectura?.codigoLote || null)
   const cruces = await aplicarCruces(supabase, buildingId, cert.lectura, catastral, consulta.lote ? consulta : null, b.chip).catch(() => 0)
   const certificado = cert.aplicados + cruces
   await supabase.from('data_points').upsert(
@@ -84,6 +86,7 @@ export async function consultarYAplicar(supabase: SupabaseClient, buildingId: st
     .update({
       ...(b.lat == null || b.lng == null ? { lat: consulta.lote.lat, lng: consulta.lote.lng } : {}),
       ...(!b.zona && consulta.upl ? { zona: consulta.upl } : {}),
+      ...(!b.matricula_inmobiliaria && cert.lectura?.matricula ? { matricula_inmobiliaria: cert.lectura.matricula } : {}),
       updated_at: ahora(),
     })
     .eq('id', buildingId)

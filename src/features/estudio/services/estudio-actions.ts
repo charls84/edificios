@@ -1,7 +1,6 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { after } from 'next/server'
 import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { IS_DEMO } from '@/shared/lib/demo'
@@ -11,8 +10,6 @@ import { CRITERIOS_FILTROS } from '../catalogo/filtros'
 import { CAMPOS_FUENTES } from '../catalogo/fuentes'
 import { ITEMS_GUIA } from '../catalogo/guia'
 import { CATEGORIAS_USO } from '../catalogo/usos'
-import { correrAnalista } from './analista'
-import { consultarYAplicar } from './auto-aplicar'
 
 // Acciones del estudio: estado de documentos, archivos, checklist de la guia y usos.
 // Todas devuelven { error } en vez de lanzar, para mostrar el aviso en la pantalla.
@@ -87,18 +84,6 @@ export async function registrarArchivo(entrada: z.infer<typeof archivoSchema>): 
       { building_id: buildingId, codigo, estado: 'cargado', updated_by: profile.id, updated_at: ahora() },
       { onConflict: 'building_id,codigo' }
     )
-  }
-  // Los dos documentos base se leen solos y se cruzan con Catastro (SAE, H1, H2, H3, A1, A2, A7)
-  if (codigo === 'F01' || codigo === 'F03') {
-    after(async () => {
-      try {
-        await consultarYAplicar(supabase, buildingId)
-        await correrAnalista(buildingId)
-        refrescar(buildingId)
-      } catch {
-        // Si no se puede leer (PDF escaneado), el equipo llena la fuente SAE a mano
-      }
-    })
   }
   refrescar(buildingId)
   return {}

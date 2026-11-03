@@ -40,6 +40,12 @@ function textosFuentes(c: ConsultaPredio): Record<string, string> {
     const sector = [c.sectorInteresCultural, c.pemp === 'afectada' ? 'área afectada del PEMP' : c.pemp === 'influencia' ? 'zona de influencia del PEMP' : null].filter(Boolean)
     f['bic.sector'] = sector.length ? sector.join(' · ') : 'Fuera de sectores de interés cultural y de PEMP'
   }
+  if (c.pot?.tratamiento) f['sinupot.tratamiento'] = `${c.pot.tratamiento} (POT Decreto 555 de 2021)`
+  if (c.pot?.areaActividad) {
+    f['sinupot.usos'] = /PEMP/i.test(c.pot.areaActividad)
+      ? 'Área de actividad PEMP BIC Nacional: los usos los fija la resolución del PEMP del Centro Histórico, no el cuadro general del POT. Confirmar el uso con el IDPC o con un concepto de norma'
+      : `Área de actividad: ${c.pot.areaActividad}. Los usos permitidos están en el cuadro de usos del Decreto 555; confirmar el uso puntual con un concepto de norma`
+  }
   const ep = c.espacioPublico
   if (ok(c, 'espacio_publico')) {
     f['espacio_publico.colindancia'] = [
@@ -97,6 +103,13 @@ function filtros(c: ConsultaPredio): SugerenciaFiltro[] {
     if (/1/.test(nivel)) s.push({ codigo: 'R3', puntaje: 0, nota: `BIC ${nivel}: intervención muy limitada` })
     else if (c.bic || c.pemp || c.sectorInteresCultural) s.push({ codigo: 'R3', puntaje: 1, nota: c.bic ? `BIC ${nivel || 'sin nivel registrado'}` : 'Dentro de un sector o PEMP patrimonial' })
     else s.push({ codigo: 'R3', puntaje: 2, nota: 'No es BIC ni está en sector patrimonial' })
+    if (c.pot?.tratamiento) {
+      const tr = c.pot.tratamiento.toLowerCase()
+      // En área PEMP manda el plan de protección, aunque el tratamiento diga renovación
+      const pemp = /PEMP/i.test(c.pot.areaActividad ?? '')
+      const p = pemp ? 1 : /renovaci|consolidaci|desarrollo/.test(tr) ? 2 : /conservaci|mejoramiento/.test(tr) ? 1 : null
+      if (p != null) s.push({ codigo: 'R2', puntaje: p, nota: `Tratamiento ${c.pot.tratamiento} (POT 555)${pemp ? '; en área PEMP los usos y la intervención los fija el plan de protección' : ''}` })
+    }
     if (c.bic || c.renobo) s.push({ codigo: 'R4', puntaje: 1, nota: 'Posible incentivo de reúso (Reúsa y Revitaliza o exención predial por BIC): confirmar con RenoBo' })
   }
   return s.map((x) => ({ ...x, nota: PREFIJO_AUTO + x.nota }))
@@ -107,6 +120,7 @@ function checklist(c: ConsultaPredio, f: Record<string, string>): SugerenciaItem
   if (f['sinupot.licencias']) s.push({ codigo: 'A4', estado: 'por_verificar', nota: `${f['sinupot.licencias']}. Faltan planos aprobados y permiso de ocupación.` })
   if (f['sinupot.plusvalia']) s.push({ codigo: 'A5', estado: 'por_verificar', nota: `${f['sinupot.plusvalia']}. Falta el paz y salvo predial.` })
   if (f['espacio_publico.afectacion']) s.push({ codigo: 'A6', estado: 'por_verificar', nota: `${f['espacio_publico.afectacion']}. Confirmar servidumbres en el certificado de tradición.` })
+  if (c.pot?.tratamiento || c.pot?.areaActividad) s.push({ codigo: 'B2', estado: 'cumple', nota: [c.pot.tratamiento && `Tratamiento ${c.pot.tratamiento}`, c.pot.areaActividad && `área de actividad ${c.pot.areaActividad}`].filter(Boolean).join(' · ') })
   if (c.upl) s.push({ codigo: 'B1', estado: 'cumple', nota: `POT Decreto 555 de 2021 · UPL ${c.upl}` })
   if (f['bic.es_bic']) s.push({ codigo: 'B5', estado: 'cumple', nota: [f['bic.es_bic'], f['bic.nivel'], f['bic.sector']].filter(Boolean).join(' · ') })
   if (c.renobo || c.bic) s.push({ codigo: 'B8', estado: 'por_verificar', nota: 'Puede aplicar a incentivos de reúso: confirmar con RenoBo y Hacienda.' })

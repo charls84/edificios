@@ -215,4 +215,6 @@ export interface ConsultaPredio {
   espacioPublico: { alameda: string | null; andenMaxM: number | null; vias: number; prediosPublicos: number }
   arboles: { a10m: number; masCercano: { especie: string; distancia: number } | null; protegidos: { especie: string; distancia: number }[] }
   renobo: string | null
+  /** POT 555: tratamiento urbanístico y área de actividad */
+  pot?: { tratamiento: string | null; areaActividad: string | null; detalle: Record<string, Record<string, string>> } | null
 }

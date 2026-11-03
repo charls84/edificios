@@ -27,10 +27,10 @@ const t = (es: string, en: string): Texto => ({ es, en })
 export const FUENTES: Fuente[] = [
   {
     codigo: 'sinupot',
-    nombre: t('SINUPOT · norma urbana y licencias', 'SINUPOT · planning rules and permits'),
+    nombre: t('Norma urbana · POT 555 y licencias', 'Planning rules · POT 555 and permits'),
     entidad: 'Secretaría Distrital de Planeación',
-    url: 'https://sinupot.sdp.gov.co/',
-    comoBuscar: t('Buscar por CHIP en "Consulta de predios" y abrir la ficha normativa.', 'Search by CHIP in "Consulta de predios" and open the planning sheet.'),
+    url: 'https://mapas.bogota.gov.co/',
+    comoBuscar: t('La plataforma consulta sola el tratamiento y el área de actividad del POT 555 y las licencias de Catastro. Para revisar a mano, Mapas Bogotá tiene las capas del POT; SINUPOT a veces no responde.', 'The platform looks up the POT 555 treatment and activity area and the Cadastre permits on its own. To check by hand, Mapas Bogotá has the POT layers; SINUPOT sometimes does not respond.'),
     campos: [
       { codigo: 'upl', texto: t('UPL y área de actividad', 'UPL and activity area'), ejemplo: t('UPL Centro Histórico · Área de actividad grandes servicios metropolitanos', 'UPL Centro Histórico · metropolitan services area'), alimenta: ['B1', 'B2'] },
       { codigo: 'tratamiento', texto: t('Tratamiento urbanístico', 'Urban treatment'), ejemplo: t('Conservación (PEMP Centro Histórico)', 'Conservation (Historic Center PEMP)'), alimenta: ['R2', 'B2'] },

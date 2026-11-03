@@ -4,11 +4,10 @@ import { Galeria } from '@/features/ficha/components/galeria'
 import { SemaforoBadge } from '@/features/ficha/components/badges'
 import type { InformeVisita } from '@/features/ficha/types'
 import { ITEMS_GUIA } from '../catalogo/guia'
-import { progresoDocumentos, progresoPrueba, resumenUsos } from '../lib/progreso'
-import { fecha, tx } from '../lib/texto'
+import { progresoDocumentos, progresoPrueba } from '../lib/progreso'
+import { tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
 import { FILTROS, UMBRALES } from '../catalogo/filtros'
-import { FUENTES } from '../catalogo/fuentes'
 import { calcularFiltros, COLOR_LECTURA, type EvaluacionCriterio } from '../lib/filtros'
 import { CalificacionVisita } from '@/features/visita/components/calificacion-visita'
 import { resumirVisita } from '@/features/visita/lib/calificacion'
@@ -32,41 +31,21 @@ interface Props {
   decision: SugerenciaDecision
   /** Tarjeta del analista de IA (se arma en la página) */
   ia: React.ReactNode
-}
-
-type Paso = { n: number; titulo: string; estado: 'hecho' | 'en_curso' | 'pendiente'; detalle: string; href: string }
-
-function siguientePaso(pasos: Paso[]) {
-  return pasos.find((p) => p.estado !== 'hecho') ?? pasos.at(-1)!
+  /** Los cinco pasos del flujo (se arma en la página) */
+  flujo: React.ReactNode
 }
 
 // Pestaña Resumen: donde va el estudio y cual es el siguiente paso
-export async function ResumenEstudio({ edificio, docs, items, usos, informe, tamizaje, mmu, filtros, fuentes, decision, ia }: Props) {
+export async function ResumenEstudio({ edificio, docs, items, informe, tamizaje, filtros, decision, ia, flujo }: Props) {
   const [t, locale] = await Promise.all([getTranslations('estudio.resumen'), getLocale()])
   const base = `/edificios/${edificio.id}`
   const pd = progresoDocumentos(docs)
   const legal = progresoPrueba(items, 'legal')
   const fisica = progresoPrueba(items, 'fisica')
   const financiera = progresoPrueba(items, 'financiera')
-  const ru = resumenUsos(usos)
-  const detalladoTotal = legal.total + fisica.total + financiera.total
-  const detalladoHecho = legal.resueltos + fisica.resueltos + financiera.resueltos
   const rf = calcularFiltros(filtros)
-  const fuentesConDatos = FUENTES.filter((f) => f.campos.some((c) => fuentes[`${f.codigo}.${c.codigo}`])).length
   const tf = await getTranslations('estudio.filtros')
-  const recomendado = mmu ? mmu.resultado.usos.find((u) => u.id === mmu.resultado.recomendado) : null
 
-  const pasos: Paso[] = [
-    { n: 1, titulo: t('pasos.matricula'), estado: 'hecho', detalle: fecha(locale, edificio.createdAt), href: `${base}/editar` },
-    { n: 2, titulo: t('pasos.minimo'), estado: pd.minimoListos === pd.minimo && fuentesConDatos === FUENTES.length ? 'hecho' : pd.minimoListos + fuentesConDatos > 0 ? 'en_curso' : 'pendiente', detalle: t('certificadoYFuentes', { cert: pd.minimoListos === pd.minimo ? t('certificadoListo') : t('certificadoFalta'), a: fuentesConDatos, b: FUENTES.length }), href: pd.minimoListos === pd.minimo ? `${base}/fuentes` : `${base}/documentos` },
-    { n: 3, titulo: t('pasos.filtros'), estado: rf.lectura !== 'incompleto' ? 'hecho' : rf.cobertura > 0 ? 'en_curso' : 'pendiente', detalle: rf.potencial == null ? t('sinEvaluar') : t('potencialDe', { n: rf.potencial, lectura: tf(`lectura.${rf.lectura}`) }), href: `${base}/filtros` },
-    { n: 4, titulo: t('pasos.usos'), estado: ru.total > 0 ? 'hecho' : 'pendiente', detalle: t('usosDetalle', { total: ru.total, pasan: ru.pasanEdificio }), href: `${base}/usos` },
-    { n: 5, titulo: t('pasos.tamizaje'), estado: tamizaje ? 'hecho' : 'pendiente', detalle: tamizaje ? t(`semaforo.${tamizaje.resultado.semaforo}`) : t('sinCorrer'), href: `${base}/analisis` },
-    { n: 6, titulo: t('pasos.detallado'), estado: detalladoHecho === detalladoTotal ? 'hecho' : detalladoHecho > 0 ? 'en_curso' : 'pendiente', detalle: t('deN', { a: detalladoHecho, b: detalladoTotal }), href: `${base}/checklist` },
-    { n: 7, titulo: t('pasos.mmu'), estado: mmu ? 'hecho' : 'pendiente', detalle: recomendado ? recomendado.nombre : mmu ? t('sinViable') : t('sinCorrer'), href: `${base}/analisis` },
-    { n: 8, titulo: t('pasos.informe'), estado: mmu ? 'en_curso' : 'pendiente', detalle: mmu ? t('informeListo') : t('informeTras'), href: `${base}/informe` },
-  ]
-  const siguiente = siguientePaso(pasos)
   const visita = resumirVisita(informe)
   const tva = await getTranslations('estudio.visitaAnalisis')
   const fotos = (informe?.secciones ?? []).flatMap((s) => s.fotos).slice(0, 8).map((f) => ({ src: f.src, alt: f.destacado || f.texto || t('fotoVisita') }))
@@ -76,6 +55,7 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
       {fotos.length > 0 && <div className="md:col-span-4"><Galeria fotos={fotos} titulo={edificio.nombre} /></div>}
 
+      {flujo}
       {ia}
       <DecisionSugerida sugerencia={decision} className="md:col-span-4" />
       {visita && visita.calificadas > 0 && (
@@ -87,34 +67,6 @@ export async function ResumenEstudio({ edificio, docs, items, usos, informe, tam
           <CalificacionVisita resumen={visita} />
         </section>
       )}
-
-      <section className="bento md:col-span-3">
-        <h2 className="text-lg font-bold">{t('avance')}</h2>
-        <ol className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {pasos.map((p) => (
-            <li key={p.n}>
-              <Link href={p.href} className={`block h-full rounded-xl border p-3 transition-colors hover:border-torna ${p === siguiente ? 'border-rojo bg-rojo-claro/40' : 'border-borde'}`}>
-                <span className="flex items-center gap-2">
-                  <span aria-hidden className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${p.estado === 'hecho' ? 'bg-verde text-white' : p.estado === 'en_curso' ? 'bg-ambar text-white' : 'bg-piedra text-medio-texto'}`}>
-                    {p.estado === 'hecho' ? '✓' : p.n}
-                  </span>
-                  <span className="text-sm font-semibold">{p.titulo}</span>
-                </span>
-                <span className="mt-1 block text-xs text-medio-texto">{p.detalle}</span>
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="bento flex flex-col justify-between gap-3 bg-torna text-white">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-white/60">{t('siguiente')}</p>
-          <p className="mt-1 text-lg font-bold">{siguiente.titulo}</p>
-          <p className="mt-1 text-sm text-white/75">{t(`ayuda.${siguiente.n}`)}</p>
-        </div>
-        <Link href={siguiente.href} className="inline-flex items-center justify-center rounded-xl bg-rojo px-4 py-2 text-sm font-semibold text-white hover:bg-rojo-oscuro">{t('ir')}</Link>
-      </section>
 
       {(bloqueos.length > 0 || edificio.resumen) && (
         <section className={`bento md:col-span-4 ${bloqueos.length > 0 ? 'border-rojo/40 bg-rojo-claro' : ''}`}>
