@@ -557,7 +557,10 @@
         "restablecer": "Reset to defaults",
         "horizonteAyuda": "Default 10 years.",
         "porVerificar": "To verify",
-        "viableProvisional": "Viable (provisional)"
+        "viableProvisional": "Viable (provisional)",
+        "mezcla": "Mixed scenario",
+        "mezclaTexto": "Combined NPV of {vpn}, annual net income of {neto} and combined yield of {rentabilidad}.",
+        "mezclaNota": "Each use keeps its share of the usable area. Confirm with the architect which floors go to each use (e.g., retail on the ground floor and basement)."
       }
     },
     "resumen": {
@@ -698,7 +701,42 @@
         "pasos": "Next steps",
         "bloque": "Block {b}",
         "millones": "million",
-        "fotoPrincipal": "Façade · main photo"
+        "fotoPrincipal": "Façade · main photo",
+        "usoFinanciero": "Recommended use: {uso}",
+        "mezclaPosible": "possible mix: {usos}",
+        "trazaPortada": "Conclusion edited by {autor} on {fecha}"
+      },
+      "edicion": {
+        "portadaTitulo": "Cover conclusion",
+        "portadaTexto": "It currently says: {conclusion}. If the team or committee reaches another conclusion, write it here: it replaces the automatic one and is logged.",
+        "editando": "Editing: {seccion}",
+        "decision": "Decision",
+        "decisionAuto": "The platform's suggestion",
+        "texto": "Team note for this section",
+        "textoConclusion": "Conclusion management will see",
+        "ejemplo": "E.g.: Sales confirmed $55,000/m² rent for ground-floor retail (October appraisal).",
+        "aviso": "Saving leaves a trace in the report: who, when (Bogotá time) and which section.",
+        "error": "Couldn't save. Try again.",
+        "guardar": "Save",
+        "guardando": "Saving…",
+        "cancelar": "Cancel",
+        "editar": "Edit team note",
+        "agregar": "+ Add team note",
+        "agregarConclusion": "Edit the conclusion",
+        "notaEquipo": "Team note",
+        "conclusionEquipo": "Team conclusion",
+        "traza": "Modified by {autor} on {fecha} · section: {seccion}",
+        "control": "Change log",
+        "controlTexto": "Manual changes made to the report before export. Automatic data (lookups, documents, calculations) is not altered.",
+        "cFecha": "Date and time (Bogotá)",
+        "cSeccion": "Section",
+        "cAccion": "Action",
+        "cAutor": "Author",
+        "accion": {
+          "agrego": "Added note",
+          "edito": "Edited",
+          "borro": "Removed note"
+        }
       }
     },
     "filtros": {
@@ -881,7 +919,8 @@
         "fallo": "No free model responded (they are saturated). Try again in a few minutes. To make it always respond, add credit in OpenRouter.",
         "demo": "Not available in the demo."
       },
-      "desactualizado": "This analysis predates the latest property lookup ({fecha}) and does not include the new data. Click \"Update analysis\"."
+      "desactualizado": "This analysis predates the latest property lookup ({fecha}) and does not include the new data. Click \"Update analysis\".",
+      "difiere": "The financial analysis, run with all uses and their figures, recommends {financiero}. That is the recommendation in the report."
     },
     "flujo": {
       "titulo": "Study workflow",

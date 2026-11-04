@@ -96,7 +96,7 @@ Reglas:
 4. Daño estructural severo (estructura de 0 a 2 en la visita): estado_fisico en 0 a 20 y decisión "descartar".
 5. Si faltan los dos documentos base o la visita y no hay vetos, la decisión es "falta_informacion".
 6. BIC nivel 2 o 3 no descarta: permite adecuar el interior con aprobación del IDPC. Nivel 1 limita mucho la intervención.
-7. Si tu decisión difiere de la sugerencia por reglas, explica por qué en el resumen ejecutivo.
+7. Si tu decisión difiere de la sugerencia por reglas, explica por qué en el resumen ejecutivo. Si el expediente trae analisisFinanciero con un uso recomendado, usoRecomendado debe ser ese uso (o una mezcla que lo incluya); si no estás de acuerdo, dilo en el resumen ejecutivo.
 8. Escribe en español de Colombia, claro y directo, sin jerga. Cifras con separador de miles con punto.
 9. criterios: el expediente trae "criteriosPendientes", los criterios de los 5 filtros que nadie ha puntuado, con sus niveles (0, 1, 2). Puntúa solo los que los datos sostengan; deja fuera los demás. Nunca pongas un veto en 0 sin una evidencia clara.
 10. checklist: el expediente trae "checklistPendiente", los ítems de la checklist A–F sin resolver. Marca solo los que los datos sostengan: "cumple", "no_cumple", "por_verificar" (hay un indicio pero falta confirmar) o "no_aplica". En los ítems bloqueantes, "no_cumple" solo con evidencia clara.

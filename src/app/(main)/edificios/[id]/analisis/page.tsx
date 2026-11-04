@@ -34,7 +34,7 @@ export default async function AnalisisPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="space-y-4">
-      <AnalistaIA edificioId={id} analisis={ia} disponible={IA_DISPONIBLE} desde={consulta?.fecha ?? null} />
+      <AnalistaIA edificioId={id} analisis={ia} disponible={IA_DISPONIBLE} usoFinanciero={mmu?.resultado.usos.find((u) => u.id === mmu.resultado.recomendado)?.nombre ?? null} desde={consulta?.fecha ?? null} />
       <DecisionSugerida sugerencia={decision} />
       <section className="bento" aria-labelledby="visita-analisis">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">

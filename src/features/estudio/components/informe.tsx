@@ -3,7 +3,7 @@ import { SemaforoBadge } from '@/features/ficha/components/badges'
 import type { InformeVisita } from '@/features/ficha/types'
 import { DOCUMENTOS, documentoPorCodigo } from '../catalogo/documentos'
 import { ITEMS_GUIA, itemsDelBloque } from '../catalogo/guia'
-import { COP, fecha, numero, porcentaje, tx } from '../lib/texto'
+import { COP, fecha, fechaHora, numero, porcentaje, tx } from '../lib/texto'
 import type { AnalisisGuardado, EdificioReal, EstadoDocumentoEdificio, EstadoItemEdificio, ResultadoMayorMejorUso, ResultadoTamizaje, UsoCandidato } from '../types'
 import { FILTROS } from '../catalogo/filtros'
 import { FUENTES } from '../catalogo/fuentes'
@@ -13,7 +13,9 @@ import type { SugerenciaDecision } from '../lib/decision'
 import { urlArchivo } from '../lib/archivos'
 import type { AnalisisIAGuardado } from '../lib/analista-ia'
 import type { ConsultaPredio } from '../types'
+import type { CambioInforme, NotaInforme as NotaInformeDatos, SeccionEditable } from '../lib/informe-ediciones'
 import { BotonImprimir } from './boton-imprimir'
+import { NotaInforme } from './nota-informe'
 import { IndicadoresClave, PortadaInforme, RegistroFotografico, type DatoClave, type FotoReporte } from './informe-portada'
 import { DecisionSugerida } from './decision-sugerida'
 import { RadarFiltros } from './radar-filtros'
@@ -34,6 +36,7 @@ interface Props {
   ia: React.ReactNode
   iaDatos?: AnalisisIAGuardado | null
   consulta?: ConsultaPredio | null
+  ediciones?: { notas: Partial<Record<SeccionEditable, NotaInformeDatos>>; historial: CambioInforme[] }
 }
 
 const ESTADO_COLOR: Record<EstadoItemEdificio['estado'], string> = {
@@ -44,11 +47,11 @@ const ESTADO_COLOR: Record<EstadoItemEdificio['estado'], string> = {
   no_aplica: 'bg-piedra text-medio-texto',
 }
 
-function Capitulo({ n, titulo, children }: { n: number; titulo: string; children: React.ReactNode }) {
+function Capitulo({ n, titulo, children, nota }: { n: number; titulo: string; children: React.ReactNode; nota?: React.ReactNode }) {
   return (
     <section className="informe-cap bento print:rounded-none print:border-0 print:p-0 print:shadow-none" aria-labelledby={`cap-${n}`}>
       <h2 id={`cap-${n}`} className="informe-titulo text-lg font-bold print:border-b-2 print:border-torna print:pb-1.5 print:text-[13pt]"><span className="mr-2 text-rojo">{String(n).padStart(2, '0')}</span>{titulo}</h2>
-      <div className="mt-3 space-y-3 text-sm print:text-[9.5pt]">{children}</div>
+      <div className="mt-3 space-y-3 text-sm print:text-[9.5pt]">{nota}{children}</div>
     </section>
   )
 }
@@ -87,7 +90,7 @@ async function Bloque({ codigo, estados }: { codigo: string; estados: Map<string
 }
 
 // Informe de viabilidad: los 10 capitulos de la guia (seccion 07), armados con lo que hay en la ficha
-export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu, fuentes, decision, ia, iaDatos = null, consulta = null }: Props) {
+export async function Informe({ edificio, docs, items, usos, informe, tamizaje, mmu, fuentes, decision, ia, iaDatos = null, consulta = null, ediciones = { notas: {}, historial: [] } }: Props) {
   const [t, tf, locale] = await Promise.all([getTranslations('estudio.informe'), getTranslations('estudio.filtros'), getLocale()])
   const estados = new Map(items.map((i) => [i.codigo, i]))
   const estadoDoc = new Map(docs.map((d) => [d.codigo, d]))
@@ -130,12 +133,22 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
     { etiqueta: tp('estrato'), valor: c?.manzana?.estrato != null ? String(c.manzana.estrato) : '—' },
     { etiqueta: tp('corte'), valor: hoy },
   ]
-  const conclusion = a
-    ? { decision: td(`opcion.${a.decision}`), puntaje: iaDatos!.puntajeGlobal != null ? `${iaDatos!.puntajeGlobal}/100` : '—', detalle: a.usoRecomendado ? tp('usoIa', { uso: a.usoRecomendado }) : ta('titulo') }
-    : { decision: td(`opcion.${decision.decision}`), puntaje: rf?.potencial != null ? `${rf.potencial}/100` : '—', detalle: tp('porReglas') }
+  // Uso recomendado: siempre el del análisis financiero (mismo dato en portada, resumen y matriz)
+  const viablesMezcla = r ? r.usos.filter((u) => u.viable).sort((x, y) => (y.valorAjustado ?? 0) - (x.valorAjustado ?? 0)).slice(0, 2).map((u) => u.nombre) : []
+  const detalleUso = recomendado
+    ? [tp('usoFinanciero', { uso: recomendado.nombre }), viablesMezcla.length === 2 ? tp('mezclaPosible', { usos: viablesMezcla.join(' + ') }) : null].filter(Boolean).join(' · ')
+    : a?.usoRecomendado ? tp('usoIa', { uso: a.usoRecomendado }) : tp('porReglas')
+  const notaPortada = ediciones.notas.portada
+  const decisionFinal = notaPortada?.decision ?? a?.decision ?? decision.decision
+  const conclusion = {
+    decision: td(`opcion.${decisionFinal}`),
+    puntaje: a && iaDatos!.puntajeGlobal != null ? `${iaDatos!.puntajeGlobal}/100` : rf?.potencial != null ? `${rf.potencial}/100` : '—',
+    detalle: notaPortada?.texto || detalleUso,
+    traza: notaPortada && (notaPortada.texto || notaPortada.decision) ? tp('trazaPortada', { autor: notaPortada.autor, fecha: fechaHora(locale, notaPortada.fecha) }) : undefined,
+  }
 
   const indicadores = [
-    { etiqueta: tp('decision'), valor: conclusion.decision, tono: (a?.decision ?? decision.decision) === 'descartar' ? 'rojo' as const : (a?.decision ?? decision.decision) === 'continuar' ? 'verde' as const : 'ambar' as const },
+    { etiqueta: tp('decision'), valor: conclusion.decision, tono: decisionFinal === 'descartar' ? 'rojo' as const : decisionFinal === 'continuar' ? 'verde' as const : 'ambar' as const },
     { etiqueta: tp('puntajeIa'), valor: iaDatos?.puntajeGlobal != null ? `${iaDatos.puntajeGlobal}/100` : '—' },
     { etiqueta: tp('potencial'), valor: rf?.potencial != null ? `${rf.potencial}/100` : '—' },
     { etiqueta: tp('usoRecomendado'), valor: recomendado?.nombre ?? '—' },
@@ -148,6 +161,9 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
   const pendientesPorBloque = ['A', 'B', 'C', 'CV', 'D', 'E', 'F']
     .map((b) => ({ b, items: porVerificar.filter((i) => i.bloque === b) }))
     .filter((g) => g.items.length > 0)
+
+  const nota = (clave: SeccionEditable, seccion: string) => <NotaInforme edificioId={edificio.id} clave={clave} seccion={seccion} nota={ediciones.notas[clave] ?? null} />
+  const nombreSeccion = (clave: SeccionEditable) => (clave === 'portada' ? tp('conclusion') : `${clave.slice(3).padStart(2, '0')} · ${t(`cap.${clave.slice(3)}` as 'cap.1')}`)
 
   return (
     <article className="informe space-y-4 print:space-y-5">
@@ -163,9 +179,15 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         <BotonImprimir />
       </header>
 
+      <section className="bento space-y-2 print:hidden">
+        <p className="text-sm font-semibold">{t('edicion.portadaTitulo')}</p>
+        <p className="text-xs text-medio-texto">{t('edicion.portadaTexto', { conclusion: `${td(`opcion.${a?.decision ?? decision.decision}`)} · ${detalleUso}` })}</p>
+        <NotaInforme edificioId={edificio.id} clave="portada" seccion={tp('conclusion')} nota={notaPortada ?? null} conDecision />
+      </section>
+
       {!mmu && <p className="rounded-xl bg-ambar-claro px-4 py-3 text-sm">{t('borrador')}</p>}
 
-      <Capitulo n={1} titulo={t('cap.1')}>
+      <Capitulo n={1} titulo={t('cap.1')} nota={nota('cap1', t('cap.1'))}>
         <IndicadoresClave datos={indicadores} />
         {ia}
         <DecisionSugerida sugerencia={decision} className="border-0 p-0 shadow-none" />
@@ -196,7 +218,7 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         {edificio.resumen && <p>{edificio.resumen}</p>}
       </Capitulo>
 
-      <Capitulo n={2} titulo={t('cap.2')}>
+      <Capitulo n={2} titulo={t('cap.2')} nota={nota('cap2', t('cap.2'))}>
         <dl className="grid grid-cols-2 gap-2 md:grid-cols-4">
           {[[t('direccion'), edificio.direccion], ['CHIP', edificio.chip], [t('matricula'), edificio.matricula], [t('zona'), edificio.zona]].map(([k, v]) => (
             <div key={k}><dt className="text-xs text-medio-texto">{k}</dt><dd className="font-medium">{v ?? '—'}</dd></div>
@@ -212,7 +234,7 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         )}
       </Capitulo>
 
-      <Capitulo n={3} titulo={t('cap.3')}>
+      <Capitulo n={3} titulo={t('cap.3')} nota={nota('cap3', t('cap.3'))}>
         <h3 className="font-semibold">{t('consultasEnLinea')}</h3>
         <dl className="divide-y divide-borde">
           {FUENTES.flatMap((f) => f.campos.map((c) => {
@@ -228,7 +250,7 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         <Bloque codigo="B" estados={estados} />
       </Capitulo>
 
-      <Capitulo n={4} titulo={t('cap.4')}>
+      <Capitulo n={4} titulo={t('cap.4')} nota={nota('cap4', t('cap.4'))}>
         {informe && (
           <div className="rounded-xl bg-fondo p-3">
             <p className="font-semibold">{informe.resumenTitulo || informe.titulo}</p>
@@ -256,9 +278,9 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         <Bloque codigo="CV" estados={estados} />
       </Capitulo>
 
-      <Capitulo n={5} titulo={t('cap.5')}><Bloque codigo="D" estados={estados} /></Capitulo>
+      <Capitulo n={5} titulo={t('cap.5')} nota={nota('cap5', t('cap.5'))}><Bloque codigo="D" estados={estados} /></Capitulo>
 
-      <Capitulo n={6} titulo={t('cap.6')}>
+      <Capitulo n={6} titulo={t('cap.6')} nota={nota('cap6', t('cap.6'))}>
         <Bloque codigo="E" estados={estados} />
         {usos.length > 0 && (
           <ul className="divide-y divide-borde">
@@ -269,16 +291,16 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         )}
       </Capitulo>
 
-      <Capitulo n={7} titulo={t('cap.7')}>
+      <Capitulo n={7} titulo={t('cap.7')} nota={nota('cap7', t('cap.7'))}>
         <Bloque codigo="F" estados={estados} />
         {r && <p className="text-xs text-medio-texto">{t('parametros', { tasa: porcentaje(locale, r.parametros.tasaMinima), anios: r.parametros.horizonteAnios, salida: r.parametros.tasaSalida ? porcentaje(locale, r.parametros.tasaSalida) : '—' })}</p>}
       </Capitulo>
 
-      <Capitulo n={8} titulo={t('cap.8')}>
+      <Capitulo n={8} titulo={t('cap.8')} nota={nota('cap8', t('cap.8'))}>
         {r ? <VistaMmu r={r} /> : <p className="text-medio-texto">{t('sinMatriz')}</p>}
       </Capitulo>
 
-      <Capitulo n={9} titulo={t('cap.9')}>
+      <Capitulo n={9} titulo={t('cap.9')} nota={nota('cap9', t('cap.9'))}>
         {(() => {
           const bloqueos = (tamizaje?.resultado.bloqueos ?? []).map((cod) => { const it = ITEMS_GUIA.find((x) => x.codigo === cod); return `${cod} · ${it ? tx(it.texto, locale) : ''}` })
           const reglas = [
@@ -308,7 +330,7 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         })()}
       </Capitulo>
 
-      <Capitulo n={10} titulo={t('cap.10')}>
+      <Capitulo n={10} titulo={t('cap.10')} nota={nota('cap10', t('cap.10'))}>
         {a && a.proximosPasos.length > 0 && (
           <div className="informe-fila">
             <h3 className="font-semibold">{tp('pasos')}</h3>
@@ -336,6 +358,23 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
         <section className="informe-cap bento print:rounded-none print:border-0 print:p-0 print:shadow-none" aria-labelledby="anexo-fotos">
           <h2 id="anexo-fotos" className="informe-titulo text-lg font-bold print:border-b-2 print:border-torna print:pb-1.5 print:text-[13pt]">{tp('anexo')}</h2>
           <div className="mt-3"><RegistroFotografico fotos={fotos.slice(9, 30)} /></div>
+        </section>
+      )}
+
+      {ediciones.historial.length > 0 && (
+        <section className="informe-cap bento print:rounded-none print:border-0 print:p-0 print:shadow-none" aria-labelledby="control-cambios">
+          <h2 id="control-cambios" className="informe-titulo text-lg font-bold print:border-b-2 print:border-torna print:pb-1.5 print:text-[13pt]">{t('edicion.control')}</h2>
+          <p className="mt-2 text-xs text-medio-texto">{t('edicion.controlTexto')}</p>
+          <table className="mt-2 w-full text-sm print:text-[8.5pt]">
+            <thead className="bg-fondo text-left text-xs uppercase tracking-wider text-medio-texto">
+              <tr><th className="px-2 py-1.5">{t('edicion.cFecha')}</th><th className="px-2 py-1.5">{t('edicion.cSeccion')}</th><th className="px-2 py-1.5">{t('edicion.cAccion')}</th><th className="px-2 py-1.5">{t('edicion.cAutor')}</th></tr>
+            </thead>
+            <tbody className="divide-y divide-borde">
+              {[...ediciones.historial].reverse().map((c, i) => (
+                <tr key={i}><td className="px-2 py-1.5 tabular-nums">{fechaHora(locale, c.fecha)}</td><td className="px-2 py-1.5">{nombreSeccion(c.seccion)}</td><td className="px-2 py-1.5">{t(`edicion.accion.${c.accion}`)}</td><td className="px-2 py-1.5">{c.autor}</td></tr>
+              ))}
+            </tbody>
+          </table>
         </section>
       )}
 

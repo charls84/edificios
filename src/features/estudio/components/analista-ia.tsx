@@ -18,7 +18,7 @@ function Lista({ titulo, items, tono }: { titulo: string; items: string[]; tono:
 }
 
 // Tarjeta del analista de IA: puntaje global, 8 dimensiones y sugerencia
-export async function AnalistaIA({ edificioId, analisis, disponible, desde = null, className = '' }: { edificioId: string; analisis: AnalisisIAGuardado | null; disponible: boolean; /** Fecha de la última consulta del predio: si el análisis es anterior, está desactualizado */ desde?: string | null; className?: string }) {
+export async function AnalistaIA({ edificioId, analisis, disponible, desde = null, usoFinanciero = null, className = '' }: { edificioId: string; analisis: AnalisisIAGuardado | null; disponible: boolean; /** Fecha de la última consulta del predio: si el análisis es anterior, está desactualizado */ desde?: string | null; /** Uso que recomienda el análisis financiero (manda sobre la lectura del analista) */ usoFinanciero?: string | null; className?: string }) {
   const [t, td, locale] = await Promise.all([getTranslations('estudio.analista'), getTranslations('estudio.decision'), getLocale()])
   const a = analisis?.resultado
   return (
@@ -48,6 +48,9 @@ export async function AnalistaIA({ edificioId, analisis, disponible, desde = nul
             <div>
               <p className="text-sm">{a.resumenEjecutivo}</p>
               {a.usoRecomendado && <p className="mt-2 text-sm"><strong>{t('uso')}:</strong> {a.usoRecomendado}</p>}
+              {usoFinanciero && a.usoRecomendado && !a.usoRecomendado.toLowerCase().includes(usoFinanciero.toLowerCase()) && (
+                <p className="mt-2 rounded-lg bg-ambar-claro px-3 py-2 text-xs text-ambar">{t('difiere', { financiero: usoFinanciero })}</p>
+              )}
             </div>
           </div>
 

@@ -19,7 +19,7 @@ export async function PortadaInforme({ edificio, foto, datos, conclusion, fecha 
   edificio: EdificioReal
   foto: FotoReporte | null
   datos: DatoClave[]
-  conclusion: { decision: string; puntaje: string; detalle: string } | null
+  conclusion: { decision: string; puntaje: string; detalle: string; traza?: string } | null
   fecha: string
 }) {
   const t = await getTranslations('estudio.informe.portada')
@@ -53,7 +53,8 @@ export async function PortadaInforme({ edificio, foto, datos, conclusion, fecha 
             <div className="flex-1 rounded-lg border-l-4 border-rojo bg-fondo p-4">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-medio-texto">{t('conclusion')}</p>
               <p className="mt-1 text-lg font-bold text-torna">{conclusion.decision}</p>
-              <p className="mt-1 text-sm text-medio-texto">{conclusion.detalle}</p>
+              <p className="mt-1 whitespace-pre-line text-sm text-medio-texto">{conclusion.detalle}</p>
+              {conclusion.traza && <p className="mt-2 text-[10px] text-medio-texto">{conclusion.traza}</p>}
             </div>
           </div>
         )}
