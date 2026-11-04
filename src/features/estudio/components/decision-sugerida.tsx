@@ -19,7 +19,7 @@ function Lista({ titulo, items, locale, tono }: { titulo: string; items: Texto[]
 export async function DecisionSugerida({ sugerencia: s, className = '' }: { sugerencia: SugerenciaDecision; className?: string }) {
   const [t, locale] = await Promise.all([getTranslations('estudio.decision'), getLocale()])
   return (
-    <section className={`bento break-inside-avoid ${className}`} aria-labelledby="decision-sugerida">
+    <section className={`bento break-inside-avoid print:break-inside-auto ${className}`} aria-labelledby="decision-sugerida">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-2xl">
           <h2 id="decision-sugerida" className="text-lg font-bold">{t('titulo')}</h2>

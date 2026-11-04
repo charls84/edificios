@@ -529,8 +529,7 @@
           "obraMas20": "Rentabilidad con obra +20 %",
           "colocacionLenta": "VPN con colocación +6 meses",
           "valorAjustado": "4 · Valor ajustado por riesgo",
-          "estado": "Resultado",
-          "provisional": "Resultado"
+          "estado": "Resultado"
         },
         "viable": "Viable",
         "motivos": {
@@ -548,7 +547,8 @@
         "porDefecto": "Valores por defecto",
         "restablecer": "Restablecer valores por defecto",
         "horizonteAyuda": "Por defecto 10 años.",
-        "provisionalSi": "Provisional: hay pruebas por verificar"
+        "porVerificar": "Por verificar",
+        "viableProvisional": "Viable (provisional)"
       }
     },
     "resumen": {
@@ -655,7 +655,41 @@
       "consultasEnLinea": "Consultas en línea (Catastro, POT 555, Mapas Bogotá, DADEP, SIGAU, SAE)",
       "sinConsultar": "Sin consultar",
       "avisoProvisional": "Resultado provisional: alguna prueba (norma, edificio o demanda) de los usos sigue por verificar.",
-      "avisoSupuestos": "Los números de canon, obra y gastos son supuestos de referencia de la plataforma: el comercial debe validarlos en Usos candidatos antes de presentar el informe."
+      "avisoSupuestos": "Los números de canon, obra y gastos son supuestos de referencia de la plataforma: el comercial debe validarlos en Usos candidatos antes de presentar el informe.",
+      "portada": {
+        "etiqueta": "Portada del informe",
+        "tipo": "Informe de prefactibilidad",
+        "titulo": "Evaluación de mayor y mejor uso",
+        "puntaje": "Puntaje",
+        "conclusion": "Conclusión",
+        "preparado": "Preparado por Torna · Fecha de corte: {fecha}",
+        "confidencial": "Confidencial · Uso interno",
+        "matricula": "Matrícula",
+        "lote": "Área del lote",
+        "construida": "Área construida",
+        "estimada": "estimada",
+        "pisos": "Pisos",
+        "sotano": "sótano",
+        "patrimonio": "Patrimonio",
+        "noBic": "No es BIC",
+        "tratamiento": "Tratamiento POT",
+        "estrato": "Estrato",
+        "corte": "Fecha de corte",
+        "usoIa": "Uso que mejor encaja según el analista: {uso}",
+        "porReglas": "Sugerencia por reglas a partir de los 5 filtros y la consulta automática",
+        "decision": "Decisión sugerida",
+        "puntajeIa": "Puntaje analista IA",
+        "potencial": "Potencial 5 filtros",
+        "usoRecomendado": "Uso recomendado",
+        "rentabilidad": "Rentabilidad",
+        "registro": "Registro fotográfico ({n} fotos)",
+        "anexo": "Anexo · Registro fotográfico complementario",
+        "riesgos": "Riesgos identificados",
+        "mitigacion": "Cómo mitigarlos",
+        "pasos": "Próximos pasos",
+        "bloque": "Bloque {b}",
+        "millones": "millones"
+      }
     },
     "filtros": {
       "titulo": "Los 5 filtros de Torna",
