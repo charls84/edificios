@@ -830,9 +830,10 @@
       },
       "error": {
         "sinLlave": "The OpenRouter key isn't set in Vercel.",
-        "fallo": "The analyst didn't respond. Try again in a minute.",
+        "fallo": "No free model responded (they are saturated). Try again in a few minutes. To make it always respond, add credit in OpenRouter.",
         "demo": "Not available in the demo."
-      }
+      },
+      "desactualizado": "This analysis predates the latest property lookup ({fecha}) and does not include the new data. Click \"Update analysis\"."
     },
     "flujo": {
       "titulo": "Study workflow",
@@ -868,7 +869,7 @@
         "sinRespuesta": "Cadastre didn't respond. Try again in a few minutes.",
         "invalido": "Check the building's data.",
         "demo": "Not available in the demo.",
-        "ia": "The AI analyst didn't respond (free models get saturated). Request it again in a few minutes from Analysis."
+        "ia": "Documents and sources are ready, but no free AI model responded (they are saturated). Request the analysis again in a few minutes from Analysis."
       }
     }
   }

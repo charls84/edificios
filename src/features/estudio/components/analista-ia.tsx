@@ -18,7 +18,7 @@ function Lista({ titulo, items, tono }: { titulo: string; items: string[]; tono:
 }
 
 // Tarjeta del analista de IA: puntaje global, 8 dimensiones y sugerencia
-export async function AnalistaIA({ edificioId, analisis, disponible, className = '' }: { edificioId: string; analisis: AnalisisIAGuardado | null; disponible: boolean; className?: string }) {
+export async function AnalistaIA({ edificioId, analisis, disponible, desde = null, className = '' }: { edificioId: string; analisis: AnalisisIAGuardado | null; disponible: boolean; /** Fecha de la última consulta del predio: si el análisis es anterior, está desactualizado */ desde?: string | null; className?: string }) {
   const [t, td, locale] = await Promise.all([getTranslations('estudio.analista'), getTranslations('estudio.decision'), getLocale()])
   const a = analisis?.resultado
   return (
@@ -32,6 +32,10 @@ export async function AnalistaIA({ edificioId, analisis, disponible, className =
         </div>
         {disponible && <BotonAnalista edificioId={edificioId} hayAnalisis={Boolean(analisis)} />}
       </div>
+
+      {analisis && desde && new Date(analisis.fecha) < new Date(desde) && (
+        <p role="status" className="mt-3 rounded-xl bg-ambar-claro px-4 py-3 text-sm text-ambar">{t('desactualizado', { fecha: fecha(locale, desde) })}</p>
+      )}
 
       {a && (
         <>

@@ -25,7 +25,7 @@ export interface EntradaDecision {
   visita: ResumenVisita | null
   consulta: ConsultaPredio | null
   mmu: ResultadoMayorMejorUso | null
-  /** Hay algo escrito en "Usos permitidos" de SINUPOT */
+  /** Hay algo escrito en "Usos permitidos" (POT 555 o concepto de norma) */
   usosConsultados: boolean
   /** Respuestas de la verificación de lavado de activos (fuente SAE), por campo */
   sae: Partial<Record<'inventario' | 'medidas' | 'listas', string>>
@@ -58,7 +58,7 @@ function faltantes(e: EntradaDecision): Texto[] {
   if (!e.consulta?.lote) f.push(t('Consulta automática del predio en Catastro (revisar la dirección o el código de lote)', 'Automatic cadastre lookup (check the address or lot code)'))
   if (!e.visita || e.visita.calificadas < CLAVES_VISITA.length) f.push(t('Visita técnica con las seis secciones calificadas', 'Site visit with all six sections scored'))
   if (!e.sae.inventario) f.push(t('Verificación en la SAE de lavado de activos y extinción de dominio', 'SAE check for money laundering and asset forfeiture'))
-  if (!e.usosConsultados) f.push(t('Usos permitidos y tratamiento en SINUPOT o concepto de norma', 'Permitted uses and treatment in SINUPOT or a planning opinion'))
+  if (!e.usosConsultados) f.push(t('Usos permitidos: confirmar con el POT 555 o con un concepto de norma', 'Permitted uses: confirm with POT 555 or a planning opinion'))
   for (const r of e.filtros.filtros.filter((x) => x.vetoPendiente)) {
     const filtro = FILTROS.find((x) => x.codigo === r.codigo)!
     const veto = filtro.criterios.find((c) => c.veto)!

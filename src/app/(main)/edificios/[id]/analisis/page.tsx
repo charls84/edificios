@@ -11,14 +11,14 @@ import { resumirVisita } from '@/features/visita/lib/calificacion'
 import { Analisis } from '@/features/estudio/components/analisis'
 import { faltantesMayorMejorUso } from '@/features/estudio/lib/finanzas'
 import { documentosMinimoFaltantes } from '@/features/estudio/lib/tamizaje'
-import { getDocumentos, getInformeVisita, getItemsGuia, getUltimoAnalisis, getUsos } from '@/features/estudio/services/consultas'
+import { getConsultaAuto, getDocumentos, getInformeVisita, getItemsGuia, getUltimoAnalisis, getUsos } from '@/features/estudio/services/consultas'
 import type { ResultadoMayorMejorUso, ResultadoTamizaje } from '@/features/estudio/types'
 import { IS_DEMO } from '@/shared/lib/demo'
 
 export default async function AnalisisPage({ params }: { params: Promise<{ id: string }> }) {
   if (IS_DEMO) notFound()
   const { id } = await params
-  const [docs, items, usos, tamizaje, mmu, decision, informe, t, ia] = await Promise.all([
+  const [docs, items, usos, tamizaje, mmu, decision, informe, t, ia, consulta] = await Promise.all([
     getDocumentos(id),
     getItemsGuia(id),
     getUsos(id),
@@ -28,12 +28,13 @@ export default async function AnalisisPage({ params }: { params: Promise<{ id: s
     getInformeVisita(id),
     getTranslations('estudio.visitaAnalisis'),
     getAnalisisIA(id),
+    getConsultaAuto(id),
   ])
   const visita = resumirVisita(informe)
 
   return (
     <div className="space-y-4">
-      <AnalistaIA edificioId={id} analisis={ia} disponible={IA_DISPONIBLE} />
+      <AnalistaIA edificioId={id} analisis={ia} disponible={IA_DISPONIBLE} desde={consulta?.fecha ?? null} />
       <DecisionSugerida sugerencia={decision} />
       <section className="bento" aria-labelledby="visita-analisis">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
