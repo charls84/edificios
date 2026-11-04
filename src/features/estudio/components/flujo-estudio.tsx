@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from 'next-intl/server'
 import Link from 'next/link'
-import { fecha } from '../lib/texto'
+import { fecha, fechaHora } from '../lib/texto'
 import { BotonAnalizarPredio } from './boton-analizar-predio'
 
 type Estado = 'hecho' | 'en_curso' | 'pendiente'
@@ -30,7 +30,7 @@ export async function FlujoEstudio({ d, className = '' }: { d: DatosFlujo; class
     {
       estado: d.consulta ? 'hecho' : 'pendiente',
       titulo: t('p3'),
-      detalle: d.consulta ? t('p3d', { fecha: fecha(locale, d.consulta.fecha), ok: d.consulta.ok, total: d.consulta.total }) : t('p3pendiente'),
+      detalle: d.consulta ? t('p3d', { fecha: fechaHora(locale, d.consulta.fecha), ok: d.consulta.ok, total: d.consulta.total }) : t('p3pendiente'),
       href: d.consulta ? `${base}/fuentes` : undefined,
       accion: <BotonAnalizarPredio edificioId={d.edificioId} yaAnalizado={Boolean(d.consulta)} iaDisponible={d.iaDisponible} />,
     },
@@ -38,7 +38,7 @@ export async function FlujoEstudio({ d, className = '' }: { d: DatosFlujo; class
     {
       estado: d.ia ? (d.consulta && new Date(d.ia.fecha) >= new Date(d.consulta.fecha) ? 'hecho' : 'en_curso') : 'pendiente',
       titulo: t('p5'),
-      detalle: !d.iaDisponible ? t('p5sinLlave') : d.ia ? t('p5d', { fecha: fecha(locale, d.ia.fecha), puntaje: d.ia.puntaje ?? '—' }) : t('p5pendiente'),
+      detalle: !d.iaDisponible ? t('p5sinLlave') : d.ia ? t('p5d', { fecha: fechaHora(locale, d.ia.fecha), puntaje: d.ia.puntaje ?? '—' }) : t('p5pendiente'),
       href: `${base}/analisis`,
     },
   ]
