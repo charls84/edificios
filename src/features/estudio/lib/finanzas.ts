@@ -77,8 +77,9 @@ export function metricasDeUso(u: UsoCandidato, p: ParametrosFinancieros): Metric
     mesesPrimerIngreso: u.mesesPrimerIngreso ?? 0, riesgo: u.riesgo, valorAjustado: null,
     sensibilidad: { canonMenos10: null, obraMas20: null, colocacionLenta: null },
   }
-  if (u.legal !== 'si') return { ...base, motivo: 'legal' }
-  if (u.fisico !== 'si') return { ...base, motivo: 'fisica' }
+  // Un "no" descarta el uso; "por verificar" deja correr los números como resultado provisional
+  if (u.legal === 'no') return { ...base, motivo: 'legal' }
+  if (u.fisico === 'no') return { ...base, motivo: 'fisica' }
   if (u.demanda === 'no') return { ...base, motivo: 'demanda' }
   const e = completo(u)
   if (!e) return { ...base, motivo: 'datos' }
@@ -90,6 +91,7 @@ export function metricasDeUso(u: UsoCandidato, p: ParametrosFinancieros): Metric
   const rentabilidad = neto / e.inversion
   return {
     ...base,
+    provisional: [u.legal, u.fisico, u.demanda].includes('por_verificar'),
     viable: neto > 0 && valor >= 0,
     motivo: neto <= 0 ? 'ingreso' : valor < 0 ? 'tasa' : null,
     ingresoBruto: bruto,
@@ -120,7 +122,7 @@ export function correrMayorMejorUso(usos: UsoCandidato[], p: ParametrosFinancier
 
 /** Que falta para poder correr el analisis: usos sin numeros y bloques D-F sin resolver */
 export function faltantesMayorMejorUso(usos: UsoCandidato[], items: EstadoItemEdificio[]) {
-  const sobreviven = usos.filter((u) => u.legal === 'si' && u.fisico === 'si')
+  const sobreviven = usos.filter((u) => u.legal !== 'no' && u.fisico !== 'no')
   const usosSinNumeros = sobreviven.filter((u) => !completo(u)).map((u) => u.nombre)
   const estado = new Map(items.map((x) => [x.codigo, x.estado]))
   const itemsPendientes = ITEMS_GUIA

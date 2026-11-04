@@ -80,6 +80,8 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
   const porVerificar = ITEMS_GUIA.filter((i) => estados.get(i.codigo)?.estado === 'por_verificar')
   const fragiles = r ? r.usos.filter((u) => u.viable && u.sensibilidad.canonMenos10 != null && u.sensibilidad.canonMenos10 < r.parametros.tasaMinima) : []
   const hoy = fecha(locale, new Date().toISOString())
+  // Usos con números puestos por la plataforma: el informe lo advierte hasta que el comercial los cambie
+  const conSupuestos = usos.some((u) => u.demandaNota?.includes('supuestos de referencia'))
   const visita = resumirVisita(informe)
 
   return (
@@ -103,6 +105,11 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
           <>
             <p className="text-lg font-semibold">{t('usoRecomendado', { uso: recomendado.nombre })}</p>
             <p>{t('porque', { rentabilidad: porcentaje(locale, recomendado.rentabilidad ?? 0), vpn: COP(locale, recomendado.vpn ?? 0), recuperacion: numero(locale, recomendado.recuperacionAnios ?? 0) })}</p>
+            {(recomendado.provisional || conSupuestos) && (
+              <p className="rounded-xl bg-ambar-claro px-3 py-2 text-sm text-ambar">
+                {[recomendado.provisional && t('avisoProvisional'), conSupuestos && t('avisoSupuestos')].filter(Boolean).join(' ')}
+              </p>
+            )}
           </>
         ) : <p className="text-medio-texto">{t('sinRecomendacion')}</p>}
         {tamizaje?.resultado.filtros && (

@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { consultarAutomaticamente, pedirAnalisisIA } from '../services/auto-actions'
+import { correrAnalisisFinanciero } from '../services/financiero-auto'
 
 const ERRORES_CONSULTA = ['sinLote', 'sinRespuesta', 'invalido', 'demo'] as const
 
@@ -13,7 +14,7 @@ export function BotonAnalizarPredio({ edificioId, yaAnalizado, iaDisponible }: {
   const t = useTranslations('estudio.flujo')
   const router = useRouter()
   const [pendiente, iniciar] = useTransition()
-  const [paso, setPaso] = useState<1 | 2 | null>(null)
+  const [paso, setPaso] = useState<1 | 2 | 3 | null>(null)
   const [aviso, setAviso] = useState<{ tipo: 'ok' | 'error'; texto: string } | null>(null)
 
   const analizar = () => {
@@ -26,14 +27,17 @@ export function BotonAnalizarPredio({ edificioId, yaAnalizado, iaDisponible }: {
         setPaso(null)
         return
       }
-      const avisoConsulta = c.error ? t(`error.${ERRORES_CONSULTA.find((e) => e === c.error) ?? 'sinRespuesta'}`) : null
+      const avisos: string[] = c.error ? [t(`error.${ERRORES_CONSULTA.find((e) => e === c.error) ?? 'sinRespuesta'}`)] : []
       if (iaDisponible) {
         setPaso(2)
         const ia = await pedirAnalisisIA(edificioId)
-        setAviso(ia.error ? { tipo: 'error', texto: [avisoConsulta, t('error.ia')].filter(Boolean).join(' ') } : { tipo: avisoConsulta ? 'error' : 'ok', texto: avisoConsulta ?? t('listo') })
-      } else {
-        setAviso({ tipo: avisoConsulta ? 'error' : 'ok', texto: avisoConsulta ?? t('listoSinIa') })
+        if (ia.error) avisos.push(t('error.ia'))
       }
+      // Con los usos que dejó el analista (o el equipo): números, tamizaje y mayor y mejor uso
+      setPaso(3)
+      const f = await correrAnalisisFinanciero(edificioId)
+      if (!f.mmu) avisos.push(t('error.mmu'))
+      setAviso(avisos.length ? { tipo: 'error', texto: avisos.join(' ') } : { tipo: 'ok', texto: t('listo') })
       setPaso(null)
       router.refresh()
     })
