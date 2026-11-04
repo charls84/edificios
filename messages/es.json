@@ -830,9 +830,10 @@
       },
       "error": {
         "sinLlave": "Falta configurar la llave de OpenRouter en Vercel.",
-        "fallo": "El analista no respondió. Intenta de nuevo en un minuto.",
+        "fallo": "Ningún modelo gratuito respondió (están saturados). Intenta en unos minutos. Para que responda siempre, carga saldo en OpenRouter.",
         "demo": "No disponible en el demo."
-      }
+      },
+      "desactualizado": "Este análisis es anterior a la última consulta del predio ({fecha}) y no tiene en cuenta los datos nuevos. Haz clic en \"Actualizar análisis\"."
     },
     "flujo": {
       "titulo": "Flujo del estudio",
@@ -868,7 +869,7 @@
         "sinRespuesta": "Catastro no respondió. Intenta de nuevo en unos minutos.",
         "invalido": "Revisa los datos del edificio.",
         "demo": "No disponible en el demo.",
-        "ia": "El analista de IA no respondió (los modelos gratuitos se saturan). Pídelo de nuevo en unos minutos desde Análisis."
+        "ia": "Los documentos y las fuentes quedaron listos, pero ningún modelo gratuito de IA respondió (están saturados). Pide el análisis de nuevo en unos minutos desde Análisis."
       }
     }
   }

@@ -47,7 +47,7 @@ export async function armarExpediente(buildingId: string) {
     fuentes: Object.fromEntries(Object.entries(fuentes).map(([k, v]) => [textoFuente.get(k) ?? k, v.texto])),
     filtros: { evaluaciones: filtros.map((f) => ({ criterio: f.codigo, puntaje: f.puntaje, nota: f.nota })), resultado: calcularFiltros(filtros) },
     checklistPendiente: ITEMS_GUIA.filter((i) => (items.find((x) => x.codigo === i.codigo)?.estado ?? 'pendiente') === 'pendiente').map((i) => ({
-      codigo: i.codigo, bloque: i.bloque, item: i.texto.es, dondeSeConsigue: i.nota.es, bloqueante: Boolean(i.bloqueante),
+      codigo: i.codigo, item: i.texto.es, bloqueante: i.bloqueante || undefined,
     })),
     criteriosPendientes: CRITERIOS_FILTROS.filter((c) => !puntuados.has(c.codigo)).map((c) => ({
       codigo: c.codigo, filtro: c.filtro, criterio: c.texto.es, veto: Boolean(c.veto), niveles: c.niveles.map((n, i) => `${i}: ${n.es}`),
@@ -107,19 +107,30 @@ export async function correrAnalista(buildingId: string): Promise<ResultadoAnali
   if (!IA_DISPONIBLE) return { ok: false, error: 'sinLlave' }
   const expediente = await armarExpediente(buildingId)
   if (!expediente) return { ok: false, error: 'sinPredio' }
-  const modelos = await modelosAnalista()
+  // Primero el modelo que funcionó la última vez (los gratuitos cambian de disponibilidad)
+  const supabaseLectura = await createClient()
+  const { data: ultimo } = await supabaseLectura.from('data_points').select('valor').eq('categoria', 'ia').eq('clave', 'analista').order('fecha_consulta', { ascending: false }).limit(1).maybeSingle()
+  const preferido = (ultimo as { valor: { modelo?: string } } | null)?.valor?.modelo
+  const todos = await modelosAnalista()
+  const modelos = preferido && todos.includes(preferido) ? [preferido, ...todos.filter((m) => m !== preferido)] : todos
+  const inicio = Date.now()
+  // Expediente sin campos vacíos: menos texto, respuestas más rápidas
+  const compacto = JSON.stringify(expediente, (_k, v) => (v === null || v === '' || (Array.isArray(v) && v.length === 0) ? undefined : v))
   if (modelos.length === 0) console.error('[analista-ia] no se pudo obtener la lista de modelos gratuitos de OpenRouter')
   // Se prueba un modelo tras otro: los gratuitos a veces están saturados o devuelven JSON inválido
   for (const modelo of modelos) {
+    // Vercel corta a los 5 minutos: no empezar otro modelo si queda poco tiempo
+    const restante = 270_000 - (Date.now() - inicio)
+    if (restante < 30_000) break
     try {
       const { text } = await generateText({
         model: openrouter(modelo),
         system: `${INSTRUCCIONES_ANALISTA}\n\nResponde SOLO con un objeto JSON válido que cumpla este JSON Schema, sin texto antes ni después:\n${FORMATO_RESPUESTA}`,
-        prompt: `Expediente del predio:\n${JSON.stringify(expediente)}`,
+        prompt: `Expediente del predio:\n${compacto}`,
         temperature: 0.2,
         maxOutputTokens: 8000,
         maxRetries: 0,
-        abortSignal: AbortSignal.timeout(75_000),
+        abortSignal: AbortSignal.timeout(Math.min(120_000, restante)),
       })
       const resultado = leerRespuestaIA(text)
       if (!resultado) {
