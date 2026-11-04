@@ -529,8 +529,7 @@
           "obraMas20": "Yield with works +20%",
           "colocacionLenta": "NPV with lease-up +6 months",
           "valorAjustado": "4 · Risk-adjusted value",
-          "estado": "Result",
-          "provisional": "Result"
+          "estado": "Result"
         },
         "viable": "Viable",
         "motivos": {
@@ -548,7 +547,8 @@
         "porDefecto": "Default values",
         "restablecer": "Reset to defaults",
         "horizonteAyuda": "Default 10 years.",
-        "provisionalSi": "Provisional: tests pending"
+        "porVerificar": "To verify",
+        "viableProvisional": "Viable (provisional)"
       }
     },
     "resumen": {
@@ -655,7 +655,41 @@
       "consultasEnLinea": "Online lookups (Cadastre, POT 555, Mapas Bogotá, DADEP, SIGAU, SAE)",
       "sinConsultar": "Not checked",
       "avisoProvisional": "Provisional result: some use tests (rules, building or demand) are still pending.",
-      "avisoSupuestos": "Rent, works and expense figures are platform reference assumptions: the commercial team must validate them in Candidate uses before presenting the report."
+      "avisoSupuestos": "Rent, works and expense figures are platform reference assumptions: the commercial team must validate them in Candidate uses before presenting the report.",
+      "portada": {
+        "etiqueta": "Report cover",
+        "tipo": "Pre-feasibility report",
+        "titulo": "Highest and best use assessment",
+        "puntaje": "Score",
+        "conclusion": "Conclusion",
+        "preparado": "Prepared by Torna · Cut-off date: {fecha}",
+        "confidencial": "Confidential · Internal use",
+        "matricula": "Registration",
+        "lote": "Lot area",
+        "construida": "Built area",
+        "estimada": "estimated",
+        "pisos": "Floors",
+        "sotano": "basement",
+        "patrimonio": "Heritage",
+        "noBic": "Not listed",
+        "tratamiento": "POT treatment",
+        "estrato": "Stratum",
+        "corte": "Cut-off date",
+        "usoIa": "Best-fitting use per the analyst: {uso}",
+        "porReglas": "Rule-based suggestion from the 5 filters and the automatic lookup",
+        "decision": "Suggested decision",
+        "puntajeIa": "AI analyst score",
+        "potencial": "5-filter potential",
+        "usoRecomendado": "Recommended use",
+        "rentabilidad": "Yield",
+        "registro": "Photo record ({n} photos)",
+        "anexo": "Annex · Additional photo record",
+        "riesgos": "Identified risks",
+        "mitigacion": "How to mitigate them",
+        "pasos": "Next steps",
+        "bloque": "Block {b}",
+        "millones": "million"
+      }
     },
     "filtros": {
       "titulo": "Torna's 5 filters",

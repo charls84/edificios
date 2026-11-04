@@ -144,6 +144,8 @@ export interface MetricasUso {
   riesgo: Riesgo
   /** Alguna prueba (legal, física o demanda) sigue por verificar: el resultado es provisional */
   provisional?: boolean
+  /** Veredicto de cada prueba al correr (corridas anteriores no lo traen) */
+  pruebas?: { legal: Veredicto; fisico: Veredicto; demanda: Veredicto }
   valorAjustado: number | null
   sensibilidad: { canonMenos10: number | null; obraMas20: number | null; colocacionLenta: number | null }
 }

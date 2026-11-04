@@ -27,9 +27,49 @@
 }
 
 /* Informe: al imprimir queda solo el contenido (sin barra lateral, encabezado ni pestañas) */
+@page {
+  size: A4;
+  margin: 14mm 13mm 17mm;
+  @bottom-left {
+    content: "TORNA · Informe de prefactibilidad · Confidencial";
+    font: 600 7pt Inter, system-ui, sans-serif;
+    letter-spacing: 0.08em;
+    color: #6b7280;
+  }
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font: 600 7.5pt Inter, system-ui, sans-serif;
+    color: #0b1f3a;
+  }
+}
+@page :first {
+  margin: 0;
+  @bottom-left { content: none; }
+  @bottom-right { content: none; }
+}
+
 @media print {
   aside, header.sticky, nav, .print\:hidden { display: none !important; }
   .lg\:pl-64 { padding-left: 0 !important; }
   main { max-width: none !important; padding: 0 !important; }
   body { background: #fff; }
+
+  /* Los colores de marca, puntajes y estados salen tal cual (el navegador los quita por defecto) */
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+  /* Portada: ocupa la primera hoja completa, sin márgenes */
+  .informe-portada { height: 297mm; break-after: page; margin: 0; }
+  .informe > .informe-portada + * { margin-top: 0 !important; }
+
+  /* Capítulos continuos: sin hojas medio vacías; el título nunca queda solo al pie de una hoja */
+  .informe-cap { break-inside: auto; break-before: auto; }
+  .informe-titulo { break-after: avoid; page-break-after: avoid; }
+  .informe-titulo + * { break-before: avoid; }
+  .informe-fila, .informe li, .informe tr, .informe figure, .informe dl > div { break-inside: avoid; }
+  .informe table { break-inside: auto; }
+  .informe thead { display: table-header-group; }
+
+  /* Tipografía de informe: más compacta y legible en papel */
+  .informe { font-size: 9.5pt; line-height: 1.45; }
+  .informe .bento { box-shadow: none !important; }
 }

@@ -22,7 +22,7 @@ export async function AnalistaIA({ edificioId, analisis, disponible, desde = nul
   const [t, td, locale] = await Promise.all([getTranslations('estudio.analista'), getTranslations('estudio.decision'), getLocale()])
   const a = analisis?.resultado
   return (
-    <section className={`bento break-inside-avoid ${className}`} aria-labelledby="analista-ia">
+    <section className={`bento break-inside-avoid print:break-inside-auto ${className}`} aria-labelledby="analista-ia">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="max-w-2xl">
           <h2 id="analista-ia" className="text-lg font-bold">{t('titulo')}</h2>
@@ -65,7 +65,11 @@ export async function AnalistaIA({ edificioId, analisis, disponible, desde = nul
                   </div>
                   <p className="mt-2 text-sm">{x.resumen}</p>
                   {x.evidencias.length > 0 && (
-                    <details className="mt-1 text-xs text-medio-texto">
+                    // En papel no hay clic: las evidencias principales salen a la vista
+                    <ul className="mt-1 hidden list-disc space-y-0.5 pl-4 text-[8pt] text-medio-texto print:block">{x.evidencias.slice(0, 3).map((e, i) => <li key={i}>{e}</li>)}</ul>
+                  )}
+                  {x.evidencias.length > 0 && (
+                    <details className="mt-1 text-xs text-medio-texto print:hidden">
                       <summary className="cursor-pointer">{t('evidencias', { n: x.evidencias.length })} · {t(`confianza.${x.confianza}`)}</summary>
                       <ul className="mt-1 list-disc space-y-0.5 pl-4">{x.evidencias.map((e, i) => <li key={i}>{e}</li>)}</ul>
                       {x.riesgos.length > 0 && <ul className="mt-1 list-disc space-y-0.5 pl-4 text-rojo-oscuro">{x.riesgos.map((r, i) => <li key={i}>{r}</li>)}</ul>}

@@ -19,10 +19,12 @@ export default async function EdificioLayout({ children, params }: { children: R
   if (!edificio) notFound()
 
   return (
-    <div className="space-y-4">
-      <Link href="/dashboard" className="inline-block text-sm text-rojo hover:underline">{t('volverPortafolio')}</Link>
-      <EncabezadoEdificio edificio={edificio} esAdmin={profile.role === 'admin'} />
-      <Pestanas edificioId={id} />
+    <div className="space-y-4 print:space-y-0">
+      <div className="space-y-4 print:hidden">
+        <Link href="/dashboard" className="inline-block text-sm text-rojo hover:underline">{t('volverPortafolio')}</Link>
+        <EncabezadoEdificio edificio={edificio} esAdmin={profile.role === 'admin'} />
+        <Pestanas edificioId={id} />
+      </div>
       <div>{children}</div>
     </div>
   )

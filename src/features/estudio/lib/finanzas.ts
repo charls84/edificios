@@ -76,6 +76,7 @@ export function metricasDeUso(u: UsoCandidato, p: ParametrosFinancieros): Metric
     ingresoBruto: 0, ingresoNeto: 0, rentabilidad: null, recuperacionAnios: null, tir: null, vpn: null,
     mesesPrimerIngreso: u.mesesPrimerIngreso ?? 0, riesgo: u.riesgo, valorAjustado: null,
     sensibilidad: { canonMenos10: null, obraMas20: null, colocacionLenta: null },
+    pruebas: { legal: u.legal, fisico: u.fisico, demanda: u.demanda },
   }
   // Un "no" descarta el uso; "por verificar" deja correr los números como resultado provisional
   if (u.legal === 'no') return { ...base, motivo: 'legal' }

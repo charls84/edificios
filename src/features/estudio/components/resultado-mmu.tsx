@@ -8,7 +8,7 @@ const vacio = '—'
 function Fila({ etiqueta, usos, render }: { etiqueta: string; usos: MetricasUso[]; render: (m: MetricasUso) => React.ReactNode }) {
   return (
     <tr>
-      <th scope="row" className="whitespace-nowrap px-3 py-2 text-left text-xs font-medium text-medio-texto">{etiqueta}</th>
+      <th scope="row" className="whitespace-nowrap px-3 py-2 text-left text-xs font-medium text-medio-texto print:whitespace-normal print:px-1.5 print:py-1 print:text-[8pt]">{etiqueta}</th>
       {usos.map((m) => <Fragment key={m.id}>{render(m)}</Fragment>)}
     </tr>
   )
@@ -23,8 +23,15 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
   const recomendado = r.usos.find((m) => m.id === r.recomendado)
   const cop = (v: number) => COP(locale, v)
   const pct = (v: number) => porcentaje(locale, v)
-  const si = t('si'), no = t('no')
-  const celda = (contenido: React.ReactNode, clase = '') => <td className={`whitespace-nowrap px-3 py-2 text-right tabular-nums ${clase}`}>{contenido}</td>
+  const si = t('si'), no = t('no'), pv = t('porVerificar')
+  const celda = (contenido: React.ReactNode, clase = '') => <td className={`whitespace-nowrap px-3 py-2 text-right tabular-nums print:whitespace-normal print:px-1.5 print:py-1 ${clase}`}>{contenido}</td>
+  // Veredicto real de cada prueba; las corridas anteriores solo traen el motivo de descarte
+  const prueba = (m: MetricasUso, k: 'legal' | 'fisico' | 'demanda', descarte: string, antes: string[]) => {
+    if (antes.includes(m.motivo ?? '')) return celda(vacio)
+    if (m.motivo === descarte) return celda(no, 'text-rojo-oscuro')
+    const v = m.pruebas?.[k]
+    return v === 'por_verificar' ? celda(pv, 'text-ambar') : celda(v === 'no' ? no : si)
+  }
 
   return (
     <div className="space-y-4">
@@ -37,13 +44,13 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
 
       <p className="text-xs text-medio-texto">{t('parametros', { tasa: pct(r.parametros.tasaMinima), anios: r.parametros.horizonteAnios, salida: r.parametros.tasaSalida ? pct(r.parametros.tasaSalida) : '—' })}</p>
 
-      <div className="overflow-x-auto rounded-xl border border-borde">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto rounded-xl border border-borde print:overflow-visible">
+        <table className="w-full text-sm print:text-[8pt]">
           <thead className="bg-fondo">
             <tr>
               <th className="px-3 py-2 text-left text-xs uppercase tracking-wider text-medio-texto">{t('criterio')}</th>
               {r.usos.map((m) => (
-                <th key={m.id} className={`px-3 py-2 text-right ${m.id === r.recomendado ? 'bg-verde-claro' : ''}`}>
+                <th key={m.id} className={`px-3 py-2 text-right print:px-1.5 ${m.id === r.recomendado ? 'bg-verde-claro' : ''}`}>
                   {m.nombre}
                   {posicion.has(m.id) && <span className="ml-1 rounded-full bg-torna px-1.5 text-xs text-white">#{posicion.get(m.id)}</span>}
                 </th>
@@ -51,9 +58,9 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-borde">
-            <Fila etiqueta={t('f.norma')} usos={r.usos} render={(m) => celda(m.motivo === 'legal' ? no : si)} />
-            <Fila etiqueta={t('f.edificio')} usos={r.usos} render={(m) => celda(m.motivo === 'legal' ? vacio : m.motivo === 'fisica' ? no : si)} />
-            <Fila etiqueta={t('f.demanda')} usos={r.usos} render={(m) => celda(['legal', 'fisica'].includes(m.motivo ?? '') ? vacio : m.motivo === 'demanda' ? no : si)} />
+            <Fila etiqueta={t('f.norma')} usos={r.usos} render={(m) => prueba(m, 'legal', 'legal', [])} />
+            <Fila etiqueta={t('f.edificio')} usos={r.usos} render={(m) => prueba(m, 'fisico', 'fisica', ['legal'])} />
+            <Fila etiqueta={t('f.demanda')} usos={r.usos} render={(m) => prueba(m, 'demanda', 'demanda', ['legal', 'fisica'])} />
             <Fila etiqueta={t('f.ingresoBruto')} usos={r.usos} render={(m) => celda(m.rentabilidad == null ? vacio : cop(m.ingresoBruto))} />
             <Fila etiqueta={t('f.ingresoNeto')} usos={r.usos} render={(m) => celda(m.rentabilidad == null ? vacio : cop(m.ingresoNeto))} />
             <Fila etiqueta={t('f.rentabilidad')} usos={r.usos} render={(m) => celda(m.rentabilidad == null ? vacio : pct(m.rentabilidad), 'font-semibold')} />
@@ -66,8 +73,7 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
             <Fila etiqueta={t('f.obraMas20')} usos={r.usos} render={(m) => celda(m.sensibilidad.obraMas20 == null ? vacio : pct(m.sensibilidad.obraMas20))} />
             <Fila etiqueta={t('f.colocacionLenta')} usos={r.usos} render={(m) => celda(m.sensibilidad.colocacionLenta == null ? vacio : cop(m.sensibilidad.colocacionLenta))} />
             <Fila etiqueta={t('f.valorAjustado')} usos={r.usos} render={(m) => celda(m.valorAjustado == null ? vacio : cop(m.valorAjustado), 'font-semibold')} />
-            <Fila etiqueta={t('f.estado')} usos={r.usos} render={(m) => celda(m.viable ? t('viable') : t(`motivos.${m.motivo ?? 'datos'}`), m.viable ? 'text-verde' : 'text-rojo-oscuro')} />
-            <Fila etiqueta={t('f.provisional')} usos={r.usos} render={(m) => celda(m.provisional ? t('provisionalSi') : '—', m.provisional ? 'text-ambar' : '')} />
+            <Fila etiqueta={t('f.estado')} usos={r.usos} render={(m) => celda(m.viable ? (m.provisional ? t('viableProvisional') : t('viable')) : t(`motivos.${m.motivo ?? 'datos'}`), m.viable ? (m.provisional ? 'text-ambar' : 'text-verde') : 'text-rojo-oscuro')} />
           </tbody>
         </table>
       </div>
