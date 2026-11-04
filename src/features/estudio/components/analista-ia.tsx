@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from 'next-intl/server'
 import { DIMENSIONES, PESOS_DIMENSION, type AnalisisIAGuardado } from '../lib/analista-ia'
 import { COLOR_DECISION } from '../lib/decision'
-import { fecha } from '../lib/texto'
+import { fechaHora } from '../lib/texto'
 import { BotonAnalista } from './boton-analista'
 
 const color = (p: number | null) => (p == null ? 'bg-piedra text-medio-texto' : p >= 70 ? 'bg-verde text-white' : p >= 50 ? 'bg-ambar text-white' : 'bg-rojo text-white')
@@ -27,14 +27,14 @@ export async function AnalistaIA({ edificioId, analisis, disponible, desde = nul
         <div className="max-w-2xl">
           <h2 id="analista-ia" className="text-lg font-bold">{t('titulo')}</h2>
           <p className="mt-0.5 text-xs text-medio-texto">
-            {analisis ? t('meta', { fecha: fecha(locale, analisis.fecha), modelo: analisis.modelo }) : disponible ? t('sinAnalisis') : t('sinLlave')}
+            {analisis ? t('meta', { fecha: fechaHora(locale, analisis.fecha), modelo: analisis.modelo }) : disponible ? t('sinAnalisis') : t('sinLlave')}
           </p>
         </div>
         {disponible && <BotonAnalista edificioId={edificioId} hayAnalisis={Boolean(analisis)} />}
       </div>
 
       {analisis && desde && new Date(analisis.fecha) < new Date(desde) && (
-        <p role="status" className="mt-3 rounded-xl bg-ambar-claro px-4 py-3 text-sm text-ambar">{t('desactualizado', { fecha: fecha(locale, desde) })}</p>
+        <p role="status" className="mt-3 rounded-xl bg-ambar-claro px-4 py-3 text-sm text-ambar">{t('desactualizado', { fecha: fechaHora(locale, desde) })}</p>
       )}
 
       {a && (

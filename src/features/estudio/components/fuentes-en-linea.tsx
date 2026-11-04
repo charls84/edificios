@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { FUENTES, type CampoFuente, type Fuente } from '../catalogo/fuentes'
-import { fecha, tx } from '../lib/texto'
+import { fechaHora, tx } from '../lib/texto'
 import { setCampoFuente } from '../services/estudio-actions'
 import type { ConsultaPredio } from '../types'
 import { ConsultaAutomatica } from './consulta-automatica'
@@ -49,7 +49,7 @@ function Campo({ edificioId, fuente, campo, valor }: { edificioId: string; fuent
         rows={2}
       />
       <p className="mt-1 text-xs text-medio-texto" role="status">
-        {pendiente ? t('guardando') : guardado ? t('guardado') : valor ? t('consultado', { fecha: fecha(locale, valor.fecha) }) : ''}
+        {pendiente ? t('guardando') : guardado ? t('guardado') : valor ? t('consultado', { fecha: fechaHora(locale, valor.fecha) }) : ''}
       </p>
     </li>
   )

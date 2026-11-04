@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
 import { documentoPorCodigo } from '../catalogo/documentos'
 import { PARAMETROS_DEFAULT } from '../lib/finanzas'
-import { fecha, tx } from '../lib/texto'
+import { fechaHora, tx } from '../lib/texto'
 import { correrMayorMejorUsoAction, correrTamizajeAction } from '../services/analisis-actions'
 import type { AnalisisGuardado, ResultadoMayorMejorUso, ResultadoTamizaje } from '../types'
 import { ResultadoMayorMejorUso as VistaMmu } from './resultado-mmu'
@@ -26,7 +26,7 @@ function Estado({ a, t }: { a: AnalisisGuardado<unknown> | null; t: ReturnType<t
   if (!a) return <p className="text-sm text-medio-texto">{t('sinCorrer')}</p>
   return (
     <p className="text-sm text-medio-texto">
-      {t('corrido', { fecha: fecha(locale, a.fecha), autor: a.autor ?? '—' })}
+      {t('corrido', { fecha: fechaHora(locale, a.fecha), autor: a.autor ?? '—' })}
       {a.desactualizado && <span className="ml-2 rounded-full bg-ambar-claro px-2 py-0.5 text-xs font-semibold text-ambar">{t('desactualizado')}</span>}
     </p>
   )

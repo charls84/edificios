@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
-import { COP, fecha, numero } from '../lib/texto'
+import { COP, fechaHora, numero } from '../lib/texto'
 import { consultarAutomaticamente } from '../services/auto-actions'
 import type { ConsultaPredio, EstadoFuenteAuto } from '../types'
 
@@ -64,7 +64,7 @@ export function ConsultaAutomatica({ edificioId, consulta }: { edificioId: strin
         <div className="max-w-2xl">
           <h2 id="consulta-auto" className="text-xl font-bold">{t('titulo')}</h2>
           <p className="mt-1 text-sm text-medio-texto">{t('texto')}</p>
-          <p className="mt-1 text-xs text-medio-texto">{consulta ? t('ultima', { fecha: fecha(locale, consulta.fecha) }) : t('nunca')}</p>
+          <p className="mt-1 text-xs text-medio-texto">{consulta ? t('ultima', { fecha: fechaHora(locale, consulta.fecha) }) : t('nunca')}</p>
         </div>
         <button type="button" onClick={consultar} disabled={pendiente} className="boton w-auto">
           {pendiente ? t('consultando') : consulta ? t('repetir') : t('boton')}
