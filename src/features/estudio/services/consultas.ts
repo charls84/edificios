@@ -2,6 +2,7 @@ import 'server-only'
 import type { InformeVisita } from '@/features/ficha/types'
 import { createClient } from '@/lib/supabase/server'
 import type { EvaluacionCriterio } from '../lib/filtros'
+import { SECCIONES_EDITABLES, type CambioInforme, type NotaInforme, type SeccionEditable } from '../lib/informe-ediciones'
 import type {
   AnalisisGuardado,
   ConsultaPredio,
@@ -240,4 +241,18 @@ export async function getConsultaAuto(buildingId: string): Promise<ConsultaPredi
   const supabase = await createClient()
   const { data } = await supabase.from('data_points').select('valor').eq('building_id', buildingId).eq('categoria', 'auto').eq('clave', 'consulta').maybeSingle()
   return ((data as { valor: ConsultaPredio } | null)?.valor) ?? null
+}
+
+// Ediciones manuales del informe (categoria 'informe'): una nota por sección y el historial
+export async function getEdicionesInforme(buildingId: string): Promise<{ notas: Partial<Record<SeccionEditable, NotaInforme>>; historial: CambioInforme[] }> {
+  const supabase = await createClient()
+  const { data } = await supabase.from('data_points').select('clave, valor').eq('building_id', buildingId).eq('categoria', 'informe')
+  const filas = (data ?? []) as { clave: string; valor: unknown }[]
+  const notas: Partial<Record<SeccionEditable, NotaInforme>> = {}
+  let historial: CambioInforme[] = []
+  for (const f of filas) {
+    if (f.clave === 'historial') historial = (f.valor as { cambios?: CambioInforme[] }).cambios ?? []
+    else if ((SECCIONES_EDITABLES as readonly string[]).includes(f.clave)) notas[f.clave as SeccionEditable] = f.valor as NotaInforme
+  }
+  return { notas, historial }
 }

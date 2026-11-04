@@ -55,5 +55,5 @@ export default async function EdificioPage({ params }: { params: Promise<{ id: s
     ia: ia ? { fecha: ia.fecha, puntaje: ia.puntajeGlobal } : null,
     iaDisponible: IA_DISPONIBLE,
   }
-  return <ResumenEstudio edificio={edificio} docs={docs} items={items} usos={usos} informe={informe} tamizaje={tamizaje} mmu={mmu} filtros={filtros} fuentes={fuentes} decision={decision} flujo={<FlujoEstudio d={flujo} className="md:col-span-4" />} ia={<AnalistaIA edificioId={id} analisis={ia} disponible={IA_DISPONIBLE} desde={consulta?.fecha ?? null} className="md:col-span-4" />} />
+  return <ResumenEstudio edificio={edificio} docs={docs} items={items} usos={usos} informe={informe} tamizaje={tamizaje} mmu={mmu} filtros={filtros} fuentes={fuentes} decision={decision} flujo={<FlujoEstudio d={flujo} className="md:col-span-4" />} ia={<AnalistaIA edificioId={id} analisis={ia} disponible={IA_DISPONIBLE} usoFinanciero={mmu?.resultado.usos.find((u) => u.id === mmu.resultado.recomendado)?.nombre ?? null} desde={consulta?.fecha ?? null} className="md:col-span-4" />} />
 }

@@ -23,6 +23,14 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
   const recomendado = r.usos.find((m) => m.id === r.recomendado)
   const cop = (v: number) => COP(locale, v)
   const pct = (v: number) => porcentaje(locale, v)
+  // Escenario mixto: los dos usos viables con más valor ajustado, cada uno en su parte del área
+  const viables = r.usos.filter((m) => m.viable && m.rentabilidad && m.vpn != null).sort((a, b) => (b.valorAjustado ?? 0) - (a.valorAjustado ?? 0)).slice(0, 2)
+  const mezcla = viables.length === 2 ? {
+    usos: viables.map((m) => m.nombre),
+    vpn: viables.reduce((s, m) => s + (m.vpn ?? 0), 0),
+    neto: viables.reduce((s, m) => s + m.ingresoNeto, 0),
+    rentabilidad: viables.reduce((s, m) => s + m.ingresoNeto, 0) / viables.reduce((s, m) => s + m.ingresoNeto / (m.rentabilidad ?? 1), 0),
+  } : null
   const si = t('si'), no = t('no'), pv = t('porVerificar')
   const celda = (contenido: React.ReactNode, clase = '') => <td className={`whitespace-nowrap px-3 py-2 text-right tabular-nums print:whitespace-normal print:px-1.5 print:py-1 ${clase}`}>{contenido}</td>
   // Veredicto real de cada prueba; las corridas anteriores solo traen el motivo de descarte
@@ -41,6 +49,15 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
         <p className="mt-1 text-sm">{recomendado ? t('porque', { rentabilidad: pct(recomendado.rentabilidad ?? 0), vpn: cop(recomendado.vpn ?? 0) }) : t('ningunoTexto')}</p>
         {r.loteVacioManda && <p className="mt-2 text-sm font-semibold text-rojo-oscuro">{t('loteVacio')}</p>}
       </div>
+
+      {mezcla && (
+        <div className="informe-fila rounded-xl border border-torna/20 bg-fondo p-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-medio-texto">{t('mezcla')}</p>
+          <p className="mt-1 text-lg font-bold">{mezcla.usos.join(' + ')}</p>
+          <p className="mt-1 text-sm">{t('mezclaTexto', { vpn: cop(mezcla.vpn), neto: cop(mezcla.neto), rentabilidad: pct(mezcla.rentabilidad) })}</p>
+          <p className="mt-1 text-xs text-medio-texto">{t('mezclaNota')}</p>
+        </div>
+      )}
 
       <p className="text-xs text-medio-texto">{t('parametros', { tasa: pct(r.parametros.tasaMinima), anios: r.parametros.horizonteAnios, salida: r.parametros.tasaSalida ? pct(r.parametros.tasaSalida) : '—' })}</p>
 

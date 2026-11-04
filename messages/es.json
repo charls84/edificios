@@ -557,7 +557,10 @@
         "restablecer": "Restablecer valores por defecto",
         "horizonteAyuda": "Por defecto 10 años.",
         "porVerificar": "Por verificar",
-        "viableProvisional": "Viable (provisional)"
+        "viableProvisional": "Viable (provisional)",
+        "mezcla": "Escenario mixto",
+        "mezclaTexto": "VPN combinado de {vpn}, ingreso neto anual de {neto} y rentabilidad combinada del {rentabilidad}.",
+        "mezclaNota": "Cada uso conserva su parte del área útil. Confirmar con el arquitecto qué pisos van para cada uso (por ejemplo, comercio en primer piso y sótano)."
       }
     },
     "resumen": {
@@ -698,7 +701,42 @@
         "pasos": "Próximos pasos",
         "bloque": "Bloque {b}",
         "millones": "millones",
-        "fotoPrincipal": "Fachada · foto principal"
+        "fotoPrincipal": "Fachada · foto principal",
+        "usoFinanciero": "Uso recomendado: {uso}",
+        "mezclaPosible": "mezcla posible: {usos}",
+        "trazaPortada": "Conclusión editada por {autor} el {fecha}"
+      },
+      "edicion": {
+        "portadaTitulo": "Conclusión de la portada",
+        "portadaTexto": "Hoy dice: {conclusion}. Si el equipo o el comité llegan a otra conclusión, escríbela aquí: reemplaza a la automática y queda registrada.",
+        "editando": "Editando: {seccion}",
+        "decision": "Decisión",
+        "decisionAuto": "La sugerida por la plataforma",
+        "texto": "Nota del equipo para esta sección",
+        "textoConclusion": "Conclusión que verá gerencia",
+        "ejemplo": "Ej.: El comercial confirmó canon de $55.000/m² para locales en primer piso (avalúo de octubre).",
+        "aviso": "Al guardar queda la traza en el informe: quién, cuándo (hora de Bogotá) y en qué sección.",
+        "error": "No se pudo guardar. Intenta de nuevo.",
+        "guardar": "Guardar",
+        "guardando": "Guardando…",
+        "cancelar": "Cancelar",
+        "editar": "Editar nota del equipo",
+        "agregar": "+ Agregar nota del equipo",
+        "agregarConclusion": "Editar la conclusión",
+        "notaEquipo": "Nota del equipo",
+        "conclusionEquipo": "Conclusión del equipo",
+        "traza": "Modificado por {autor} el {fecha} · sección: {seccion}",
+        "control": "Control de cambios",
+        "controlTexto": "Modificaciones manuales hechas al informe antes de exportarlo. Los datos automáticos (consultas, documentos, cálculos) no se alteran.",
+        "cFecha": "Fecha y hora (Bogotá)",
+        "cSeccion": "Sección",
+        "cAccion": "Acción",
+        "cAutor": "Autor",
+        "accion": {
+          "agrego": "Agregó nota",
+          "edito": "Editó",
+          "borro": "Borró la nota"
+        }
       }
     },
     "filtros": {
@@ -881,7 +919,8 @@
         "fallo": "Ningún modelo gratuito respondió (están saturados). Intenta en unos minutos. Para que responda siempre, carga saldo en OpenRouter.",
         "demo": "No disponible en el demo."
       },
-      "desactualizado": "Este análisis es anterior a la última consulta del predio ({fecha}) y no tiene en cuenta los datos nuevos. Haz clic en \"Actualizar análisis\"."
+      "desactualizado": "Este análisis es anterior a la última consulta del predio ({fecha}) y no tiene en cuenta los datos nuevos. Haz clic en \"Actualizar análisis\".",
+      "difiere": "El análisis financiero, que corrió con todos los usos y sus números, recomienda {financiero}. Esa es la recomendación del informe."
     },
     "flujo": {
       "titulo": "Flujo del estudio",
