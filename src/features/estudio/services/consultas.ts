@@ -35,7 +35,9 @@ interface FilaEdificio {
 const COLUMNAS_EDIFICIO =
   'id, nombre, direccion, chip, matricula_inmobiliaria, zona, lat, lng, etapa, semaforo, resumen, origen, contacto, notas, created_at, updated_at'
 
-function mapEdificio(b: FilaEdificio): EdificioReal {
+const urlFoto = (ruta: string) => `/api/archivos/fotos/${ruta}`
+
+function mapEdificio(b: FilaEdificio, foto: string | null = null): EdificioReal {
   return {
     id: b.id,
     nombre: b.nombre ?? b.direccion,
@@ -51,6 +53,7 @@ function mapEdificio(b: FilaEdificio): EdificioReal {
     origen: b.origen,
     contacto: b.contacto,
     notas: b.notas,
+    foto,
     createdAt: b.created_at,
     updatedAt: b.updated_at,
   }
@@ -58,14 +61,22 @@ function mapEdificio(b: FilaEdificio): EdificioReal {
 
 export async function getEdificio(id: string): Promise<EdificioReal | null> {
   const supabase = await createClient()
-  const { data } = await supabase.from('buildings').select(COLUMNAS_EDIFICIO).eq('id', id).maybeSingle()
-  return data ? mapEdificio(data as FilaEdificio) : null
+  const [{ data }, { data: foto }] = await Promise.all([
+    supabase.from('buildings').select(COLUMNAS_EDIFICIO).eq('id', id).maybeSingle(),
+    supabase.from('data_points').select('valor').eq('building_id', id).eq('categoria', 'ficha').eq('clave', 'foto_principal').maybeSingle(),
+  ])
+  const ruta = (foto as { valor: { ruta?: string } } | null)?.valor?.ruta
+  return data ? mapEdificio(data as FilaEdificio, ruta ? urlFoto(ruta) : null) : null
 }
 
 export async function listEdificiosReales(): Promise<EdificioReal[]> {
   const supabase = await createClient()
-  const { data } = await supabase.from('buildings').select(COLUMNAS_EDIFICIO).order('updated_at', { ascending: false })
-  return ((data ?? []) as FilaEdificio[]).map(mapEdificio)
+  const [{ data }, { data: fotos }] = await Promise.all([
+    supabase.from('buildings').select(COLUMNAS_EDIFICIO).order('updated_at', { ascending: false }),
+    supabase.from('data_points').select('building_id, valor').eq('categoria', 'ficha').eq('clave', 'foto_principal'),
+  ])
+  const porEdificio = new Map(((fotos ?? []) as { building_id: string; valor: { ruta?: string } }[]).filter((f) => f.valor?.ruta).map((f) => [f.building_id, urlFoto(f.valor.ruta!)]))
+  return ((data ?? []) as FilaEdificio[]).map((b) => mapEdificio(b, porEdificio.get(b.id) ?? null))
 }
 
 export async function getDocumentos(buildingId: string): Promise<EstadoDocumentoEdificio[]> {

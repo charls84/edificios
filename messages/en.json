@@ -309,11 +309,20 @@
       "matricular": "Register building",
       "queSigueTitulo": "What comes next",
       "queSigue": [
-        "Get the certificate of title (online, with the registration number) and upload it in Documents.",
-        "With the CHIP, check SINUPOT, Mapas Bogotá (heritage), the DADEP observatory, SIGAU and SAE (money laundering), and record the findings in Sources.",
-        "Score the 5 filters, build the candidate uses and run the screening.",
-        "If it passes, complete the detailed study (checklist A–F) and run the highest and best use analysis."
-      ]
+        "Upload the certificate of title in Documents (the cadastral one is optional).",
+        "Click \"Analyze the property\": it reads the certificate, queries Cadastre, POT 555, DADEP and the Botanical Garden, runs the AI analyst and builds the highest and best use.",
+        "Score the site visit (6 sections from 0 to 10); saving it makes the analyst score again.",
+        "Review the uses and their figures, and export the PDF report for the committee."
+      ],
+      "foto": "Main building photo",
+      "fotoAlt": "Main building photo",
+      "fotoVacia": "No photo. It will show in the portfolio and on the report cover.",
+      "fotoSubir": "Upload photo",
+      "fotoCambiar": "Change photo",
+      "fotoProcesando": "Preparing the photo…",
+      "fotoQuitar": "Remove current photo",
+      "fotoAyuda": "Best an exterior view of the façade. It is resized automatically before upload.",
+      "fotoError": "The image couldn't be read. Try a JPG or PNG."
     },
     "documentos": {
       "titulo": "Documents to upload",
@@ -688,7 +697,8 @@
         "mitigacion": "How to mitigate them",
         "pasos": "Next steps",
         "bloque": "Block {b}",
-        "millones": "million"
+        "millones": "million",
+        "fotoPrincipal": "Façade · main photo"
       }
     },
     "filtros": {

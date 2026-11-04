@@ -184,6 +184,8 @@ export interface EdificioReal {
   origen: string | null
   contacto: string | null
   notas: string | null
+  /** Foto principal (portafolio, mapa, resumen y portada del informe) */
+  foto: string | null
   createdAt: string
   updatedAt: string
 }
