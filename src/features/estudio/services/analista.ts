@@ -91,11 +91,15 @@ async function completarHuecos(supabase: Supabase, buildingId: string, a: Analis
   if (items.length) await supabase.from('checklist_items').upsert(items, { onConflict: 'building_id,codigo' })
 
   const { count } = await supabase.from('candidate_uses').select('id', { count: 'exact', head: true }).eq('building_id', buildingId)
-  if (!count && a.usos?.length) {
-    // Área útil aproximada: 80 % del área construida estimada, repartida entre los usos propuestos
-    const m2 = areaConstruida ? Math.round((areaConstruida * 0.8) / a.usos.length) : null
-    await supabase.from('candidate_uses').insert(a.usos.map((u, i) => ({
-      building_id: buildingId, nombre: u.nombre, categoria: u.categoria, orden: i,
+  if ((count ?? 0) < 2 && a.usos?.length) {
+    // Con menos de dos usos no hay comparación: se agregan los que propone el analista (sin repetir nombre)
+    const { data: previos } = await supabase.from('candidate_uses').select('nombre').eq('building_id', buildingId)
+    const nombres = new Set(((previos ?? []) as { nombre: string }[]).map((p) => p.nombre.trim().toLowerCase()))
+    const nuevos = a.usos.filter((u) => !nombres.has(u.nombre.trim().toLowerCase()))
+    // Área útil aproximada: 80 % del área construida estimada, repartida entre todos los usos
+    const m2 = areaConstruida ? Math.round((areaConstruida * 0.8) / (nuevos.length + (count ?? 0) || 1)) : null
+    if (nuevos.length) await supabase.from('candidate_uses').insert(nuevos.map((u, i) => ({
+      building_id: buildingId, nombre: u.nombre, categoria: u.categoria, orden: (count ?? 0) + i,
       legal: u.legal, legal_nota: `IA · ${u.nota}`, fisico: u.fisico, demanda: u.demanda, m2_netos: m2,
     })))
   }

@@ -67,6 +67,7 @@ export function ResultadoMayorMejorUso({ r }: { r: ResultadoMayorMejorUso }) {
             <Fila etiqueta={t('f.colocacionLenta')} usos={r.usos} render={(m) => celda(m.sensibilidad.colocacionLenta == null ? vacio : cop(m.sensibilidad.colocacionLenta))} />
             <Fila etiqueta={t('f.valorAjustado')} usos={r.usos} render={(m) => celda(m.valorAjustado == null ? vacio : cop(m.valorAjustado), 'font-semibold')} />
             <Fila etiqueta={t('f.estado')} usos={r.usos} render={(m) => celda(m.viable ? t('viable') : t(`motivos.${m.motivo ?? 'datos'}`), m.viable ? 'text-verde' : 'text-rojo-oscuro')} />
+            <Fila etiqueta={t('f.provisional')} usos={r.usos} render={(m) => celda(m.provisional ? t('provisionalSi') : '—', m.provisional ? 'text-ambar' : '')} />
           </tbody>
         </table>
       </div>

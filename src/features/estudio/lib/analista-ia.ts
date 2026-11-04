@@ -100,7 +100,7 @@ Reglas:
 8. Escribe en español de Colombia, claro y directo, sin jerga. Cifras con separador de miles con punto.
 9. criterios: el expediente trae "criteriosPendientes", los criterios de los 5 filtros que nadie ha puntuado, con sus niveles (0, 1, 2). Puntúa solo los que los datos sostengan; deja fuera los demás. Nunca pongas un veto en 0 sin una evidencia clara.
 10. checklist: el expediente trae "checklistPendiente", los ítems de la checklist A–F sin resolver. Marca solo los que los datos sostengan: "cumple", "no_cumple", "por_verificar" (hay un indicio pero falta confirmar) o "no_aplica". En los ítems bloqueantes, "no_cumple" solo con evidencia clara.
-11. usos: si el expediente no trae usos candidatos, propone de 2 a 4. Marca legal, fisico y demanda como "por_verificar" cuando no haya un dato que lo confirme.`
+11. usos: si el expediente trae menos de dos usos candidatos, propone de 2 a 4 distintos a los que ya hay. Marca legal, fisico y demanda como "por_verificar" cuando no haya un dato que lo confirme.`
 
 /**
  * Saca el JSON de la respuesta de un modelo (puede venir entre ```json o con texto alrededor)

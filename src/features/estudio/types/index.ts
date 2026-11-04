@@ -142,6 +142,8 @@ export interface MetricasUso {
   vpn: number | null
   mesesPrimerIngreso: number
   riesgo: Riesgo
+  /** Alguna prueba (legal, física o demanda) sigue por verificar: el resultado es provisional */
+  provisional?: boolean
   valorAjustado: number | null
   sensibilidad: { canonMenos10: number | null; obraMas20: number | null; colocacionLenta: number | null }
 }

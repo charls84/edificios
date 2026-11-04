@@ -529,7 +529,8 @@
           "obraMas20": "Rentabilidad con obra +20 %",
           "colocacionLenta": "VPN con colocación +6 meses",
           "valorAjustado": "4 · Valor ajustado por riesgo",
-          "estado": "Resultado"
+          "estado": "Resultado",
+          "provisional": "Resultado"
         },
         "viable": "Viable",
         "motivos": {
@@ -546,7 +547,8 @@
         "parametrosTitulo": "Parámetros del cálculo",
         "porDefecto": "Valores por defecto",
         "restablecer": "Restablecer valores por defecto",
-        "horizonteAyuda": "Por defecto 10 años."
+        "horizonteAyuda": "Por defecto 10 años.",
+        "provisionalSi": "Provisional: hay pruebas por verificar"
       }
     },
     "resumen": {
@@ -614,7 +616,7 @@
       "matricula": "Matrícula",
       "corte": "Fecha de corte: {fecha}",
       "exportar": "Exportar PDF",
-      "borrador": "Borrador: el análisis de mayor y mejor uso aún no se ha corrido. El informe se completa con la matriz y la recomendación.",
+      "borrador": "Borrador: el análisis de mayor y mejor uso aún no se ha corrido. Haz clic en \"Analizar el predio\" en el Resumen y el informe se completa solo con la matriz y la recomendación.",
       "cap": {
         "1": "Resumen ejecutivo",
         "2": "Identificación del inmueble y estudio de títulos (bloque A)",
@@ -651,7 +653,9 @@
       "documentosPendientes": "Documentos por cargar ({n})",
       "pie": "Informe generado por la plataforma de Torna con los datos validados por el equipo. Los cálculos financieros son fórmulas sobre los datos ingresados; no reemplazan el concepto del IDPC, la certificación del IDIGER, la visita estructural (NSR-10) ni la licencia ante curaduría.",
       "consultasEnLinea": "Consultas en línea (Catastro, POT 555, Mapas Bogotá, DADEP, SIGAU, SAE)",
-      "sinConsultar": "Sin consultar"
+      "sinConsultar": "Sin consultar",
+      "avisoProvisional": "Resultado provisional: alguna prueba (norma, edificio o demanda) de los usos sigue por verificar.",
+      "avisoSupuestos": "Los números de canon, obra y gastos son supuestos de referencia de la plataforma: el comercial debe validarlos en Usos candidatos antes de presentar el informe."
     },
     "filtros": {
       "titulo": "Los 5 filtros de Torna",
@@ -837,7 +841,7 @@
     },
     "flujo": {
       "titulo": "Flujo del estudio",
-      "texto": "Cinco pasos en orden. El paso 3 lee los documentos, consulta las fuentes oficiales y corre el analista de IA.",
+      "texto": "Cinco pasos en orden. El paso 3 lee los documentos, consulta las fuentes oficiales, corre el analista de IA y arma el análisis de mayor y mejor uso.",
       "p1": "Matricular el edificio",
       "p1d": "Hecho el {fecha}",
       "p2": "Cargar el certificado de tradición",
@@ -853,10 +857,10 @@
       "p5sinLlave": "Inactivo: falta la llave de OpenRouter.",
       "analizar": "Analizar el predio",
       "repetir": "Volver a analizar",
-      "paso1": "1 de 2 · Leyendo documentos y consultando fuentes…",
-      "paso2": "2 de 2 · El analista de IA está puntuando…",
+      "paso1": "1 de 3 · Leyendo documentos y consultando fuentes…",
+      "paso2": "2 de 3 · El analista de IA está puntuando…",
       "espera": "Puede tardar hasta 3 minutos. No cierres la página.",
-      "listo": "Listo: documentos leídos, fuentes consultadas y puntaje del analista actualizado.",
+      "listo": "Listo: documentos leídos, fuentes consultadas, puntaje del analista, tamizaje y mayor y mejor uso actualizados. El informe ya está armado.",
       "listoSinIa": "Listo: documentos leídos y fuentes consultadas.",
       "ver": "Ver →",
       "estado": {
@@ -869,8 +873,10 @@
         "sinRespuesta": "Catastro no respondió. Intenta de nuevo en unos minutos.",
         "invalido": "Revisa los datos del edificio.",
         "demo": "No disponible en el demo.",
-        "ia": "Los documentos y las fuentes quedaron listos, pero ningún modelo gratuito de IA respondió (están saturados). Pide el análisis de nuevo en unos minutos desde Análisis."
-      }
+        "ia": "Los documentos y las fuentes quedaron listos, pero ningún modelo gratuito de IA respondió (están saturados). Pide el análisis de nuevo en unos minutos desde Análisis.",
+        "mmu": "El mayor y mejor uso no se pudo correr: faltan usos con área (corre primero el analista o agrega un uso en Usos candidatos)."
+      },
+      "paso3": "3 de 3 · Corriendo tamizaje y mayor y mejor uso…"
     }
   }
 }
