@@ -309,11 +309,20 @@
       "matricular": "Matricular edificio",
       "queSigueTitulo": "Qué sigue después de matricular",
       "queSigue": [
-        "Sacar el certificado de tradición y libertad (en línea, con la matrícula) y cargarlo en Documentos.",
-        "Con el CHIP, consultar SINUPOT, Mapas Bogotá (BIC), el observatorio del DADEP, el SIGAU y la SAE (lavado de activos), y anotar lo encontrado en Fuentes.",
-        "Puntuar los 5 filtros, armar los usos candidatos y correr el tamizaje.",
-        "Si pasa, completar el estudio detallado (checklist A–F) y correr el análisis de mayor y mejor uso."
-      ]
+        "Cargar el certificado de tradición y libertad en Documentos (el catastral es opcional).",
+        "Hacer clic en \"Analizar el predio\": lee el certificado, consulta Catastro, POT 555, DADEP y Jardín Botánico, corre el analista de IA y arma el mayor y mejor uso.",
+        "Calificar la visita técnica (6 secciones de 0 a 10); al guardarla, el analista vuelve a puntuar.",
+        "Revisar los usos y sus números, y exportar el informe en PDF para el comité."
+      ],
+      "foto": "Foto principal del edificio",
+      "fotoAlt": "Foto principal del edificio",
+      "fotoVacia": "Sin foto. Se verá en el portafolio y en la portada del informe.",
+      "fotoSubir": "Subir foto",
+      "fotoCambiar": "Cambiar foto",
+      "fotoProcesando": "Preparando la foto…",
+      "fotoQuitar": "Quitar la foto actual",
+      "fotoAyuda": "Mejor una vista exterior de la fachada. Se reduce sola antes de subirla.",
+      "fotoError": "No se pudo leer la imagen. Prueba con un JPG o PNG."
     },
     "documentos": {
       "titulo": "Documentos que hay que cargar",
@@ -688,7 +697,8 @@
         "mitigacion": "Cómo mitigarlos",
         "pasos": "Próximos pasos",
         "bloque": "Bloque {b}",
-        "millones": "millones"
+        "millones": "millones",
+        "fotoPrincipal": "Fachada · foto principal"
       }
     },
     "filtros": {

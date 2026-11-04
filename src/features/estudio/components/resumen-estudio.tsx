@@ -48,7 +48,10 @@ export async function ResumenEstudio({ edificio, docs, items, informe, tamizaje,
 
   const visita = resumirVisita(informe)
   const tva = await getTranslations('estudio.visitaAnalisis')
-  const fotos = (informe?.secciones ?? []).flatMap((s) => s.fotos).slice(0, 8).map((f) => ({ src: f.src, alt: f.destacado || f.texto || t('fotoVisita') }))
+  const fotos = [
+    ...(edificio.foto ? [{ src: edificio.foto, alt: edificio.nombre }] : []),
+    ...(informe?.secciones ?? []).flatMap((s) => s.fotos).map((f) => ({ src: f.src, alt: f.destacado || f.texto || t('fotoVisita') })),
+  ].slice(0, 8)
   const bloqueos = tamizaje?.resultado.bloqueos ?? []
 
   return (

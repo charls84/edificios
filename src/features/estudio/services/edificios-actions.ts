@@ -46,6 +46,33 @@ function filaDesde(d: z.infer<typeof edificioSchema>) {
   }
 }
 
+type Supabase = Awaited<ReturnType<typeof createClient>>
+const MAX_FOTO = 4 * 1024 * 1024
+
+/** Sube la foto principal (ya reducida en el navegador) y guarda su ruta; borra la anterior */
+async function guardarFotoPrincipal(supabase: Supabase, buildingId: string, formData: FormData) {
+  const { data: previa } = await supabase.from('data_points').select('valor').eq('building_id', buildingId).eq('categoria', 'ficha').eq('clave', 'foto_principal').maybeSingle()
+  const rutaPrevia = (previa as { valor: { ruta?: string } } | null)?.valor?.ruta
+  const foto = formData.get('foto')
+  const nueva = foto instanceof File && foto.size > 0 && foto.size <= MAX_FOTO && foto.type.startsWith('image/') ? foto : null
+
+  if (nueva) {
+    const ruta = `${buildingId}/portada-${crypto.randomUUID()}.jpg`
+    const { error } = await supabase.storage.from('fotos').upload(ruta, nueva, { contentType: nueva.type, upsert: false })
+    if (error) return
+    await supabase.from('data_points').upsert(
+      { building_id: buildingId, categoria: 'ficha', clave: 'foto_principal', valor: { ruta }, estado: 'validado', fecha_consulta: new Date().toISOString() },
+      { onConflict: 'building_id,categoria,clave' }
+    )
+  } else if (formData.get('quitarFoto') === 'on' && rutaPrevia) {
+    // Se vacía la ruta en vez de borrar la fila: borrar filas es solo para administradores (RLS)
+    await supabase.from('data_points').update({ valor: { ruta: null }, fecha_consulta: new Date().toISOString() }).eq('building_id', buildingId).eq('categoria', 'ficha').eq('clave', 'foto_principal')
+  } else {
+    return
+  }
+  if (rutaPrevia) await supabase.storage.from('fotos').remove([rutaPrevia])
+}
+
 export async function crearEdificio(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const profile = await requireProfile()
   const t = await getTranslations('errores')
@@ -66,6 +93,7 @@ export async function crearEdificio(_prev: ActionState, formData: FormData): Pro
     .select('id')
     .single()
   if (error || !data) return { error: t('noSeGuardo') }
+  await guardarFotoPrincipal(supabase, (data as { id: string }).id, formData)
 
   revalidatePath('/dashboard')
   redirect(`/edificios/${(data as { id: string }).id}`)
@@ -81,6 +109,7 @@ export async function actualizarEdificio(id: string, _prev: ActionState, formDat
   const supabase = await createClient()
   const { error } = await supabase.from('buildings').update(filaDesde(parsed.data)).eq('id', id)
   if (error) return { error: error.code === '23505' ? t('errores.chipRepetido') : t('errores.noSeGuardo') }
+  await guardarFotoPrincipal(supabase, id, formData)
 
   revalidatePath(`/edificios/${id}`, 'layout')
   revalidatePath('/dashboard')

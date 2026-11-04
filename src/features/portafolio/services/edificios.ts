@@ -35,7 +35,6 @@ export async function listEdificios(): Promise<ResumenEdificio[]> {
     semaforo: b.semaforo,
     lat: b.lat,
     lng: b.lng,
-    // La foto principal llega con la visita tecnica; en la lista se muestra el marcador neutro
-    foto: null,
+    foto: b.foto,
   }))
 }

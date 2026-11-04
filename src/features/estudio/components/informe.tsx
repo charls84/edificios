@@ -113,9 +113,10 @@ export async function Informe({ edificio, docs, items, usos, informe, tamizaje, 
   const fotosVisita: (FotoReporte & { general: boolean })[] = (informe?.secciones ?? []).flatMap((sec) => sec.fotos.filter((f) => !f.src.startsWith('idb:')).map((f) => ({ src: f.src, titulo: f.destacado || sec.etiqueta, detalle: f.destacado ? sec.etiqueta : f.texto || undefined, general: sec.clave === 'general' })))
   // Pie corto para las fotos de Documentos: el nombre del documento hasta la primera coma
   const fotosDocs: FotoReporte[] = docs.flatMap((d) => d.archivos.filter((x) => /\.(jpe?g|png|webp)$/i.test(x.nombreArchivo)).map((x) => ({ src: urlArchivo('documentos', x.ruta), titulo: tx(documentoPorCodigo(d.codigo)?.nombre ?? { es: d.codigo, en: d.codigo }, locale).split(/[,:(]/)[0].trim() })))
-  const fotos: FotoReporte[] = [...fotosVisita, ...fotosDocs].filter((f, i, arr) => arr.findIndex((g) => g.src === f.src) === i)
+  const principal: FotoReporte[] = edificio.foto ? [{ src: edificio.foto, titulo: tp('fotoPrincipal') }] : []
+  const fotos: FotoReporte[] = [...principal, ...fotosVisita, ...fotosDocs].filter((f, i, arr) => arr.findIndex((g) => g.src === f.src) === i)
   // Portada: la vista general del edificio en la visita; si no hay, la primera foto cargada en Documentos
-  const fotoPortada = fotosVisita.find((f) => f.general) ?? fotosDocs[0] ?? fotos[0] ?? null
+  const fotoPortada = principal[0] ?? fotosVisita.find((f) => f.general) ?? fotosDocs[0] ?? fotos[0] ?? null
 
   const c = consulta
   const datosPortada: DatoClave[] = [

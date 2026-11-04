@@ -5,6 +5,7 @@ import { useActionState } from 'react'
 import { FormMessage } from '@/features/auth/components/form-message'
 import type { ActionState } from '@/features/auth/types'
 import type { EdificioReal } from '../types'
+import { FotoPrincipalCampo } from './foto-principal-campo'
 
 interface Props {
   action: (prev: ActionState, formData: FormData) => Promise<ActionState>
@@ -30,6 +31,7 @@ export function FormularioEdificio({ action, inicial }: Props) {
   return (
     <form action={enviar} className="space-y-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <FotoPrincipalCampo actual={inicial?.foto ?? null} />
         <Campo id="nombre" label={t('nombre')} ayuda={t('nombreAyuda')}>
           <input id="nombre" name="nombre" required defaultValue={v('nombre')} className="campo" />
         </Campo>
